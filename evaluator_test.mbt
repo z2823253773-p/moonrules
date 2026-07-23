@@ -199,3 +199,63 @@ test "trace budget reserves its final slot for truncation error" {
   )
   debug_inspect(report.stats.trace_nodes_emitted, content="3")
 }
+
+///|
+fn evaluate_binary_for_test(
+  operator : Operator,
+  left : String,
+  right : String,
+) -> EvaluationReport raise {
+  evaluate_condition(
+    Expr::Operation(operator, [
+      Expr::Literal(@json.parse(left)),
+      Expr::Literal(@json.parse(right)),
+    ]),
+    Json::empty_object(),
+    Budget::default(),
+  )
+}
+
+///|
+test "equality and inequality accept every JSON type" {
+  debug_inspect(
+    evaluate_binary_for_test(Operator::Equal, "{\"a\":1}", "{\"a\":1.0}").decision,
+    content="Pass",
+  )
+  debug_inspect(
+    evaluate_binary_for_test(Operator::NotEqual, "[1,2]", "[2,1]").decision,
+    content="Pass",
+  )
+}
+
+///|
+test "all ordered comparisons use strict numeric semantics" {
+  debug_inspect(
+    evaluate_binary_for_test(Operator::GreaterThan, "3", "2").decision,
+    content="Pass",
+  )
+  debug_inspect(
+    evaluate_binary_for_test(Operator::GreaterOrEqual, "2", "2.0").decision,
+    content="Pass",
+  )
+  debug_inspect(
+    evaluate_binary_for_test(Operator::LessThan, "2", "3").decision,
+    content="Pass",
+  )
+  debug_inspect(
+    evaluate_binary_for_test(Operator::LessOrEqual, "2", "2").decision,
+    content="Pass",
+  )
+  debug_inspect(
+    evaluate_binary_for_test(Operator::GreaterThan, "2", "3").decision,
+    content="Fail",
+  )
+}
+
+///|
+test "ordered comparison rejects cross-type coercion" {
+  debug_inspect(
+    evaluate_binary_for_test(Operator::GreaterThan, "\"3\"", "2").decision,
+    content="Indeterminate(TypeMismatch(\"numeric comparison requires two numbers\"))",
+  )
+}

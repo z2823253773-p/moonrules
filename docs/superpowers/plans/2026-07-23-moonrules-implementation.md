@@ -976,7 +976,7 @@ git commit -m "feat: enforce deterministic evaluation budgets"
 - Modify: `evaluator.mbt`
 - Modify: `evaluator_test.mbt`
 
-- [ ] **Step 1: Lock deep-equality behavior with failing tests**
+- [x] **Step 1: Lock deep-equality behavior with failing tests**
 
 ```moonbit
 ///|
@@ -992,7 +992,7 @@ test "JSON equality follows the specification" {
 
 Also test nested objects, unequal keys, unequal array lengths, strings, booleans, and cross-type values.
 
-- [ ] **Step 2: Implement exhaustive recursive equality**
+- [x] **Step 2: Implement exhaustive recursive equality**
 
 Create `json_equal.mbt` with:
 
@@ -1020,11 +1020,11 @@ pub fn json_deep_equal(left : Json, right : Json) -> Bool {
 
 If current `Map` iteration uses a different method, use `moon ide doc 'Map::iter'` and update only the object arm while preserving the tests and semantics.
 
-- [ ] **Step 3: Wire `==`, `!=`, `>`, `>=`, `<`, and `<=`**
+- [x] **Step 3: Wire `==`, `!=`, `>`, `>=`, `<`, and `<=`**
 
 Add exhaustive operator dispatch in `operators.mbt`; equality accepts every JSON type, while ordered comparison accepts only two JSON numbers. Add one evaluator test per operator and one type-error test shared across ordered comparisons.
 
-- [ ] **Step 4: Verify and commit comparisons**
+- [x] **Step 4: Verify and commit comparisons**
 
 Run all tests and commit:
 

@@ -17,3 +17,21 @@ fn compare_numbers(
     },
   )
 }
+
+///|
+fn evaluate_comparison(
+  operator : Operator,
+  left : Json,
+  right : Json,
+) -> Result[Bool, EvalError] {
+  match operator {
+    Equal => Ok(json_deep_equal(left, right))
+    NotEqual => Ok(!json_deep_equal(left, right))
+    GreaterThan | GreaterOrEqual | LessThan | LessOrEqual =>
+      compare_numbers(operator, left, right)
+    _ =>
+      Err(
+        TypeMismatch("operator \{operator_name(operator)} is not a comparison"),
+      )
+  }
+}

@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Task 8 complete: three-state logic and deterministic execution budgets.
+Task 9 complete: JSON deep equality and strict comparisons.
 
 ## Locked decisions
 
@@ -26,4 +26,4 @@ Task 8 complete: three-state logic and deterministic execution budgets.
 
 ## Next action
 
-Implement JSON deep equality and all comparison operators in Task 9.
+Implement collection and string operators in Task 10.

@@ -475,7 +475,7 @@ fn eval_binary_comparison(
   let value : Result[Json, EvalError] = match first_error {
     Some(error) => Err(error)
     None =>
-      match compare_numbers(operator, values[0], values[1]) {
+      match evaluate_comparison(operator, values[0], values[1]) {
         Ok(result) => Ok(Json::boolean(result))
         Err(error) => Err(error)
       }
@@ -568,7 +568,12 @@ fn eval_expr(
         And => eval_and(context, arguments, data, operation_path, depth)
         Or => eval_or(context, arguments, data, operation_path, depth)
         Not => eval_not(context, arguments, data, operation_path, depth)
-        GreaterOrEqual =>
+        Equal
+        | NotEqual
+        | GreaterThan
+        | GreaterOrEqual
+        | LessThan
+        | LessOrEqual =>
           eval_binary_comparison(
             context, operator, arguments, data, operation_path, depth,
           )
