@@ -24,7 +24,7 @@
 
 ### Project and governance
 
-- `moon.mod.json` — module metadata and pinned external module versions.
+- `moon.mod` — module metadata and pinned external module versions.
 - `moon.pkg` — root library-package imports.
 - `AGENTS.md` — commands, boundaries, and completion contract for coding agents.
 - `.ai/TASK_STATE.md` — current milestone, decisions, commands, and next action.
@@ -74,7 +74,7 @@
 - Inspect: `docs/superpowers/specs/2026-07-23-moonrules-design.md`
 - No workspace files are changed until every command in this gate passes.
 
-- [ ] **Step 1: Verify architecture and the official installer URL**
+- [x] **Step 1: Verify architecture and the official installer URL**
 
 Run:
 
@@ -85,7 +85,7 @@ curl -I https://cli.moonbitlang.com/install/unix.sh
 
 Expected: `arm64`; the installer request returns an HTTP success or redirect from `cli.moonbitlang.com`. If either differs, stop and report the exact output.
 
-- [ ] **Step 2: Request approval and install the toolchain**
+- [x] **Step 2: Request approval and install the toolchain**
 
 Run only after explicit approval because this writes under `~/.moon`:
 
@@ -95,7 +95,7 @@ curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
 
 Expected: installer completes without error.
 
-- [ ] **Step 3: Verify the installed commands**
+- [x] **Step 3: Verify the installed commands**
 
 Run:
 
@@ -109,7 +109,7 @@ moon test --help
 
 Expected: all four commands exit `0`; record the actual compiler and `moon` versions in `.ai/TASK_STATE.md` when that file is created in Task 2.
 
-- [ ] **Step 4: Generate a disposable current template**
+- [x] **Step 4: Generate a disposable current template**
 
 Run:
 
@@ -119,9 +119,9 @@ moon new "$MOONRULES_TEMPLATE_DIR" --user z2823253773-p --name moonrules
 find "$MOONRULES_TEMPLATE_DIR" -maxdepth 3 -type f -o -type l
 ```
 
-Expected: the template contains `moon.mod.json`, `moon.pkg`, a root `.mbt` file, tests, `cmd/main/main.mbt`, and `cmd/main/moon.pkg`. Do not copy the nested `.git` directory.
+Expected: with the verified 2026-07-23 toolchain, the template contains `moon.mod`, `moon.pkg`, a root `.mbt` file, tests, `cmd/main/main.mbt`, and `cmd/main/moon.pkg`. Do not copy the nested `.git` directory.
 
-- [ ] **Step 5: Verify core and external dependencies independently**
+- [x] **Step 5: Verify core and external dependencies independently**
 
 Inside the disposable template, run:
 
@@ -139,27 +139,33 @@ Expected: all commands exit `0`. If the exact pinned versions are unavailable or
 ## Task 2: Project metadata and agent-safe handoff
 
 **Files:**
-- Create: `moon.mod.json`
+- Create: `moon.mod`
 - Create: `moon.pkg`
 - Create: `AGENTS.md`
 - Create: `.ai/TASK_STATE.md`
 - Create: `.gitignore`
 - Create: `LICENSE`
 
-- [ ] **Step 1: Create the module and root-package configuration**
+- [x] **Step 1: Create the module and root-package configuration**
 
-Create `moon.mod.json` with the current template's field spelling and these exact values:
+Create `moon.mod` with the current template's field spelling and these exact values:
 
-```json
-{
-  "name": "z2823253773-p/moonrules",
-  "version": "0.1.0",
-  "readme": "README.md",
-  "repository": "https://github.com/z2823253773-p/moonrules",
-  "license": "Apache-2.0",
-  "keywords": ["rules-engine", "json", "validation", "explainable"],
-  "description": "Explainable and budget-limited JSON business rules for MoonBit"
-}
+```moonbit
+name = "z2823253773-p/moonrules"
+
+version = "0.1.0"
+
+readme = "README.md"
+
+repository = "https://github.com/z2823253773-p/moonrules"
+
+license = "Apache-2.0"
+
+keywords = ["rules-engine", "json", "validation", "explainable"]
+
+preferred_target = "wasm-gc"
+
+description = "Explainable and budget-limited JSON business rules for MoonBit"
 ```
 
 Create `moon.pkg`:
@@ -183,7 +189,7 @@ moon check
 
 Expected: configuration parses. Source-related errors are acceptable only until `model.mbt` is added in Task 3; configuration errors must be fixed now.
 
-- [ ] **Step 2: Create project rules for both coding agents**
+- [x] **Step 2: Create project rules for both coding agents**
 
 Create `AGENTS.md` with this contract:
 
@@ -239,7 +245,7 @@ credentials.json
 .env
 ```
 
-- [ ] **Step 3: Add the Apache-2.0 license**
+- [x] **Step 3: Add the Apache-2.0 license**
 
 Use the unmodified Apache License 2.0 text in `LICENSE`, with copyright line:
 
@@ -255,7 +261,7 @@ rg -n "Apache License|Copyright 2026" LICENSE
 
 Expected: both phrases are present.
 
-- [ ] **Step 4: Fix repository-local public Git identity before any push**
+- [x] **Step 4: Fix repository-local public Git identity before any push**
 
 Run:
 
@@ -273,7 +279,7 @@ Expected: the repository-local values are the GitHub login and noreply address. 
 Run:
 
 ```bash
-git add moon.mod.json moon.pkg AGENTS.md .ai/TASK_STATE.md .gitignore LICENSE
+git add moon.mod moon.pkg AGENTS.md .ai/TASK_STATE.md .gitignore LICENSE
 git commit -m "chore: initialize MoonRules module"
 ```
 
@@ -1158,7 +1164,7 @@ git commit -m "feat: expose reports and trace rendering"
 ## Task 12: Thin native CLI
 
 **Files:**
-- Modify: `moon.mod.json`
+- Modify: `moon.mod`
 - Create: `cmd/main/moon.pkg`
 - Create: `cmd/main/main.mbt`
 
@@ -1171,7 +1177,7 @@ moon add moonbitlang/async@0.20.2
 moon add moonbitlang/x@0.4.46
 ```
 
-Expected: `moon.mod.json` records both exact compatible versions. If Task 1 required different verified versions, use those recorded versions consistently and update this plan before proceeding.
+Expected: `moon.mod` records both exact compatible versions. If Task 1 required different verified versions, use those recorded versions consistently and update this plan before proceeding.
 
 - [ ] **Step 2: Configure the executable package**
 
@@ -1222,7 +1228,7 @@ Expected: `check` reports success; `eval` prints the coupon Trace and exits `1` 
 - [ ] **Step 5: Commit the CLI**
 
 ```bash
-git add moon.mod.json cmd/main .ai/TASK_STATE.md
+git add moon.mod cmd/main .ai/TASK_STATE.md
 git commit -m "feat: add native MoonRules CLI"
 ```
 
@@ -1443,7 +1449,7 @@ Expected: repository is public, `main` is pushed, the CI workflow is green, READ
 
 **Files:**
 - Create: `docs/submission/moonrules-application.md`
-- Modify: `moon.mod.json` only if packaging reports metadata errors.
+- Modify: `moon.mod` only if packaging reports metadata errors.
 - Modify: `.ai/TASK_STATE.md`
 
 - [ ] **Step 1: Verify package contents without publishing**
@@ -1495,7 +1501,7 @@ Record the public GitHub URL, green CI URL, mooncakes.io package URL, test comma
 Update `.ai/TASK_STATE.md` to state that implementation and release checks are complete, then commit only non-secret project files:
 
 ```bash
-git add docs/submission .ai/TASK_STATE.md moon.mod.json
+git add docs/submission .ai/TASK_STATE.md moon.mod
 git commit -m "docs: prepare hackathon submission"
 git push origin main
 ```
