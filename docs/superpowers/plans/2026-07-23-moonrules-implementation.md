@@ -721,7 +721,7 @@ git commit -m "feat: parse MoonRules DSL"
 - Create: `checker.mbt`
 - Create: `checker_test.mbt`
 
-- [ ] **Step 1: Add failing diagnostic snapshots**
+- [x] **Step 1: Add failing diagnostic snapshots**
 
 ```moonbit
 ///|
@@ -762,7 +762,7 @@ test "caller cannot raise library budget ceilings" {
 
 Run `moon test checker_test.mbt`; expected: FAIL.
 
-- [ ] **Step 2: Implement checker traversal and arity table**
+- [x] **Step 2: Implement checker traversal and arity table**
 
 Use this exact arity function:
 
@@ -787,7 +787,7 @@ fn check_node(expr : Expr, path : RulePath, depth : Int, count : Ref[Int], budge
 
 The traversal must append diagnostics in preorder so output is deterministic. It checks arity, V1 data-path syntax, obvious literal operand types, `max_depth`, and `max_rule_nodes`. `validate_budget` emits `E_BUDGET_LIMIT` for every supplied value above `Budget::default()`; V1 callers may lower limits but may not raise them.
 
-- [ ] **Step 3: Verify and commit the checker**
+- [x] **Step 3: Verify and commit the checker**
 
 Run `moon fmt && moon test checker_test.mbt && moon test && moon check`.
 

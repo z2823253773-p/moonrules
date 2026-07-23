@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Task 5 complete: JSON DSL parser.
+Task 6 complete: static checker and deterministic diagnostics.
 
 ## Locked decisions
 
@@ -18,6 +18,7 @@ Task 5 complete: JSON DSL parser.
 - `moonc`: `0.10.4`
 - Manifest format: `moon.mod`
 - Compatible dependencies: `moonbitlang/async@0.20.2`, `moonbitlang/x@0.4.46`
+- Black-box tests construct public enum values with qualified names such as `Expr::Operation` and `Operator::And`.
 
 ## Verification commands
 
@@ -25,4 +26,4 @@ Task 5 complete: JSON DSL parser.
 
 ## Next action
 
-Implement the static checker and diagnostics in Task 6.
+Implement the minimal evaluator and independent Trace nodes in Task 7.
