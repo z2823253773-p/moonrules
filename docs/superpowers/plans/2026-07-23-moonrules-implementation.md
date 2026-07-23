@@ -807,7 +807,7 @@ git commit -m "feat: validate rules before evaluation"
 - Create: `examples/coupon.rule.json`
 - Create: `examples/coupon.data.json`
 
-- [ ] **Step 1: Add the coupon files and failing vertical-slice test**
+- [x] **Step 1: Add the coupon files and failing vertical-slice test**
 
 Use the exact coupon rule and data from the approved design. Add this direct-library test:
 
@@ -832,7 +832,7 @@ test "coupon trace has independent variable and literal nodes" {
 
 Run `moon test evaluator_test.mbt`; expected: FAIL.
 
-- [ ] **Step 2: Implement numeric comparison helpers**
+- [x] **Step 2: Implement numeric comparison helpers**
 
 In `operators.mbt`, implement strict numeric comparison without coercion:
 
@@ -855,7 +855,7 @@ fn compare_numbers(
 }
 ```
 
-- [ ] **Step 3: Implement the evaluation context and vertical slice**
+- [x] **Step 3: Implement the evaluation context and vertical slice**
 
 In `evaluator.mbt`, define a private mutable context with `budget`, `steps`, `nodes`, `max_depth`, and `trace_nodes`. Implement:
 
@@ -881,7 +881,7 @@ fn error_trace(path : RulePath, operator : String, error : EvalError) -> TraceNo
 
 Before evaluation, reject budgets above library defaults with a terminal `BudgetExceeded` report. `TraceMode::Full` runs normally; `Off` and `Summary` return a terminal `UnsupportedTraceMode` report in V1.
 
-- [ ] **Step 4: Verify the vertical slice and commit**
+- [x] **Step 4: Verify the vertical slice and commit**
 
 Run:
 

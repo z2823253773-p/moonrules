@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Task 6 complete: static checker and deterministic diagnostics.
+Task 7 complete: minimal evaluator with independent Trace nodes.
 
 ## Locked decisions
 
@@ -26,4 +26,4 @@ Task 6 complete: static checker and deterministic diagnostics.
 
 ## Next action
 
-Implement the minimal evaluator and independent Trace nodes in Task 7.
+Implement three-state logic and all deterministic execution budgets in Task 8.
