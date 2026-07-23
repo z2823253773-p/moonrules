@@ -130,9 +130,27 @@ pub fn evaluate(
       Indeterminate(TypeMismatch("rule condition must evaluate to a boolean"))
     Err(error) => Indeterminate(error)
   }
+  let raw_trace = evaluated.trace
+  let root_detail = match decision {
+    Decision::Indeterminate(error) => eval_error_message(error)
+    Decision::Pass | Decision::Fail => raw_trace.message
+  }
+  let root_status = match decision {
+    Decision::Indeterminate(_) => TraceStatus::Error
+    Decision::Pass | Decision::Fail => raw_trace.status
+  }
+  let trace : TraceNode = {
+    rule_path: raw_trace.rule_path,
+    operator: raw_trace.operator,
+    status: root_status,
+    resolved_inputs: raw_trace.resolved_inputs,
+    result: raw_trace.result,
+    message: "\{rule.id}\n\{root_detail}",
+    children: raw_trace.children,
+  }
   {
     decision,
-    trace: evaluated.trace,
+    trace,
     stats: {
       steps_executed: context.steps,
       nodes_evaluated: context.nodes,

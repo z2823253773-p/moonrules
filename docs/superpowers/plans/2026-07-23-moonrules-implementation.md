@@ -1097,11 +1097,11 @@ git commit -m "feat: complete V1 rule operators"
 - Create: `render_test.mbt`
 - Create: `moonrules.mbt`
 
-- [ ] **Step 1: Add golden tests for the coupon Trace**
+- [x] **Step 1: Add golden tests for the coupon Trace**
 
 The text snapshot must match the approved design, including independent `VALUE var(...)` and `VALUE literal` nodes and `SKIPPED` after `and` short-circuiting. Add a JSON snapshot asserting `decision`, `trace`, and all four `stats` fields.
 
-- [ ] **Step 2: Implement bounded text rendering**
+- [x] **Step 2: Implement bounded text rendering**
 
 Use:
 
@@ -1113,11 +1113,11 @@ fn preview_json(value : Json, max_chars : Int) -> String
 
 `preview_json` returns the full `stringify()` result when it fits; otherwise it returns the first `max_chars` characters followed by the literal suffix `…(truncated)`.
 
-- [ ] **Step 3: Implement structured report JSON**
+- [x] **Step 3: Implement structured report JSON**
 
 Add `report_to_json(report : EvaluationReport) -> Json`. Use stable object keys and preserve child order. Do not serialize wall-clock time or memory addresses.
 
-- [ ] **Step 4: Add the public façade**
+- [x] **Step 4: Add the public façade**
 
 Create `moonrules.mbt`:
 
@@ -1152,7 +1152,7 @@ pub fn evaluate_json(
 }
 ```
 
-- [ ] **Step 5: Verify and commit rendering/API**
+- [x] **Step 5: Verify and commit rendering/API**
 
 Run all checks and commit:
 

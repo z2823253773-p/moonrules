@@ -1,0 +1,177 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "z2823253773-p/moonrules"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn check(RuleDocument, budget? : Budget) -> Array[Diagnostic]
+
+pub fn check_expr(Expr, Budget) -> Array[Diagnostic]
+
+pub fn evaluate(RuleDocument, Json, Budget, trace_mode? : TraceMode) -> EvaluationReport
+
+pub fn evaluate_condition(Expr, Json, Budget, trace_mode? : TraceMode) -> EvaluationReport
+
+pub fn evaluate_json(String, String, budget? : Budget, trace_mode? : TraceMode) -> Result[EvaluationReport, String]
+
+pub fn json_deep_equal(Json, Json) -> Bool
+
+pub fn parse(String) -> Result[RuleDocument, RuleParseError]
+
+pub fn parse_data_path(String) -> Result[Array[String], DataPathError]
+
+pub fn parse_rule_document(Json) -> Result[RuleDocument, RuleParseError]
+
+pub fn render_report(EvaluationReport, Budget) -> String
+
+pub fn report_to_json(EvaluationReport) -> Json
+
+pub fn resolve_data_path(Json, String) -> Result[Json, DataPathError]
+
+pub fn validate_budget(Budget) -> Array[Diagnostic]
+
+// Errors
+
+// Types and methods
+pub(all) struct Budget {
+  max_depth : Int
+  max_rule_nodes : Int
+  max_steps : Int
+  max_trace_nodes : Int
+  max_preview_chars : Int
+} derive(Eq, @debug.Debug)
+pub fn Budget::default() -> Self
+
+pub(all) enum DataPathError {
+  InvalidDataPath(String)
+  MissingDataPath(String)
+  NonObjectSegment(String)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Decision {
+  Pass
+  Fail
+  Indeterminate(EvalError)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Diagnostic {
+  code : String
+  severity : DiagnosticSeverity
+  rule_path : String
+  message : String
+  suggestion : String
+} derive(Eq, @debug.Debug)
+
+pub(all) enum DiagnosticSeverity {
+  Error
+  Warning
+} derive(Eq, @debug.Debug)
+
+pub(all) enum EvalError {
+  MissingVariable(String)
+  TypeMismatch(String)
+  BudgetExceeded(String, Int, Int)
+  UnsupportedTraceMode(String)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct EvaluationReport {
+  decision : Decision
+  trace : TraceNode
+  stats : ExecutionStats
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ExecutionStats {
+  steps_executed : Int
+  nodes_evaluated : Int
+  max_depth_reached : Int
+  trace_nodes_emitted : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Expr {
+  Literal(Json)
+  Variable(String)
+  Operation(Operator, Array[Expr])
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Operator {
+  And
+  Or
+  Not
+  Equal
+  NotEqual
+  GreaterThan
+  GreaterOrEqual
+  LessThan
+  LessOrEqual
+  In
+  Contains
+  StartsWith
+  EndsWith
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ResolvedInput {
+  source : String
+  value : Json
+} derive(Eq, @debug.Debug)
+
+pub(all) struct RuleDocument {
+  id : String
+  description : String
+  condition : Expr
+} derive(Eq, @debug.Debug)
+
+pub(all) enum RuleParseError {
+  ExpectedObject(String)
+  MissingField(String)
+  ExpectedString(String)
+  MultipleOperatorKeys(String)
+  UnknownOperator(String)
+  InvalidVariable(String)
+  InvalidLiteral(String)
+  InvalidArguments(String)
+} derive(Eq, @debug.Debug)
+pub fn RuleParseError::message(Self) -> String
+
+pub(all) struct RulePath {
+  segments : Array[RulePathSegment]
+} derive(Eq, @debug.Debug)
+pub fn RulePath::field(Self, String) -> Self
+pub fn RulePath::index(Self, Int) -> Self
+pub fn RulePath::root() -> Self
+pub fn RulePath::to_string(Self) -> String
+
+pub(all) enum RulePathSegment {
+  Field(String)
+  Index(Int)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum TraceMode {
+  Off
+  Summary
+  Full
+} derive(Eq, @debug.Debug)
+
+pub(all) struct TraceNode {
+  rule_path : String
+  operator : String
+  status : TraceStatus
+  resolved_inputs : Array[ResolvedInput]
+  result : Json?
+  message : String
+  children : Array[TraceNode]
+} derive(Eq, @debug.Debug)
+
+pub(all) enum TraceStatus {
+  Value
+  Pass
+  Fail
+  Error
+  Skipped
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits
+

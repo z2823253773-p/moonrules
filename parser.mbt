@@ -11,6 +11,20 @@ pub(all) enum RuleParseError {
 } derive(Eq, Debug)
 
 ///|
+pub fn RuleParseError::message(self : RuleParseError) -> String {
+  match self {
+    ExpectedObject(path) => "expected an object at \{path}"
+    MissingField(field) => "missing required field \{field}"
+    ExpectedString(path) => "expected a string at \{path}"
+    MultipleOperatorKeys(path) => "expected exactly one operator key at \{path}"
+    UnknownOperator(name) => "unknown operator \{name}"
+    InvalidVariable(path) => "invalid variable expression at \{path}"
+    InvalidLiteral(path) => "invalid object literal at \{path}"
+    InvalidArguments(path) => "expected an argument array at \{path}"
+  }
+}
+
+///|
 fn parse_operator(name : String) -> Result[Operator, RuleParseError] {
   match name {
     "and" => Ok(And)

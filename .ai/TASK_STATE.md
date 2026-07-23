@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Task 10 complete: all V1 collection and string operators.
+Task 11 complete: Trace rendering, structured reports, and public façade.
 
 ## Locked decisions
 
@@ -26,4 +26,4 @@ Task 10 complete: all V1 collection and string operators.
 
 ## Next action
 
-Implement Trace rendering, structured JSON output, and the public façade in Task 11.
+Implement and smoke-test the thin native CLI in Task 12.
