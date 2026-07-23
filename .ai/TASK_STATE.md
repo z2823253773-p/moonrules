@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Task 15 local release checks complete: CI and changelog are ready.
+Task 16 local release package and one-page application are ready.
 
 ## Locked decisions
 
@@ -26,4 +26,15 @@ Task 15 local release checks complete: CI and changelog are ready.
 
 ## Next action
 
-Audit and normalize commit identities, then create and verify the public GitHub repository.
+Re-authenticate GitHub CLI, create and push the public repository, verify CI, then obtain explicit confirmation before `moon publish --frozen`.
+
+## External blockers
+
+- `gh auth status` reports an invalid token for `z2823253773-p`; run `gh auth login -h github.com`.
+- GitHub, CI, and mooncakes.io URLs remain intentionally unfilled until confirmed public.
+
+## Release artifacts
+
+- Package: `_build/publish/z2823253773-p-moonrules-0.1.0.zip` (51 files, about 62 KB).
+- Application source: `docs/submission/moonrules-application.md`.
+- Visually verified one-page PDF: `output/pdf/moonrules-application.pdf`.

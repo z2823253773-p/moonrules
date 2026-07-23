@@ -1452,7 +1452,7 @@ Expected: repository is public, `main` is pushed, the CI workflow is green, READ
 - Modify: `moon.mod` only if packaging reports metadata errors.
 - Modify: `.ai/TASK_STATE.md`
 
-- [ ] **Step 1: Verify package contents without publishing**
+- [x] **Step 1: Verify package contents without publishing**
 
 Run:
 
@@ -1463,7 +1463,7 @@ moon package
 
 Expected: package includes the root library, README files, license, examples, and documentation; it excludes `_build`, credentials, logs, and `.ai/TASK_STATE.md` if the current packager includes it by default.
 
-- [ ] **Step 2: Prepare the one-page application source**
+- [x] **Step 2: Prepare the one-page application source**
 
 Create `docs/submission/moonrules-application.md` with these exact headings:
 
