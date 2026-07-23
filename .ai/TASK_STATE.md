@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Task 9 complete: JSON deep equality and strict comparisons.
+Task 10 complete: all V1 collection and string operators.
 
 ## Locked decisions
 
@@ -26,4 +26,4 @@ Task 9 complete: JSON deep equality and strict comparisons.
 
 ## Next action
 
-Implement collection and string operators in Task 10.
+Implement Trace rendering, structured JSON output, and the public façade in Task 11.

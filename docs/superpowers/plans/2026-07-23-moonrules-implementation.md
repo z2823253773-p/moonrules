@@ -1040,7 +1040,7 @@ git commit -m "feat: add strict JSON comparisons"
 - Modify: `evaluator.mbt`
 - Modify: `evaluator_test.mbt`
 
-- [ ] **Step 1: Add a table of failing operator tests**
+- [x] **Step 1: Add a table of failing operator tests**
 
 Cover these exact cases:
 
@@ -1054,7 +1054,7 @@ contains([1, 2], 1)                            -> TypeMismatch
 in("admin", "administrator")                 -> TypeMismatch
 ```
 
-- [ ] **Step 2: Implement strict collection and string helpers**
+- [x] **Step 2: Implement strict collection and string helpers**
 
 Add:
 
@@ -1079,7 +1079,7 @@ fn evaluate_text(operator : Operator, left : Json, right : Json) -> Result[Bool,
 }
 ```
 
-- [ ] **Step 3: Verify all 15 V1 node/operator forms and commit**
+- [x] **Step 3: Verify all 15 V1 node/operator forms and commit**
 
 Run `moon fmt && moon test && moon check && moon build --target native`.
 

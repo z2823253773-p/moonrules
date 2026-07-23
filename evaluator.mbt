@@ -475,7 +475,7 @@ fn eval_binary_comparison(
   let value : Result[Json, EvalError] = match first_error {
     Some(error) => Err(error)
     None =>
-      match evaluate_comparison(operator, values[0], values[1]) {
+      match evaluate_binary_operator(operator, values[0], values[1]) {
         Ok(result) => Ok(Json::boolean(result))
         Err(error) => Err(error)
       }
@@ -573,19 +573,14 @@ fn eval_expr(
         | GreaterThan
         | GreaterOrEqual
         | LessThan
-        | LessOrEqual =>
+        | LessOrEqual
+        | In
+        | Contains
+        | StartsWith
+        | EndsWith =>
           eval_binary_comparison(
             context, operator, arguments, data, operation_path, depth,
           )
-        _ => {
-          let error = TypeMismatch(
-            "operator \{operator_name(operator)} is not implemented yet",
-          )
-          {
-            value: Err(error),
-            trace: error_trace(operation_path, operator_name(operator), error),
-          }
-        }
       }
     }
   }

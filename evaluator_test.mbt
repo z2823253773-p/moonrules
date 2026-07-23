@@ -259,3 +259,71 @@ test "ordered comparison rejects cross-type coercion" {
     content="Indeterminate(TypeMismatch(\"numeric comparison requires two numbers\"))",
   )
 }
+
+///|
+test "in uses JSON deep equality for array membership" {
+  debug_inspect(
+    evaluate_binary_for_test(
+      Operator::In,
+      "\"admin\"",
+      "[\"viewer\",\"admin\"]",
+    ).decision,
+    content="Pass",
+  )
+  debug_inspect(
+    evaluate_binary_for_test(Operator::In, "{\"a\":1}", "[{\"a\":1.0}]").decision,
+    content="Pass",
+  )
+  debug_inspect(
+    evaluate_binary_for_test(
+      Operator::In,
+      "\"owner\"",
+      "[\"viewer\",\"admin\"]",
+    ).decision,
+    content="Fail",
+  )
+}
+
+///|
+test "in rejects non-array haystacks" {
+  debug_inspect(
+    evaluate_binary_for_test(Operator::In, "\"admin\"", "\"administrator\"").decision,
+    content="Indeterminate(TypeMismatch(\"in requires an array as its second argument\"))",
+  )
+}
+
+///|
+test "contains is a strict string operator" {
+  debug_inspect(
+    evaluate_binary_for_test(Operator::Contains, "\"moonrules\"", "\"rules\"").decision,
+    content="Pass",
+  )
+  debug_inspect(
+    evaluate_binary_for_test(Operator::Contains, "\"moonrules\"", "\"sun\"").decision,
+    content="Fail",
+  )
+  debug_inspect(
+    evaluate_binary_for_test(Operator::Contains, "[1,2]", "1").decision,
+    content="Indeterminate(TypeMismatch(\"string operator requires two strings\"))",
+  )
+}
+
+///|
+test "starts_with and ends_with are strict string operators" {
+  debug_inspect(
+    evaluate_binary_for_test(Operator::StartsWith, "\"moonrules\"", "\"moon\"").decision,
+    content="Pass",
+  )
+  debug_inspect(
+    evaluate_binary_for_test(Operator::StartsWith, "\"moonrules\"", "\"rules\"").decision,
+    content="Fail",
+  )
+  debug_inspect(
+    evaluate_binary_for_test(Operator::EndsWith, "\"moonrules\"", "\"rules\"").decision,
+    content="Pass",
+  )
+  debug_inspect(
+    evaluate_binary_for_test(Operator::EndsWith, "\"moonrules\"", "\"moon\"").decision,
+    content="Fail",
+  )
+}
