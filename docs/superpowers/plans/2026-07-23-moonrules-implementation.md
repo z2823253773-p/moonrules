@@ -611,7 +611,7 @@ Expected: all path tests pass.
 - Create: `parser.mbt`
 - Create: `parser_test.mbt`
 
-- [ ] **Step 1: Write parser tests before implementation**
+- [x] **Step 1: Write parser tests before implementation**
 
 Create tests for the exact primary rule and three invalid shapes:
 
@@ -643,7 +643,7 @@ test "reject malformed var and unwrapped object literal" {
 
 Run `moon test parser_test.mbt`; expected: FAIL.
 
-- [ ] **Step 2: Add explicit parse errors and operator mapping**
+- [x] **Step 2: Add explicit parse errors and operator mapping**
 
 In `parser.mbt`, define:
 
@@ -679,7 +679,7 @@ fn parse_operator(name : String) -> Result[Operator, RuleParseError] {
 }
 ```
 
-- [ ] **Step 3: Implement `parse_rule_document` and recursive `parse_expr`**
+- [x] **Step 3: Implement `parse_rule_document` and recursive `parse_expr`**
 
 The implementation must obey this exhaustive decision table:
 
@@ -702,7 +702,7 @@ fn parse_expr_array(values : Array[Json], path : RulePath) -> Result[Array[Expr]
 
 Do not perform arity or runtime-type checks here; those belong to `checker.mbt`.
 
-- [ ] **Step 4: Verify and commit parser behavior**
+- [x] **Step 4: Verify and commit parser behavior**
 
 Run:
 

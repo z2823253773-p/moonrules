@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Task 4 complete: rule paths and V1 data paths.
+Task 5 complete: JSON DSL parser.
 
 ## Locked decisions
 
@@ -25,4 +25,4 @@ Task 4 complete: rule paths and V1 data paths.
 
 ## Next action
 
-Implement the JSON DSL parser in Task 5.
+Implement the static checker and diagnostics in Task 6.
