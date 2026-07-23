@@ -1,0 +1,10 @@
+target/
+_build/
+.mooncakes/
+.DS_Store
+.idea/
+.vscode/
+*.log
+*.tmp
+credentials.json
+.env
