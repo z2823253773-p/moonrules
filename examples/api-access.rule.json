@@ -1,0 +1,11 @@
+{
+  "id": "production-api-access",
+  "description": "只有管理员或运维角色可以访问 production 的 v1 API",
+  "condition": {
+    "and": [
+      { "in": [{ "var": "request.role" }, ["admin", "operator"]] },
+      { "==": [{ "var": "request.environment" }, "production"] },
+      { "starts_with": [{ "var": "request.path" }, "/v1/"] }
+    ]
+  }
+}

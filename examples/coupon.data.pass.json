@@ -1,0 +1,9 @@
+{
+  "user": {
+    "age": 20,
+    "role": "student"
+  },
+  "order": {
+    "total": 128
+  }
+}

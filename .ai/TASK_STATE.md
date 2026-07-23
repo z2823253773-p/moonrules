@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Task 12 complete: native CLI with verified exit codes and smoke tests.
+Task 13 complete: three runnable scenarios and bilingual documentation.
 
 ## Locked decisions
 
@@ -26,4 +26,4 @@ Task 12 complete: native CLI with verified exit codes and smoke tests.
 
 ## Next action
 
-Complete the three examples and bilingual user documentation in Task 13.
+Add deterministic property tests and run the final test matrix in Task 14.

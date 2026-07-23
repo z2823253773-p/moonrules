@@ -1243,11 +1243,11 @@ git commit -m "feat: add native MoonRules CLI"
 - Create: `docs/API.md`
 - Create: `docs/ERRORS.md`
 
-- [ ] **Step 1: Complete three runnable examples**
+- [x] **Step 1: Complete three runnable examples**
 
 Each example pair must include one passing and one failing data variant. The three scenarios are coupon eligibility, API access by role/environment, and membership eligibility by age/region/status. Every example must use only V1 operators and dot-only data paths.
 
-- [ ] **Step 2: Write the Chinese primary README**
+- [x] **Step 2: Write the Chinese primary README**
 
 Use this exact section order:
 
@@ -1273,11 +1273,11 @@ MoonBit 原生的可解释、受预算限制的 JSON 业务规则引擎。
 
 The “为什么不是 JSON Schema” section must state: “JSON Schema validates structure; MoonRules evaluates business decisions and explains them.”
 
-- [ ] **Step 3: Write focused reference docs and English README**
+- [x] **Step 3: Write focused reference docs and English README**
 
 `docs/DSL.md` defines every V1 operator, arity, types, and examples. `docs/API.md` documents the four façade functions. `docs/ERRORS.md` documents three-state logic, error precedence, budgets, and partial Trace. `README.en.md` covers installation, one example, DSL overview, and limitations without duplicating the full Chinese reference.
 
-- [ ] **Step 4: Check documentation code and examples**
+- [x] **Step 4: Check documentation code and examples**
 
 Run:
 
@@ -1290,7 +1290,7 @@ moon run --target native cmd/main eval examples/coupon.rule.json --data examples
 
 Expected: all code blocks that Moon checks compile; the example runs.
 
-- [ ] **Step 5: Commit docs and examples**
+- [x] **Step 5: Commit docs and examples**
 
 ```bash
 git add README.mbt.md README.md README.en.md docs/DSL.md docs/API.md docs/ERRORS.md examples .ai/TASK_STATE.md
