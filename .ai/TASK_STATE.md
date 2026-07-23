@@ -31,12 +31,18 @@ Task 16 local release package and one-page application are ready.
 
 ## Next action
 
-Re-authenticate GitHub CLI, create and push the public repository, verify CI, then obtain explicit confirmation before `moon publish --frozen`.
+Push the focused CI registry fix, verify the replacement GitHub Actions run,
+then add confirmed public links to the application and obtain explicit
+confirmation before `moon publish --frozen`.
 
 ## External blockers
 
-- `gh auth status` reports an invalid token for `z2823253773-p`; run `gh auth login -h github.com`.
-- GitHub, CI, and mooncakes.io URLs remain intentionally unfilled until confirmed public.
+- GitHub CLI is authenticated as `z2823253773-p`.
+- Public repository: `https://github.com/z2823253773-p/moonrules`.
+- Initial CI run `29984299189` failed before compilation because a fresh runner
+  had not updated the MoonBit registry; the focused fix adds `moon update`.
+- The mooncakes.io URL remains intentionally unfilled until publication is
+  explicitly confirmed.
 
 ## Release artifacts
 
