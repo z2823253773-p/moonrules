@@ -77,14 +77,20 @@ MoonRules 与 JSON Schema 的边界必须在 README 和申报书中明确：
 预期的人类可读结果：
 
 ```text
-FAIL student-coupon
-├─ PASS user.age >= 18
-│  ├─ resolved user.age = 20
+FAIL student-coupon [and]
+├─ PASS >=
+│  ├─ VALUE var(user.age)
+│  │  └─ result = 20
+│  ├─ VALUE literal
+│  │  └─ result = 18
 │  └─ result = true
-├─ FAIL user.role == "student"
-│  ├─ resolved user.role = "guest"
+├─ FAIL ==
+│  ├─ VALUE var(user.role)
+│  │  └─ result = "guest"
+│  ├─ VALUE literal
+│  │  └─ result = "student"
 │  └─ result = false
-└─ SKIPPED order.total >= 100
+└─ SKIPPED >=
    └─ reason: and short-circuited
 ```
 
@@ -112,7 +118,7 @@ MoonRules 采用 JSONLogic 风格，但不声称完整兼容 JSONLogic：
 - JSON 对象字面量必须使用 `{"literal": {...}}` 包装，以免与操作节点产生歧义。
 - 规则对象存在多个操作符键时，解析失败而不是猜测含义。
 
-### 4.3 变量路径
+### 4.3 数据路径
 
 V1 只支持点号分隔路径：
 
@@ -120,7 +126,9 @@ V1 只支持点号分隔路径：
 {"var": "user.age"}
 ```
 
-路径段必须非空。V1 不支持数组索引、转义点号或通配符。无法找到路径时返回 `MissingVariable` 执行错误，不静默转换为 `null`。
+这里的 `user.age` 是数据路径（data path），描述如何在输入 JSON 中取值。路径段必须非空。V1 不支持数组索引、转义点号或通配符。无法找到路径时返回 `MissingVariable` 执行错误，不静默转换为 `null`。
+
+数据路径不同于 Trace 和诊断使用的规则路径（rule path）：数据路径指向输入数据，规则路径指向规则文档中的表达式节点，两者使用不同语法且不能互换。
 
 ### 4.4 V1 操作符集合
 
@@ -161,6 +169,23 @@ V1 中大小比较只接受数值；`contains`、`starts_with` 和 `ends_with` �
 - `==` 使用 JSON 深度相等语义，`!=` 是它的否定。
 - `in` 使用相同的 JSON 深度相等语义检查数组成员。
 
+JSON 深度相等的定义为：
+
+- 对象递归比较键值对集合，键的排列顺序不影响结果。
+- 数组长度必须相同，并按顺序逐元素递归比较。
+- 数字按数值比较，因此 JSON 数值 `1` 与 `1.0` 相等。
+- 字符串和布尔值按同类型值比较。
+- `null` 只与 `null` 相等；缺失字段是 `MissingVariable` 错误，不等同于 `null`。
+- 不同 JSON 类型的值不相等，不执行隐式类型转换。
+
+`in` 示例：
+
+```json
+{"in": ["admin", {"var": "user.roles"}]}
+```
+
+第二个参数必须求值为数组；引擎使用上述深度相等语义检查第一个参数是否为数组成员。
+
 ## 5. 核心数据模型
 
 概念模型如下，具体 MoonBit 类型名可在不改变语义的前提下调整：
@@ -185,9 +210,17 @@ Decision
 ├─ Pass
 ├─ Fail
 └─ Indeterminate(EvalError)
+
+ExecutionStats
+├─ steps_executed: Int
+├─ nodes_evaluated: Int
+├─ max_depth_reached: Int
+└─ trace_nodes_emitted: Int
 ```
 
 顶层结果使用三态而不是把错误强行转换成 `false`。调用方可以明确区分“不满足规则”和“规则无法可靠求值”。CLI 在最终输出层采取安全默认：`Indeterminate` 不视为通过。
+
+`ExecutionStats` 只记录确定性的结构计数，不记录墙钟耗时。性能基准可以在引擎外部单独测量，不能影响规则结果或 Trace。
 
 ## 6. Trace 设计
 
@@ -203,17 +236,17 @@ Decision
 - `message`：面向人的解释。
 - `children`：子节点 Trace。
 
-`var` 等取值节点使用 `value` 状态；布尔判断节点使用 `pass` 或 `fail`。这样不会错误地把数值 `20` 描述成“通过”。
+`var` 和所有字面量都是独立的 Trace 节点，并使用 `value` 状态；操作符节点把这些节点作为子节点。布尔判断节点使用 `pass` 或 `fail`。这样既能分别看到变量值和比较基准，也不会错误地把数值 `20` 描述成“通过”。
 
 ### 6.2 路径格式
 
-所有诊断和 Trace 统一使用可读的点号加索引格式：
+规则路径（rule path）描述一个节点在规则文档中的位置。所有诊断和 Trace 统一使用可读的点号加索引格式：
 
 ```text
 condition.and[1].==[0].var
 ```
 
-V1 不混用 JSON Pointer。解析错误、检查诊断和执行错误都使用同一套路径构造器。
+V1 不混用 JSON Pointer。解析错误、检查诊断和执行错误都使用同一套规则路径构造器。规则路径不用于读取输入数据；`var` 使用的点号数据路径由独立的数据路径解析器处理。
 
 ### 6.3 已解析输入
 
@@ -241,6 +274,8 @@ V1 只接受并实现 `Full`。其他模式返回明确的 `UnsupportedTraceMode
 ## 7. 求值和错误传播语义
 
 普通操作符遇到缺失变量、类型错误或预算超限时返回结构化 `EvalError`，对应 Trace 节点标记为 `error`。
+
+预算超限时保留已经产生的部分 Trace，并在触发截断的位置插入一个 `error` 节点，说明超出的预算种类、当前计数和上限。Trace 预算始终为这个终止错误预留最后一个节点名额。尚未开始执行的后代节点不再展开，以免生成 Trace 的过程继续突破预算；祖先节点按本节的错误传播规则产生结果。
 
 逻辑操作符使用确定性的三态传播：
 
@@ -271,7 +306,7 @@ V1 只接受并实现 `Full`。其他模式返回明确的 `UnsupportedTraceMode
 
 ## 8. 运行前检查
 
-`check` 在执行前完成不依赖运行时数据的验证：
+`check` 返回 `Array[Diagnostic]`，空数组表示检查通过。它在执行前完成不依赖运行时数据的验证：
 
 - 顶层字段和规则节点结构是否合法。
 - 操作符是否存在。
@@ -362,7 +397,7 @@ V1 提供三个完整示例：
 
 仓库交付物包括：
 
-- 中英文至少一种完整 README，优先先完成中文。
+- 同时提供中英文 README；中文为主文档，英文版覆盖安装、最小示例、DSL 概览和限制。
 - DSL 语法与操作符参考。
 - 错误传播和安全预算说明。
 - API 使用示例。
@@ -383,7 +418,7 @@ V1 提供三个完整示例：
 - 验证标准 JSON 解析接口。
 - 验证基础测试框架。
 - 确认 QuickCheck 的当前包名、版本和最小示例，但暂不大量编写性质测试。
-- 验证 CLI 所需的文件读取和退出码能力。
+- 验证 CLI 所需的文件读取、标准输出和退出码能力。
 - 确认 mooncakes.io 发布流程与账号前提。
 
 如果其中任一能力与设计假设不符，应先调整实施计划，不直接扩张依赖或更换项目方向。
@@ -424,7 +459,7 @@ V1 提供三个完整示例：
 - **Trace 重构风险**：先确定 `TraceNode` 契约，并以黄金测试锁定外部行为。
 - **DSL 范围膨胀**：V1 明确不追求 JSONLogic 完整兼容。
 - **动态类型歧义**：运行前检查只承诺可证明的问题，运行时类型错误保持结构化。
-- **新手解释困难**：模块保持单一职责，主线示例贯穿 README、测试和演示。
+- **MoonBit 学习曲线**：每个模块写清输入、输出和错误契约，保持单一职责，并用同一主线示例贯穿 README、测试和演示。
 - **时间不足**：核心引擎、测试和文档优先；CLI 保持薄，Playground 不进入 V1。
 
 ## 18. 参考链接
