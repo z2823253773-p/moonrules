@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Task 3 complete: public model and budget contracts.
+Task 4 complete: rule paths and V1 data paths.
 
 ## Locked decisions
 
@@ -25,4 +25,4 @@ Task 3 complete: public model and budget contracts.
 
 ## Next action
 
-Implement rule paths and V1 data paths in Task 4.
+Implement the JSON DSL parser in Task 5.

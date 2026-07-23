@@ -483,7 +483,7 @@ git commit -m "feat: define rule and trace contracts"
 - Create: `data_path.mbt`
 - Create: `path_test.mbt`
 
-- [ ] **Step 1: Write failing path tests**
+- [x] **Step 1: Write failing path tests**
 
 Create `path_test.mbt`:
 
@@ -515,7 +515,7 @@ test "data path rejects V2 syntax" {
 
 Run `moon test path_test.mbt`; expected: FAIL because path APIs do not exist.
 
-- [ ] **Step 2: Implement rule-path rendering**
+- [x] **Step 2: Implement rule-path rendering**
 
 Create `rule_path.mbt`:
 
@@ -554,7 +554,7 @@ pub fn RulePath::to_string(self : RulePath) -> String {
 }
 ```
 
-- [ ] **Step 3: Implement dot-only data paths**
+- [x] **Step 3: Implement dot-only data paths**
 
 Create `data_path.mbt` with a public parse error and these functions:
 
@@ -591,7 +591,7 @@ pub fn resolve_data_path(data : Json, path : String) -> Result[Json, DataPathErr
 }
 ```
 
-- [ ] **Step 4: Verify and commit paths**
+- [x] **Step 4: Verify and commit paths**
 
 Run:
 
