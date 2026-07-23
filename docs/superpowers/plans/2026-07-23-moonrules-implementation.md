@@ -1369,7 +1369,7 @@ git commit -m "test: add deterministic rule properties"
 - Create: `CHANGELOG.md`
 - Modify: `.ai/TASK_STATE.md`
 
-- [ ] **Step 1: Add CI using the official installer**
+- [x] **Step 1: Add CI using the official installer**
 
 Create `.github/workflows/ci.yml`:
 
@@ -1406,11 +1406,11 @@ jobs:
         run: moon run --target native cmd/main check examples/coupon.rule.json
 ```
 
-- [ ] **Step 2: Add the initial changelog**
+- [x] **Step 2: Add the initial changelog**
 
 Create `CHANGELOG.md` with `0.1.0` entries for DSL parsing, static checking, explainable Trace, deterministic budgets, 15 V1 forms/operators, CLI, examples, and documentation.
 
-- [ ] **Step 3: Run local release checks and commit**
+- [x] **Step 3: Run local release checks and commit**
 
 Run the same commands as CI, then:
 

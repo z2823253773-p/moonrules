@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Task 14 complete: deterministic property tests and final test matrix.
+Task 15 local release checks complete: CI and changelog are ready.
 
 ## Locked decisions
 
@@ -26,4 +26,4 @@ Task 14 complete: deterministic property tests and final test matrix.
 
 ## Next action
 
-Add CI and release metadata, then prepare GitHub publication in Task 15.
+Audit and normalize commit identities, then create and verify the public GitHub repository.
