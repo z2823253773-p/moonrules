@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Task 2: project metadata and governance.
+Task 3 complete: public model and budget contracts.
 
 ## Locked decisions
 
@@ -25,4 +25,4 @@ Task 2: project metadata and governance.
 
 ## Next action
 
-Create the public model and default execution budget in Task 3.
+Implement rule paths and V1 data paths in Task 4.

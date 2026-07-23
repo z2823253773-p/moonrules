@@ -274,7 +274,7 @@ git config --get user.email
 
 Expected: the repository-local values are the GitHub login and noreply address. Before public push, rewrite the two existing documentation commits with `--reset-author` in a supervised step; do not run a history rewrite after a remote branch has been shared.
 
-- [ ] **Step 5: Commit project metadata**
+- [x] **Step 5: Commit project metadata**
 
 Run:
 
@@ -292,7 +292,7 @@ Expected: one commit containing only project metadata and governance.
 - Create: `model_test.mbt`
 - Modify: `.ai/TASK_STATE.md`
 
-- [ ] **Step 1: Write failing tests for locked defaults and decisions**
+- [x] **Step 1: Write failing tests for locked defaults and decisions**
 
 Create `model_test.mbt`:
 
@@ -335,7 +335,7 @@ moon test model_test.mbt
 
 Expected: FAIL because the public types are not defined.
 
-- [ ] **Step 2: Define the public AST, diagnostics, results, and budget**
+- [x] **Step 2: Define the public AST, diagnostics, results, and budget**
 
 Create `model.mbt` with these public shapes:
 
@@ -455,7 +455,7 @@ pub fn Budget::default() -> Budget {
 }
 ```
 
-- [ ] **Step 3: Format and make the model tests pass**
+- [x] **Step 3: Format and make the model tests pass**
 
 Run:
 
@@ -467,7 +467,7 @@ moon check
 
 Expected: PASS with no warnings.
 
-- [ ] **Step 4: Commit the public contracts**
+- [x] **Step 4: Commit the public contracts**
 
 Update `.ai/TASK_STATE.md` to Task 4, then run:
 
