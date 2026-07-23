@@ -1304,7 +1304,7 @@ git commit -m "docs: add MoonRules guides and examples"
 - Create: `properties_test.mbt`
 - Modify: relevant deterministic test files when a property exposes a defect.
 
-- [ ] **Step 1: Import QuickCheck only for tests**
+- [x] **Step 1: Import QuickCheck only for tests**
 
 Add to `moon.pkg`:
 
@@ -1314,7 +1314,7 @@ import {
 } for "test"
 ```
 
-- [ ] **Step 2: Add deterministic properties after all ordinary tests pass**
+- [x] **Step 2: Add deterministic properties after all ordinary tests pass**
 
 Create `properties_test.mbt` with fixed sample counts:
 
@@ -1340,7 +1340,7 @@ test "evaluation is deterministic" {
 
 Add bounded generated tests for `and` false short-circuit, `or` true short-circuit, and every budget returning structured `Indeterminate` rather than panicking.
 
-- [ ] **Step 3: Run the complete test matrix**
+- [x] **Step 3: Run the complete test matrix**
 
 Run:
 
@@ -1355,7 +1355,7 @@ moon build --target wasm-gc
 
 Expected: all commands pass. If the native-only CLI prevents root `wasm-gc` commands, mark `cmd/main` as native-only in its `moon.pkg` and rerun; do not make the core library native-only.
 
-- [ ] **Step 4: Commit property tests**
+- [x] **Step 4: Commit property tests**
 
 ```bash
 git add moon.pkg properties_test.mbt cmd/main/moon.pkg .ai/TASK_STATE.md

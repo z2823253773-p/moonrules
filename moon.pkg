@@ -3,5 +3,6 @@ import {
 }
 
 import {
+  "moonbitlang/core/quickcheck",
   "moonbitlang/core/test",
 } for "test"

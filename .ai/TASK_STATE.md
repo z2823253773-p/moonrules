@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Task 13 complete: three runnable scenarios and bilingual documentation.
+Task 14 complete: deterministic property tests and final test matrix.
 
 ## Locked decisions
 
@@ -26,4 +26,4 @@ Task 13 complete: three runnable scenarios and bilingual documentation.
 
 ## Next action
 
-Add deterministic property tests and run the final test matrix in Task 14.
+Add CI and release metadata, then prepare GitHub publication in Task 15.
