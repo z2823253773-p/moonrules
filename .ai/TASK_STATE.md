@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Task 7 complete: minimal evaluator with independent Trace nodes.
+Task 8 complete: three-state logic and deterministic execution budgets.
 
 ## Locked decisions
 
@@ -26,4 +26,4 @@ Task 7 complete: minimal evaluator with independent Trace nodes.
 
 ## Next action
 
-Implement three-state logic and all deterministic execution budgets in Task 8.
+Implement JSON deep equality and all comparison operators in Task 9.

@@ -5,6 +5,7 @@ priv struct EvalContext {
   mut nodes : Int
   mut max_depth : Int
   mut trace_nodes : Int
+  mut halted : Bool
 }
 
 ///|
@@ -19,7 +20,7 @@ fn eval_error_message(error : EvalError) -> String {
     MissingVariable(path) => "missing variable: \{path}"
     TypeMismatch(message) => message
     BudgetExceeded(kind, current, limit) =>
-      "budget \{kind} exceeded: \{current} > \{limit}"
+      "budget \{kind} exceeded or exhausted: current \{current}, limit \{limit}"
     UnsupportedTraceMode(mode) => "trace mode \{mode} is not supported in V1"
   }
 }
@@ -113,6 +114,7 @@ pub fn evaluate(
     nodes: 0,
     max_depth: 0,
     trace_nodes: 0,
+    halted: false,
   }
   let evaluated = eval_expr(
     context,
@@ -157,13 +159,11 @@ pub fn evaluate_condition(
 
 ///|
 fn value_trace(
-  context : EvalContext,
   path : RulePath,
   operator : String,
   value : Json,
   source : String,
 ) -> TraceNode {
-  context.trace_nodes += 1
   {
     rule_path: path.to_string(),
     operator,
@@ -177,13 +177,11 @@ fn value_trace(
 
 ///|
 fn error_trace(
-  context : EvalContext,
   path : RulePath,
   operator : String,
   error : EvalError,
   children? : Array[TraceNode] = [],
 ) -> TraceNode {
-  context.trace_nodes += 1
   {
     rule_path: path.to_string(),
     operator,
@@ -201,33 +199,44 @@ fn skipped_trace(
   expr : Expr,
   path : RulePath,
   reason : String,
-) -> TraceNode {
+) -> TraceNode? {
+  if context.halted {
+    return None
+  }
   context.trace_nodes += 1
   let label = match expr {
     Literal(_) => "literal"
     Variable(data_path) => "var(\{data_path})"
     Operation(operator, _) => operator_name(operator)
   }
-  {
-    rule_path: path.to_string(),
-    operator: label,
-    status: Skipped,
-    resolved_inputs: [],
-    result: None,
-    message: reason,
-    children: [],
+  if context.trace_nodes >= context.budget.max_trace_nodes {
+    context.halted = true
+    let error = BudgetExceeded(
+      "max_trace_nodes",
+      context.trace_nodes,
+      context.budget.max_trace_nodes,
+    )
+    Some(error_trace(path, label, error))
+  } else {
+    Some({
+      rule_path: path.to_string(),
+      operator: label,
+      status: Skipped,
+      resolved_inputs: [],
+      result: None,
+      message: reason,
+      children: [],
+    })
   }
 }
 
 ///|
 fn operation_trace(
-  context : EvalContext,
   path : RulePath,
   operator : Operator,
   value : Result[Json, EvalError],
   children : Array[TraceNode],
 ) -> TraceNode {
-  context.trace_nodes += 1
   let resolved_inputs : Array[ResolvedInput] = []
   for child in children {
     match child.result {
@@ -293,14 +302,16 @@ fn eval_and(
   let mut decisive_false = false
   for index, argument in arguments {
     if decisive_false {
-      children.push(
+      match
         skipped_trace(
           context,
           argument,
           operation_path.index(index),
           "and short-circuited",
-        ),
-      )
+        ) {
+        Some(trace) => children.push(trace)
+        None => ()
+      }
       continue
     }
     let child = eval_expr(
@@ -320,6 +331,9 @@ fn eval_and(
         }
       Err(error) => if first_error is None { first_error = Some(error) }
     }
+    if context.halted {
+      break
+    }
   }
   let value = if decisive_false {
     Ok(Json::boolean(false))
@@ -329,10 +343,95 @@ fn eval_and(
       None => Ok(Json::boolean(true))
     }
   }
-  {
-    value,
-    trace: operation_trace(context, operation_path, And, value, children),
+  { value, trace: operation_trace(operation_path, And, value, children) }
+}
+
+///|
+fn eval_or(
+  context : EvalContext,
+  arguments : Array[Expr],
+  data : Json,
+  operation_path : RulePath,
+  depth : Int,
+) -> EvalNodeResult {
+  let children : Array[TraceNode] = []
+  let mut first_error : EvalError? = None
+  let mut decisive_true = false
+  for index, argument in arguments {
+    if decisive_true {
+      match
+        skipped_trace(
+          context,
+          argument,
+          operation_path.index(index),
+          "or short-circuited",
+        ) {
+        Some(trace) => children.push(trace)
+        None => ()
+      }
+      continue
+    }
+    let child = eval_expr(
+      context,
+      argument,
+      data,
+      operation_path.index(index),
+      depth + 1,
+    )
+    children.push(child.trace)
+    match child.value {
+      Ok(True) => decisive_true = true
+      Ok(False) => ()
+      Ok(_) =>
+        if first_error is None {
+          first_error = Some(TypeMismatch("or requires boolean operands"))
+        }
+      Err(error) => if first_error is None { first_error = Some(error) }
+    }
+    if context.halted {
+      break
+    }
   }
+  let value = if decisive_true {
+    Ok(Json::boolean(true))
+  } else {
+    match first_error {
+      Some(error) => Err(error)
+      None => Ok(Json::boolean(false))
+    }
+  }
+  { value, trace: operation_trace(operation_path, Or, value, children) }
+}
+
+///|
+fn eval_not(
+  context : EvalContext,
+  arguments : Array[Expr],
+  data : Json,
+  operation_path : RulePath,
+  depth : Int,
+) -> EvalNodeResult {
+  if arguments.length() != 1 {
+    let error = TypeMismatch("operator not requires one operand")
+    return {
+      value: Err(error),
+      trace: error_trace(operation_path, operator_name(Not), error),
+    }
+  }
+  let child = eval_expr(
+    context,
+    arguments[0],
+    data,
+    operation_path.index(0),
+    depth + 1,
+  )
+  let value = match child.value {
+    Ok(True) => Ok(Json::boolean(false))
+    Ok(False) => Ok(Json::boolean(true))
+    Ok(_) => Err(TypeMismatch("not requires a boolean operand"))
+    Err(error) => Err(error)
+  }
+  { value, trace: operation_trace(operation_path, Not, value, [child.trace]) }
 }
 
 ///|
@@ -351,12 +450,7 @@ fn eval_binary_comparison(
     )
     return {
       value: Err(error),
-      trace: error_trace(
-        context,
-        operation_path,
-        operator_name(operator),
-        error,
-      ),
+      trace: error_trace(operation_path, operator_name(operator), error),
     }
   }
   let values : Array[Json] = []
@@ -374,6 +468,9 @@ fn eval_binary_comparison(
       Ok(value) => values.push(value)
       Err(error) => if first_error is None { first_error = Some(error) }
     }
+    if context.halted {
+      break
+    }
   }
   let value : Result[Json, EvalError] = match first_error {
     Some(error) => Err(error)
@@ -383,10 +480,7 @@ fn eval_binary_comparison(
         Err(error) => Err(error)
       }
   }
-  {
-    value,
-    trace: operation_trace(context, operation_path, operator, value, children),
-  }
+  { value, trace: operation_trace(operation_path, operator, value, children) }
 }
 
 ///|
@@ -397,23 +491,47 @@ fn eval_expr(
   path : RulePath,
   depth : Int,
 ) -> EvalNodeResult {
-  context.steps += 1
-  context.nodes += 1
+  context.trace_nodes += 1
+  if context.trace_nodes >= context.budget.max_trace_nodes {
+    let error = BudgetExceeded(
+      "max_trace_nodes",
+      context.trace_nodes,
+      context.budget.max_trace_nodes,
+    )
+    context.halted = true
+    return { value: Err(error), trace: error_trace(path, "budget", error) }
+  }
   if depth > context.max_depth {
     context.max_depth = depth
   }
   if depth > context.budget.max_depth {
     let error = BudgetExceeded("max_depth", depth, context.budget.max_depth)
-    return {
-      value: Err(error),
-      trace: error_trace(context, path, "budget", error),
-    }
+    context.halted = true
+    return { value: Err(error), trace: error_trace(path, "budget", error) }
   }
+  let next_node = context.nodes + 1
+  if next_node > context.budget.max_rule_nodes {
+    let error = BudgetExceeded(
+      "max_rule_nodes",
+      next_node,
+      context.budget.max_rule_nodes,
+    )
+    context.halted = true
+    return { value: Err(error), trace: error_trace(path, "budget", error) }
+  }
+  context.nodes = next_node
+  let next_step = context.steps + 1
+  if next_step > context.budget.max_steps {
+    let error = BudgetExceeded("max_steps", next_step, context.budget.max_steps)
+    context.halted = true
+    return { value: Err(error), trace: error_trace(path, "budget", error) }
+  }
+  context.steps = next_step
   match expr {
     Literal(value) =>
       {
         value: Ok(value),
-        trace: value_trace(context, path, "literal", value, "literal"),
+        trace: value_trace(path, "literal", value, "literal"),
       }
     Variable(data_path) =>
       match resolve_data_path(data, data_path) {
@@ -421,7 +539,6 @@ fn eval_expr(
           {
             value: Ok(value),
             trace: value_trace(
-              context,
               path.field("var"),
               "var(\{data_path})",
               value,
@@ -432,12 +549,7 @@ fn eval_expr(
           let error = MissingVariable(data_path)
           {
             value: Err(error),
-            trace: error_trace(
-              context,
-              path.field("var"),
-              "var(\{data_path})",
-              error,
-            ),
+            trace: error_trace(path.field("var"), "var(\{data_path})", error),
           }
         }
         Err(InvalidDataPath(_) | NonObjectSegment(_)) => {
@@ -446,12 +558,7 @@ fn eval_expr(
           )
           {
             value: Err(error),
-            trace: error_trace(
-              context,
-              path.field("var"),
-              "var(\{data_path})",
-              error,
-            ),
+            trace: error_trace(path.field("var"), "var(\{data_path})", error),
           }
         }
       }
@@ -459,6 +566,8 @@ fn eval_expr(
       let operation_path = path.field(operator_name(operator))
       match operator {
         And => eval_and(context, arguments, data, operation_path, depth)
+        Or => eval_or(context, arguments, data, operation_path, depth)
+        Not => eval_not(context, arguments, data, operation_path, depth)
         GreaterOrEqual =>
           eval_binary_comparison(
             context, operator, arguments, data, operation_path, depth,
@@ -469,12 +578,7 @@ fn eval_expr(
           )
           {
             value: Err(error),
-            trace: error_trace(
-              context,
-              operation_path,
-              operator_name(operator),
-              error,
-            ),
+            trace: error_trace(operation_path, operator_name(operator), error),
           }
         }
       }

@@ -900,7 +900,7 @@ git commit -m "feat: evaluate rules with explainable traces"
 - Modify: `evaluator.mbt`
 - Modify: `evaluator_test.mbt`
 
-- [ ] **Step 1: Add failing tests for error dominance and short-circuiting**
+- [x] **Step 1: Add failing tests for error dominance and short-circuiting**
 
 ```moonbit
 ///|
@@ -940,11 +940,11 @@ test "V1 rejects unimplemented trace modes explicitly" {
 }
 ```
 
-- [ ] **Step 2: Add failing tests for each budget**
+- [x] **Step 2: Add failing tests for each budget**
 
 Test `max_depth`, `max_rule_nodes`, `max_steps`, and `max_trace_nodes` independently. For Trace exhaustion, assert that the final emitted node has `status == Error`, its message names `max_trace_nodes`, and no later descendants exist.
 
-- [ ] **Step 3: Implement `and`, `or`, `not`, and budget reservation**
+- [x] **Step 3: Implement `and`, `or`, `not`, and budget reservation**
 
 Use these precedence rules exactly:
 
@@ -956,7 +956,7 @@ not: error remains error; otherwise invert boolean
 
 Reserve one Trace slot before evaluating a node. When only the reserved slot remains, emit `BudgetExceeded("max_trace_nodes", current, limit)` at that node and stop expanding descendants.
 
-- [ ] **Step 4: Verify and commit logic and budgets**
+- [x] **Step 4: Verify and commit logic and budgets**
 
 Run `moon fmt && moon test evaluator_test.mbt && moon test && moon check`.
 
