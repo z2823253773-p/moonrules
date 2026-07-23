@@ -1,5 +1,7 @@
 # MoonRules
 
+[![CI](https://github.com/z2823253773-p/moonrules/actions/workflows/ci.yml/badge.svg)](https://github.com/z2823253773-p/moonrules/actions/workflows/ci.yml)
+
 MoonBit 原生的可解释、受预算限制的 JSON 业务规则引擎。
 
 MoonRules 把动态业务条件解析成类型明确的规则树，在执行前给出诊断，在执行后返回 `Pass`、`Fail` 或 `Indeterminate`，并保留每一步变量取值、比较结果、错误与短路原因。

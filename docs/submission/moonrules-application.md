@@ -4,7 +4,7 @@
 
 MoonRules 是 MoonBit 原生的可解释、受预算限制的 JSON 业务规则引擎，面向 API 准入、资格判断、表单逻辑和配置策略。JSON Schema 验证数据结构；MoonRules 判断合法数据是否满足动态业务条件，并解释每一步原因。
 
-预定公开仓库：[github.com/z2823253773-p/moonrules](https://github.com/z2823253773-p/moonrules)（等待 GitHub CLI 重新认证后创建）。
+公开仓库：[github.com/z2823253773-p/moonrules](https://github.com/z2823253773-p/moonrules)。GitHub Actions [CI 运行 29985024289](https://github.com/z2823253773-p/moonrules/actions/runs/29985024289) 已通过完整验证矩阵。
 
 ## 已有基础
 
@@ -30,8 +30,8 @@ JSON 规则依次经过 Parser、Checker、Evaluator 和 Renderer。可移植核
 
 ## 开源与许可证
 
-项目采用 Apache-2.0。提交作者已统一为 GitHub noreply 身份，包名固定为 `z2823253773-p/moonrules@0.1.0`。GitHub、CI 和 mooncakes.io 公开链接将在认证与显式发布确认后补录。
+项目采用 Apache-2.0。提交作者已统一为 GitHub noreply 身份，包名固定为 `z2823253773-p/moonrules@0.1.0`。GitHub 仓库与 CI 证据已经公开；mooncakes.io 链接将在显式确认发布后补录。
 
 ## 时间安排
 
-核心实现与本地验证已完成；下一阶段依次完成 GitHub 公开与 CI、mooncakes.io 发布、申报链接回填和演示录制。工作日按每天 1 至 2 小时维护，小步提交并持续运行完整矩阵。
+核心实现、GitHub 公开与 CI 已完成；下一阶段依次完成 mooncakes.io 发布、最终链接回填和演示录制。工作日按每天 1 至 2 小时维护，小步提交并持续运行完整矩阵。

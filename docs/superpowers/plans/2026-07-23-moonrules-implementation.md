@@ -1471,6 +1471,8 @@ jobs:
         run: |
           curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
           echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Update MoonBit registry
+        run: moon update
       - name: Verify
         run: |
           moon version --all
@@ -1497,7 +1499,7 @@ git add .github/workflows/ci.yml CHANGELOG.md .ai/TASK_STATE.md
 git commit -m "ci: validate MoonRules release"
 ```
 
-- [ ] **Step 4: Create the public GitHub repository only after local identity audit**
+- [x] **Step 4: Create the public GitHub repository only after local identity audit**
 
 Run:
 
@@ -1519,7 +1521,7 @@ Expected: every commit shows `z2823253773-p <235035337+z2823253773-p@users.norep
 
 Create public repository `z2823253773-p/moonrules`, add it as `origin`, and push `main`. Because the local `gh` token was invalid during planning, use the connected GitHub app or complete `gh auth login`; never paste a PAT into chat or a command argument.
 
-- [ ] **Step 5: Verify CI and repository visibility**
+- [x] **Step 5: Verify CI and repository visibility**
 
 Expected: repository is public, `main` is pushed, the CI workflow is green, README renders, and no secret or local-machine email appears in tracked files or commit metadata.
 
@@ -1597,7 +1599,7 @@ Expected: public repository, CI, package, application source, and final commit a
 - [ ] Core library has no filesystem, environment, process, or network dependency.
 - [ ] CLI exit codes are `0` pass, `1` fail, and `2` error.
 - [ ] Three examples run; Chinese and English READMEs render correctly.
-- [ ] CI is green and public commit metadata contains only the approved identity.
+- [x] CI is green and public commit metadata contains only the approved identity.
 - [ ] mooncakes.io package and one-page application are ready or published with explicit user confirmation.
 
 ## Primary sources used to keep the plan current

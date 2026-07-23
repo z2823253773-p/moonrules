@@ -1,5 +1,7 @@
 # MoonRules
 
+[![CI](https://github.com/z2823253773-p/moonrules/actions/workflows/ci.yml/badge.svg)](https://github.com/z2823253773-p/moonrules/actions/workflows/ci.yml)
+
 MoonRules is an explainable, budget-limited JSON business-rule engine written in MoonBit.
 
 JSON Schema validates structure; MoonRules evaluates business decisions and explains them. It parses a small JSONLogic-inspired DSL, reports preflight diagnostics, evaluates with deterministic three-state semantics, and returns a structured Trace.

@@ -2,7 +2,8 @@
 
 ## Current milestone
 
-Task 16 local release package and one-page application are ready.
+Task 16 public GitHub repository and green CI are complete. The application
+source and one-page PDF contain the confirmed public evidence.
 
 ## Locked decisions
 
@@ -31,9 +32,9 @@ Task 16 local release package and one-page application are ready.
 
 ## Next action
 
-Push the focused CI registry fix, verify the replacement GitHub Actions run,
-then add confirmed public links to the application and obtain explicit
-confirmation before `moon publish --frozen`.
+Verify mooncakes.io login and final package contents, then show the exact
+publication payload and obtain explicit confirmation before
+`moon publish --frozen`.
 
 ## External blockers
 
@@ -41,6 +42,7 @@ confirmation before `moon publish --frozen`.
 - Public repository: `https://github.com/z2823253773-p/moonrules`.
 - Initial CI run `29984299189` failed before compilation because a fresh runner
   had not updated the MoonBit registry; the focused fix adds `moon update`.
+- Green CI: `https://github.com/z2823253773-p/moonrules/actions/runs/29985024289`.
 - The mooncakes.io URL remains intentionally unfilled until publication is
   explicitly confirmed.
 
