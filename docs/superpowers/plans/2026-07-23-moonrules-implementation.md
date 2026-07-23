@@ -1168,7 +1168,7 @@ git commit -m "feat: expose reports and trace rendering"
 - Create: `cmd/main/moon.pkg`
 - Create: `cmd/main/main.mbt`
 
-- [ ] **Step 1: Add and pin official dependencies**
+- [x] **Step 1: Add and pin official dependencies**
 
 Run:
 
@@ -1179,7 +1179,7 @@ moon add moonbitlang/x@0.4.46
 
 Expected: `moon.mod` records both exact compatible versions. If Task 1 required different verified versions, use those recorded versions consistently and update this plan before proceeding.
 
-- [ ] **Step 2: Configure the executable package**
+- [x] **Step 2: Configure the executable package**
 
 Create `cmd/main/moon.pkg`:
 
@@ -1197,7 +1197,7 @@ import {
 pkgtype(kind: "executable")
 ```
 
-- [ ] **Step 3: Implement only `check` and `eval` wiring**
+- [x] **Step 3: Implement only `check` and `eval` wiring**
 
 Create `cmd/main/main.mbt` with two argparse subcommands:
 
@@ -1210,7 +1210,7 @@ Use `@env.args()` for argv, `@fs.read_file(path).text()` for UTF-8 file input, `
 
 Keep argument parsing in a testable `parse_cli(argv : ArrayView[String]) -> CliConfig raise` function and keep `async fn main` limited to reading argv, reading files, calling `@moonrules`, printing, and exiting.
 
-- [ ] **Step 4: Run CLI smoke tests**
+- [x] **Step 4: Run CLI smoke tests**
 
 Run:
 
@@ -1225,7 +1225,7 @@ test "$MOONRULES_EXIT_CODE" -eq 1
 
 Expected: `check` reports success; `eval` prints the coupon Trace and exits `1` for the deliberately ineligible `guest` input.
 
-- [ ] **Step 5: Commit the CLI**
+- [x] **Step 5: Commit the CLI**
 
 ```bash
 git add moon.mod cmd/main .ai/TASK_STATE.md

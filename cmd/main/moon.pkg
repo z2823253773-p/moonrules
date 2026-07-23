@@ -1,0 +1,12 @@
+import {
+  "z2823253773-p/moonrules",
+  "moonbitlang/async",
+  "moonbitlang/async/fs",
+  "moonbitlang/async/io",
+  "moonbitlang/async/stdio",
+  "moonbitlang/x/sys",
+}
+
+supported_targets = "-all+native"
+
+pkgtype(kind: "executable")

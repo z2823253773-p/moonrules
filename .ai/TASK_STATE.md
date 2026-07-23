@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Task 11 complete: Trace rendering, structured reports, and public façade.
+Task 12 complete: native CLI with verified exit codes and smoke tests.
 
 ## Locked decisions
 
@@ -26,4 +26,4 @@ Task 11 complete: Trace rendering, structured reports, and public façade.
 
 ## Next action
 
-Implement and smoke-test the thin native CLI in Task 12.
+Complete the three examples and bilingual user documentation in Task 13.

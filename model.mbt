@@ -60,6 +60,15 @@ pub(all) enum Decision {
 } derive(Eq, Debug)
 
 ///|
+pub fn Decision::exit_code(self : Decision) -> Int {
+  match self {
+    Decision::Pass => 0
+    Decision::Fail => 1
+    Decision::Indeterminate(_) => 2
+  }
+}
+
+///|
 pub(all) enum TraceStatus {
   Value
   Pass

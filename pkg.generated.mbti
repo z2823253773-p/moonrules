@@ -55,6 +55,7 @@ pub(all) enum Decision {
   Fail
   Indeterminate(EvalError)
 } derive(Eq, @debug.Debug)
+pub fn Decision::exit_code(Self) -> Int
 
 pub(all) struct Diagnostic {
   code : String
