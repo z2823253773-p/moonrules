@@ -16,8 +16,13 @@ Task 16 local release package and one-page application are ready.
 - Architecture: `arm64`
 - `moon`: `0.1.20260713`
 - `moonc`: `0.10.4`
-- Manifest format: `moon.mod`
+- Manifest format: `moon.mod` plus package-level `moon.pkg` files; the verified
+  toolchain does not generate `.json` manifest variants.
 - Compatible dependencies: `moonbitlang/async@0.20.2`, `moonbitlang/x@0.4.46`
+- QuickCheck is a bundled `moonbitlang/core` package imported only for tests; it
+  is not installed separately with `moon add`.
+- `moon ide doc` is unavailable, so MoonBit API shapes were locked through
+  compiler-backed probes, `moon check --deny-warn`, and focused tests.
 - Black-box tests construct public enum values with qualified names such as `Expr::Operation` and `Operator::And`.
 
 ## Verification commands

@@ -20,6 +20,37 @@
 - Do not send, paste, or commit GitHub, mooncakes.io, or other credentials.
 - Stop after a dependency/API mismatch; record the exact command and error before revising this plan.
 
+## Verified toolchain contract
+
+The following points were verified against the installed 2026-07-13 toolchain
+(`moon 0.1.20260713`, `moonc v0.10.4`) rather than inferred from older MoonBit
+examples:
+
+- `moon new` generates `moon.mod` and `moon.pkg`; this toolchain does not
+  generate `moon.mod.json` or `moon.pkg.json`. Every manifest below follows the
+  generated template's actual filename and syntax.
+- `moon test PATH...` accepts a single test file such as
+  `moon test model_test.mbt`.
+- `moon run --target native cmd/main ARGS...` is the verified executable-package
+  syntax.
+- `moon ide doc` is unavailable in this installation, so API assumptions are
+  verified with minimal compiling code plus `moon check --deny-warn` and focused
+  tests before dependent behavior is implemented.
+- `Json?` is valid optional-value syntax and is used for `TraceNode.result`.
+- `StringBuilder` provides `is_empty()`, `write_char()`, `write_string()`, and
+  `to_string()`. The implementation does not assume a `length()` method.
+- `String.split(".")` is iterable as string views; each retained segment is
+  converted with `to_owned()`.
+- `@json.parse` raises on malformed JSON and is handled with `catch`.
+- `Ref[Int]`, `Ref(0)`, and mutation through `count.val` compile.
+- JSON objects support `length()`, `get()`, and direct key/value iteration; the
+  implementation does not assume `Map.size()` or `Map.all()`.
+- JSON numeric matching supports `Number(value, ..)`.
+- `@quickcheck.samples(n)` compiles when
+  `"moonbitlang/core/quickcheck"` is imported for tests. QuickCheck is a package
+  in the bundled `moonbitlang/core` module, not a separate module to install
+  with `moon add`.
+
 ## Locked file map
 
 ### Project and governance
@@ -117,9 +148,17 @@ Run:
 MOONRULES_TEMPLATE_DIR="$(mktemp -d /tmp/moonrules-template.XXXXXX)"
 moon new "$MOONRULES_TEMPLATE_DIR" --user z2823253773-p --name moonrules
 find "$MOONRULES_TEMPLATE_DIR" -maxdepth 3 -type f -o -type l
+sed -n '1,160p' "$MOONRULES_TEMPLATE_DIR/moon.mod"
+sed -n '1,160p' "$MOONRULES_TEMPLATE_DIR/moon.pkg"
+moon test --help
 ```
 
 Expected: with the verified 2026-07-23 toolchain, the template contains `moon.mod`, `moon.pkg`, a root `.mbt` file, tests, `cmd/main/main.mbt`, and `cmd/main/moon.pkg`. Do not copy the nested `.git` directory.
+
+Record the actual manifest filenames and syntax before Task 2. Also record the
+template test naming convention and confirm from `moon test --help` that a
+single file path is accepted. These observed results override any manifest or
+test syntax shown in an older MoonBit example.
 
 - [x] **Step 5: Verify core and external dependencies independently**
 
@@ -135,6 +174,36 @@ moon build --target native
 ```
 
 Expected: all commands exit `0`. If the exact pinned versions are unavailable or incompatible with the installed toolchain, stop and revise the dependency versions in this plan before creating project files.
+
+Do not run `moon add moonbitlang/core/quickcheck`: `moon add` installs modules,
+while QuickCheck is already a package in the bundled `moonbitlang/core` module.
+Its package import is added for tests in Task 14 and verified by the complete
+test matrix there.
+
+- [x] **Step 6: Lock compiler-verified API shapes**
+
+Because `moon ide doc` is unavailable in this toolchain, use the smallest
+compiling implementation and focused test in each dependent task as the API
+probe. Do not build later behavior until the probe passes:
+
+| API surface | First compiler-backed probe | Locked result |
+|---|---|---|
+| Optional JSON and JSON parsing | Tasks 3 and 5 | `Json?`; `@json.parse(...) catch { ... }` |
+| `StringBuilder` and `String.split` | Task 4 | builder methods above; split yields views converted with `to_owned()` |
+| `Ref[Int]` | Task 6 | `let count : Ref[Int] = Ref(0)` and `count.val += 1` |
+| JSON object and number matching | Task 9 | `length()`, `get()`, key/value iteration, `Number(value, ..)` |
+| QuickCheck | Task 14 | test-only core import and typed `@quickcheck.samples(n)` |
+
+Run after the probes exist:
+
+```bash
+moon fmt --check
+moon check --deny-warn
+moon test --target native
+```
+
+Expected: no warnings and all focused tests pass. If a probe fails, update its
+task to match compiler diagnostics before continuing.
 
 ## Task 2: Project metadata and agent-safe handoff
 
@@ -168,7 +237,8 @@ preferred_target = "wasm-gc"
 description = "Explainable and budget-limited JSON business rules for MoonBit"
 ```
 
-Create `moon.pkg`:
+Create `moon.pkg` using the exact filename and syntax emitted by the Task 1
+template. For the verified toolchain, the expected content is:
 
 ```moonbit
 import {
@@ -764,6 +834,12 @@ Run `moon test checker_test.mbt`; expected: FAIL.
 
 - [x] **Step 2: Implement checker traversal and arity table**
 
+Construct every operator segment from its DSL JSON key (`and`, `or`, `not`,
+`==`, `!=`, `>`, `>=`, `<`, `<=`, `in`, `contains`, `starts_with`, or
+`ends_with`), not from the MoonBit enum variant name. Therefore
+`condition.and[0].>` in the snapshot above is intentional and consistent with
+`condition.and[1].==[0].var` in the design.
+
 Use this exact arity function:
 
 ```moonbit
@@ -1212,7 +1288,7 @@ Keep argument parsing in a testable `parse_cli(argv : ArrayView[String]) -> CliC
 
 - [x] **Step 4: Run CLI smoke tests**
 
-Run:
+Run using the syntax confirmed by `moon run --help` in Task 1:
 
 ```bash
 moon run --target native cmd/main check examples/coupon.rule.json
@@ -1306,7 +1382,9 @@ git commit -m "docs: add MoonRules guides and examples"
 
 - [x] **Step 1: Import QuickCheck only for tests**
 
-Add to `moon.pkg`:
+QuickCheck is bundled inside the already available `moonbitlang/core` module;
+do not run `moon add moonbitlang/core/quickcheck`. Add only this test-scoped
+package import to `moon.pkg`:
 
 ```moonbit
 import {
