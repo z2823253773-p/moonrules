@@ -200,7 +200,7 @@ def build() -> None:
         col_w,
         82,
         "开源与许可证",
-        "Apache-2.0；GitHub: z2823253773-p/moonrules；CI 已通过。包名 z2823253773-p/moonrules@0.1.0。",
+        "Apache-2.0；GitHub 与 CI 已公开；mooncakes.io 已发布。包名 z2823253773-p/moonrules@0.1.0。",
         fill=PALE,
     )
 
@@ -235,7 +235,7 @@ def build() -> None:
         col_w,
         94,
         "时间安排",
-        "核心实现、GitHub 公开与 CI 已完成。下一步：mooncakes.io 发布 → 最终链接回填 → 演示录制。工作日每天 1-2 小时，小步提交。",
+        "核心实现、GitHub、CI、mooncakes.io 发布和证据回填均已完成。下一步：演示录制与正式申报。工作日每天 1-2 小时，小步提交。",
     )
     top_r -= 94 + gap
     draw_card(
@@ -260,7 +260,7 @@ def build() -> None:
     c.drawString(
         margin + 14,
         evidence_y + 14,
-        "GitHub: z2823253773-p/moonrules   ·   CI: PASS #29985024289   ·   mooncakes.io: 待确认",
+        "GitHub: z2823253773-p/moonrules   ·   CI: PASS   ·   Mooncakes: docs/z2823253773-p/moonrules",
     )
 
     c.setFillColor(MUTED)

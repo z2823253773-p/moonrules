@@ -53,6 +53,12 @@ PASS adult-check [>=]
 curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
 ```
 
+从 mooncakes.io 安装已发布版本：
+
+```bash
+moon add z2823253773-p/moonrules@0.1.0
+```
+
 克隆项目后验证：
 
 ```bash

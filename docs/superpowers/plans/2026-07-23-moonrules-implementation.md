@@ -1562,21 +1562,33 @@ Create `docs/submission/moonrules-application.md` with these exact headings:
 
 Keep the rendered PDF to one page. State the three innovations as explainable execution, preflight diagnostics, and deterministic execution budgets. Link the public repository and clearly distinguish MoonRules from JSON Schema.
 
-- [ ] **Step 3: Publish only after user confirmation**
+- [x] **Step 3: Publish only after user confirmation**
 
-Run `moon login` or `moon register` interactively if needed. Immediately before `moon publish`, show the package name, version, included files, and public repository to the user and obtain confirmation. Then run:
+Run `moon login` or `moon register` interactively if needed. Immediately before
+`moon publish`, show the package name, version, included files, and public
+repository to the user and obtain confirmation. The verified toolchain first
+attempted:
 
 ```bash
 moon publish --frozen
 ```
 
-Expected: mooncakes.io publishes `z2823253773-p/moonrules@0.1.0` successfully.
+Its isolated verification directory needed to install the exact dependencies
+already pinned in `moon.mod`, which `--frozen` disallowed. Without changing the
+package ZIP, run:
 
-- [ ] **Step 4: Produce submission evidence**
+```bash
+moon publish
+```
+
+Expected: mooncakes.io publishes `z2823253773-p/moonrules@0.1.0` successfully
+and reports server status `200 OK`.
+
+- [x] **Step 4: Produce submission evidence**
 
 Record the public GitHub URL, green CI URL, mooncakes.io package URL, test command output, and demo command in the application source. Generate the one-page PDF, visually inspect it, and verify that no line is clipped.
 
-- [ ] **Step 5: Final completion commit**
+- [x] **Step 5: Final completion commit**
 
 Update `.ai/TASK_STATE.md` to state that implementation and release checks are complete, then commit only non-secret project files:
 
@@ -1590,17 +1602,17 @@ Expected: public repository, CI, package, application source, and final commit a
 
 ## Final acceptance checklist
 
-- [ ] `moon fmt --check`, `moon check --deny-warn`, `moon test`, and both native/wasm-gc builds pass.
-- [ ] Every V1 operator has success, false, and relevant type/error coverage.
-- [ ] Coupon Trace contains independent variable and literal nodes plus short-circuit `Skipped` nodes.
-- [ ] Data paths and rule paths are never conflated in code or docs.
-- [ ] JSON deep equality matches the approved object, array, number, `null`, and missing-field rules.
-- [ ] Every budget returns a structured error and retains bounded partial Trace.
-- [ ] Core library has no filesystem, environment, process, or network dependency.
-- [ ] CLI exit codes are `0` pass, `1` fail, and `2` error.
-- [ ] Three examples run; Chinese and English READMEs render correctly.
+- [x] `moon fmt --check`, `moon check --deny-warn`, `moon test`, and both native/wasm-gc builds pass.
+- [x] Every V1 operator has success, false, and relevant type/error coverage.
+- [x] Coupon Trace contains independent variable and literal nodes plus short-circuit `Skipped` nodes.
+- [x] Data paths and rule paths are never conflated in code or docs.
+- [x] JSON deep equality matches the approved object, array, number, `null`, and missing-field rules.
+- [x] Every budget returns a structured error and retains bounded partial Trace.
+- [x] Core library has no filesystem, environment, process, or network dependency.
+- [x] CLI exit codes are `0` pass, `1` fail, and `2` error.
+- [x] Three examples run; Chinese and English READMEs render correctly.
 - [x] CI is green and public commit metadata contains only the approved identity.
-- [ ] mooncakes.io package and one-page application are ready or published with explicit user confirmation.
+- [x] mooncakes.io package and one-page application are ready or published with explicit user confirmation.
 
 ## Primary sources used to keep the plan current
 

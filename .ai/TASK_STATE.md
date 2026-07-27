@@ -2,8 +2,8 @@
 
 ## Current milestone
 
-Task 16 public GitHub repository and green CI are complete. The application
-source and one-page PDF contain the confirmed public evidence.
+Task 16 is complete: implementation, public GitHub repository, green CI,
+mooncakes.io publication, install smoke test, and final submission evidence.
 
 ## Locked decisions
 
@@ -32,22 +32,30 @@ source and one-page PDF contain the confirmed public evidence.
 
 ## Next action
 
-Verify mooncakes.io login and final package contents, then show the exact
-publication payload and obtain explicit confirmation before
-`moon publish --frozen`.
+Submit the application and record the planned demo. No engineering or release
+blocker remains.
 
-## External blockers
+## External status
 
 - GitHub CLI is authenticated as `z2823253773-p`.
 - Public repository: `https://github.com/z2823253773-p/moonrules`.
 - Initial CI run `29984299189` failed before compilation because a fresh runner
   had not updated the MoonBit registry; the focused fix adds `moon update`.
 - Green CI: `https://github.com/z2823253773-p/moonrules/actions/runs/29985024289`.
-- The mooncakes.io URL remains intentionally unfilled until publication is
-  explicitly confirmed.
+- Published package:
+  `https://mooncakes.io/docs/z2823253773-p/moonrules`
+  (`z2823253773-p/moonrules@0.1.0`).
+- `moon publish --frozen` could not install pinned dependencies in its isolated
+  verification directory; publishing the identical package with `moon publish`
+  completed successfully with server status `200 OK`.
+- A clean temporary consumer project successfully ran
+  `moon add z2823253773-p/moonrules@0.1.0` followed by `moon check`.
 
 ## Release artifacts
 
-- Package: `_build/publish/z2823253773-p-moonrules-0.1.0.zip` (51 files, about 62 KB).
+- Package: `_build/publish/z2823253773-p-moonrules-0.1.0.zip` (58 archive
+  entries, 190212 bytes, SHA-256
+  `b5cf313ca8c7a58132e22de33a1086042b74d9d080af421d1c70806f41d60175`).
 - Application source: `docs/submission/moonrules-application.md`.
-- Visually verified one-page PDF: `output/pdf/moonrules-application.pdf`.
+- Visually verified final one-page PDF:
+  `output/pdf/moonrules-application.pdf`.

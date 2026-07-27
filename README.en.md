@@ -6,6 +6,12 @@ MoonRules is an explainable, budget-limited JSON business-rule engine written in
 
 JSON Schema validates structure; MoonRules evaluates business decisions and explains them. It parses a small JSONLogic-inspired DSL, reports preflight diagnostics, evaluates with deterministic three-state semantics, and returns a structured Trace.
 
+## Install
+
+```bash
+moon add z2823253773-p/moonrules@0.1.0
+```
+
 ## Quick start
 
 ```bash
