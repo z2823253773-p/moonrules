@@ -2,8 +2,14 @@
 
 ## Current milestone
 
-Task 16 is complete: implementation, public GitHub repository, green CI,
-mooncakes.io publication, install smoke test, and final submission evidence.
+MoonRules v0.1.0 is complete and published. The six-part v0.2 product and
+engineering design was approved section by section on 2026-07-27 and has been
+written to:
+
+`docs/superpowers/specs/2026-07-27-moonrules-v0.2-design.md`
+
+The written specification is awaiting the user's final document review. No
+v0.2 implementation work has started.
 
 ## Locked decisions
 
@@ -11,6 +17,14 @@ mooncakes.io publication, install smoke test, and final submission evidence.
 - Independent Trace nodes for variables and literals.
 - Three-state evaluation with deterministic budgets.
 - Native CLI is a thin wrapper around a portable core library.
+- v0.2 preserves the V1 DSL and evaluator semantics.
+- v0.2 implements Full, Summary, and Off as output-shape modes; all modes first
+  perform the same full evaluation.
+- v0.2 adds a static local-only Playground through a string/JSON Web Adapter.
+- The Web Adapter has a two-hour wasm-gc gate and may fall back to the MoonBit
+  JavaScript target without changing its TypeScript-facing contract.
+- v0.2 does not add a server, database, native desktop GUI, full JSONLogic,
+  array-index paths, custom operators, or schema-aware type environments.
 
 ## Verified environment
 
@@ -32,8 +46,9 @@ mooncakes.io publication, install smoke test, and final submission evidence.
 
 ## Next action
 
-Submit the application and record the planned demo. No engineering or release
-blocker remains.
+The user reviews the written v0.2 specification. After explicit approval, use
+the `writing-plans` skill to create a detailed TDD implementation plan. Do not
+edit v0.2 feature code before that approval and plan.
 
 ## External status
 
