@@ -8,8 +8,13 @@ written to:
 
 `docs/superpowers/specs/2026-07-27-moonrules-v0.2-design.md`
 
-The written specification is awaiting the user's final document review. No
-v0.2 implementation work has started.
+The user asked to continue after the written specification was committed, so
+the written design is treated as finally approved. The detailed TDD
+implementation plan is now at:
+
+`docs/superpowers/plans/2026-07-27-moonrules-v0.2-implementation.md`
+
+No v0.2 feature implementation has started.
 
 ## Locked decisions
 
@@ -46,9 +51,9 @@ v0.2 implementation work has started.
 
 ## Next action
 
-The user reviews the written v0.2 specification. After explicit approval, use
-the `writing-plans` skill to create a detailed TDD implementation plan. Do not
-edit v0.2 feature code before that approval and plan.
+The user chooses the execution mode for the v0.2 implementation plan:
+subagent-driven task execution or inline execution with checkpoints. Start with
+Task 1 only after that choice.
 
 ## External status
 
