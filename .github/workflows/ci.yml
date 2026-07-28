@@ -28,5 +28,7 @@ jobs:
           moon build --target native
           moon test --target wasm-gc
           moon build --target wasm-gc
+      - name: CLI contract
+        run: scripts/test_cli.sh
       - name: CLI smoke test
         run: moon run --target native cmd/main check examples/coupon.rule.json

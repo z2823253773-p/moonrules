@@ -3,8 +3,8 @@
 ## Current milestone
 
 MoonRules v0.2 implementation is active on `codex/v0.2-cli`.
-Task 4 CLI configuration/output contract passed. Next: Task 5 CLI stdin,
-JSON execution, and black-box exit tests.
+Task 5 CLI stdin, JSON execution, and black-box exit tests passed. Next: Task
+5 CLI phase PR, CI, merge, then Task 6 Web Adapter backend gate.
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions
@@ -93,9 +93,25 @@ Task 4 CLI configuration/output contract on `codex/v0.2-cli`:
 - `moon check --target native --deny-warn`: pass.
 - `moon fmt --check`: pass.
 
+Task 5 CLI stdin, JSON execution, and black-box exit tests on
+`codex/v0.2-cli`:
+
+- `moon check cmd/main --target native --deny-warn`: pass; verified
+  `@stdio.stdin.read_all().text()` for `-` source input.
+- `scripts/test_cli.sh`: initial failure identified `moon run` option parsing
+  for `--help`/`--version`; fixed with `--` argument separator.
+- `scripts/test_cli.sh`: pass; JSON pass/fail parsed, Fail exited `1`, stdin
+  check succeeded, dual stdin exited `2`, help/version matched.
+- `moon fmt`: pass.
+- `moon fmt --check`: pass.
+- `moon check --deny-warn`: pass.
+- `moon test --target native`: 71 total, 71 passed, 0 failed.
+- `moon test --target wasm-gc`: 66 total, 66 passed, 0 failed.
+- `moon build --target native`: pass.
+
 ## Next action
 
-Task 5: CLI stdin, JSON execution, and black-box exit tests.
+Task 5 CLI phase PR, CI, merge, then Task 6 Web Adapter backend gate.
 
 ## External status
 

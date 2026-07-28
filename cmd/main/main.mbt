@@ -1,7 +1,13 @@
 ///|
-async fn read_text(path : String) -> Result[String, String] {
-  Ok(@fs.read_file(path).text()) catch {
-    error => Err("failed to read \{path}: \{error}")
+async fn read_source(path : String) -> Result[String, String] {
+  if path == "-" {
+    Ok(@stdio.stdin.read_all().text()) catch {
+      error => Err("failed to read stdin: \{error}")
+    }
+  } else {
+    Ok(@fs.read_file(path).text()) catch {
+      error => Err("failed to read \{path}: \{error}")
+    }
   }
 }
 
@@ -20,8 +26,8 @@ fn diagnostics_text(diagnostics : Array[@moonrules.Diagnostic]) -> String {
 }
 
 ///|
-async fn run_check(rule_path : String, output_mode : OutputMode) -> Int {
-  let rule_source = match read_text(rule_path) {
+async fn run_check(rule_path : String, mode : OutputMode) -> Int {
+  let rule_source = match read_source(rule_path) {
     Ok(value) => value
     Err(message) => {
       @stdio.stderr.write("\{message}\n")
@@ -31,20 +37,26 @@ async fn run_check(rule_path : String, output_mode : OutputMode) -> Int {
   let rule = match @moonrules.parse(rule_source) {
     Ok(value) => value
     Err(error) => {
-      @stdio.stderr.write("rule parse failed: \{error.message()}\n")
+      let message = "rule parse failed: \{error.message()}"
+      if mode == OutputMode::Json {
+        @stdio.stdout.write("\{cli_error_json("E_RULE_PARSE", message)}\n")
+      } else {
+        @stdio.stderr.write("\{message}\n")
+      }
       return 2
     }
   }
   let diagnostics = @moonrules.check(rule)
-  if output_mode == OutputMode::Json {
+  if mode == OutputMode::Json {
     @stdio.stdout.write("\{cli_check_json(diagnostics)}\n")
-    return if diagnostics.length() == 0 { 0 } else { 2 }
-  }
-  if diagnostics.length() == 0 {
+  } else if diagnostics.length() == 0 {
     @stdio.stdout.write("MoonRules check: OK\n")
-    0
   } else {
     @stdio.stderr.write(diagnostics_text(diagnostics))
+  }
+  if diagnostics.length() == 0 {
+    0
+  } else {
     2
   }
 }
@@ -53,16 +65,16 @@ async fn run_check(rule_path : String, output_mode : OutputMode) -> Int {
 async fn run_eval(
   rule_path : String,
   data_path : String,
-  output_mode : OutputMode,
+  mode : OutputMode,
 ) -> Int {
-  let rule_source = match read_text(rule_path) {
+  let rule_source = match read_source(rule_path) {
     Ok(value) => value
     Err(message) => {
       @stdio.stderr.write("\{message}\n")
       return 2
     }
   }
-  let data_source = match read_text(data_path) {
+  let data_source = match read_source(data_path) {
     Ok(value) => value
     Err(message) => {
       @stdio.stderr.write("\{message}\n")
@@ -71,11 +83,15 @@ async fn run_eval(
   }
   match @moonrules.evaluate_json(rule_source, data_source) {
     Err(message) => {
-      @stdio.stderr.write("\{message}\n")
+      if mode == OutputMode::Json {
+        @stdio.stdout.write("\{cli_error_json("E_EVALUATE_INPUT", message)}\n")
+      } else {
+        @stdio.stderr.write("\{message}\n")
+      }
       2
     }
     Ok(report) => {
-      if output_mode == OutputMode::Json {
+      if mode == OutputMode::Json {
         @stdio.stdout.write("\{cli_report_json(report)}\n")
       } else {
         @stdio.stdout.write(
@@ -91,20 +107,14 @@ async fn run_eval(
 async fn main {
   let arguments = @sys.get_cli_args()
   let code = match parse_cli(arguments[1:]) {
+    Err(CliParseError::DualStdin) => {
+      @stdio.stderr.write("rule and data cannot both use stdin\n")
+      2
+    }
     Err(CliParseError::Usage) => {
       @stdio.stderr.write(usage())
       2
     }
-    Err(CliParseError::DualStdin) => {
-      @stdio.stderr.write(
-        "rule and data cannot both use stdin; provide one file path\n",
-      )
-      2
-    }
-    Ok(CliConfig::Check(rule_path, output_mode)) =>
-      run_check(rule_path, output_mode)
-    Ok(CliConfig::Eval(rule_path, data_path, output_mode)) =>
-      run_eval(rule_path, data_path, output_mode)
     Ok(CliConfig::Help) => {
       @stdio.stdout.write(usage())
       0
@@ -113,6 +123,9 @@ async fn main {
       @stdio.stdout.write("moonrules 0.2.0\n")
       0
     }
+    Ok(CliConfig::Check(rule_path, mode)) => run_check(rule_path, mode)
+    Ok(CliConfig::Eval(rule_path, data_path, mode)) =>
+      run_eval(rule_path, data_path, mode)
   }
   @sys.exit(code)
 }
