@@ -4,7 +4,9 @@
   "description": "",
   "scripts": {
     "dev": "vite",
+    "prebuild": "cd .. && scripts/build_playground_engine.sh",
     "build": "tsc --noEmit && vite build",
+    "pretest": "cd .. && scripts/build_playground_engine.sh",
     "test": "vitest run",
     "preview": "vite preview"
   },

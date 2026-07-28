@@ -3,8 +3,9 @@
 ## Current milestone
 
 MoonRules v0.2 implementation is active on `codex/v0.2-playground`.
-Task 7 Playground project shell and engine client passed. Next: Task 8
-examples, dual editors, and Check/Evaluate flow.
+Task 9 status, Trace, diagnostics, JSON, stats, copy, and download passed.
+Next: Task 10.
+Task 8 and Task 9 playground changes remain uncommitted in this worktree.
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions
@@ -147,9 +148,50 @@ Task 7 Playground project shell and engine client on `codex/v0.2-playground`:
   declaration requirement; fixed with `src/vite-env.d.ts`.
 - `npm run build`: pass; Vite built `playground/dist/index.html`.
 
+Task 8 examples, dual editors, and Check/Evaluate flow on
+`codex/v0.2-playground`:
+
+- Synced three browser examples with pass/fail data under
+  `playground/public/examples/`.
+- `npm test`: 2 test files, 3 tests passed.
+- `npm run build`: pass.
+- Default coupon/fail flow verified through the same generated engine module as
+  the page; `evaluate_json` returned `decision.status = "fail"`.
+
+Task 9 status, Trace, diagnostics, JSON, stats, copy, and download on
+`codex/v0.2-playground`:
+
+- `npm test`: expected TDD failure observed before implementation because
+  `playground/tests/renderers.test.ts` could not resolve `../src/renderers`.
+- Added DOM-safe result renderers that create elements with `document.createElement`
+  and assign untrusted adapter text with `textContent`.
+- Added result status card, Trace/Diagnostics/JSON/Stats tabs, copy JSON, and
+  `moonrules-report.json` download actions.
+- Addressed Task 8 review follow-ups while touching the same area: manifest
+  files are checked and pass/fail examples are evaluated in tests; selected
+  example loading now uses a monotonically increasing token; CodeMirror editable
+  content receives an aria label through `EditorView.contentAttributes`; example
+  URL bases work with or without a trailing slash; unused `.notice` CSS was
+  removed.
+- `playground/package.json` now runs `scripts/build_playground_engine.sh` before
+  `npm test` and `npm run build`, so clean checkouts regenerate the ignored
+  engine artifact automatically.
+- `scripts/build_playground_engine.sh`: pass.
+- `cd playground && npm test`: pretest regenerated the engine artifact; 3 test
+  files, 6 tests passed.
+- `cd playground && npm run build`: prebuild regenerated the engine artifact;
+  pass.
+- Generated-engine smoke: coupon fail returned `decision.status = "fail"` for
+  Full, Summary, and Off; malformed rule returned `ok=false`,
+  `kind=input_error`, and one diagnostic.
+- `moon fmt --check`: pass.
+- `moon check`: pass.
+- `moon test`: 71 total, 71 passed, 0 failed.
+- `moon build --target native`: pass.
+
 ## Next action
 
-Task 8: examples, dual editors, and Check/Evaluate flow.
+Task 10.
 
 ## External status
 

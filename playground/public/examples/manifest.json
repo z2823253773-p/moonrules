@@ -1,0 +1,23 @@
+[
+  {
+    "id": "coupon",
+    "label": "优惠券资格",
+    "rule": "coupon.rule.json",
+    "pass": "coupon.data.pass.json",
+    "fail": "coupon.data.fail.json"
+  },
+  {
+    "id": "api-access",
+    "label": "API 请求准入",
+    "rule": "api-access.rule.json",
+    "pass": "api-access.data.pass.json",
+    "fail": "api-access.data.fail.json"
+  },
+  {
+    "id": "membership",
+    "label": "会员资格",
+    "rule": "membership.rule.json",
+    "pass": "membership.data.pass.json",
+    "fail": "membership.data.fail.json"
+  }
+]

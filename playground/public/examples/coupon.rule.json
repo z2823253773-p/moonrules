@@ -1,0 +1,11 @@
+{
+  "id": "student-coupon",
+  "description": "满 100 元的成年学生可以使用优惠券",
+  "condition": {
+    "and": [
+      { ">=": [{ "var": "user.age" }, 18] },
+      { "==": [{ "var": "user.role" }, "student"] },
+      { ">=": [{ "var": "order.total" }, 100] }
+    ]
+  }
+}

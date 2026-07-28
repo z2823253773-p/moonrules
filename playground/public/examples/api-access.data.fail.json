@@ -1,0 +1,7 @@
+{
+  "request": {
+    "role": "viewer",
+    "environment": "production",
+    "path": "/v1/orders"
+  }
+}
