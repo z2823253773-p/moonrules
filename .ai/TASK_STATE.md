@@ -2,9 +2,9 @@
 
 ## Current milestone
 
-MoonRules v0.2 implementation is active on `codex/v0.2-cli`.
-Task 5 CLI stdin, JSON execution, and black-box exit tests passed. Next: Task
-5 CLI phase PR, CI, merge, then Task 6 Web Adapter backend gate.
+MoonRules v0.2 implementation is active on `codex/v0.2-playground`.
+Tasks 4-5 CLI phase passed, PR #6 was merged, and Task 6 Web Adapter backend
+gate is next.
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions
@@ -111,7 +111,7 @@ Task 5 CLI stdin, JSON execution, and black-box exit tests on
 
 ## Next action
 
-Task 5 CLI phase PR, CI, merge, then Task 6 Web Adapter backend gate.
+Task 6: Web Adapter backend gate.
 
 ## External status
 
@@ -133,7 +133,11 @@ Task 5 CLI phase PR, CI, merge, then Task 6 Web Adapter backend gate.
   - PR: `https://github.com/z2823253773-p/moonrules/pull/5`
   - Merge commit: `07f86b3819e22844f6eeb12455db1ca604b9cc76`
   - CI: `https://github.com/z2823253773-p/moonrules/actions/runs/30321323443/job/90157635140`
-  - Next branch: `codex/v0.2-cli`
+- CLI phase PR:
+  - PR: `https://github.com/z2823253773-p/moonrules/pull/6`
+  - Merge commit: `508aabf8dff93b3f6b0b764499899cdff82a6903`
+  - CI: `https://github.com/z2823253773-p/moonrules/actions/runs/30322549792/job/90161256328`
+  - Next branch: `codex/v0.2-playground`
 - Initial CI run `29984299189` failed before compilation because a fresh runner
   had not updated the MoonBit registry; the focused fix adds `moon update`.
 - Green CI: `https://github.com/z2823253773-p/moonrules/actions/runs/29985024289`.
