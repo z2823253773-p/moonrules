@@ -9,3 +9,7 @@ _build/
 credentials.json
 .env
 tmp/
+playground/node_modules/
+playground/dist/
+playground/src/generated/
+playground/public/engine/

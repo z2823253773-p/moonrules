@@ -3,8 +3,8 @@
 ## Current milestone
 
 MoonRules v0.2 implementation is active on `codex/v0.2-playground`.
-Task 6 Web Adapter backend gate passed with `PLAYGROUND_BACKEND=js`. Next:
-Task 7 Playground project shell and engine client.
+Task 7 Playground project shell and engine client passed. Next: Task 8
+examples, dual editors, and Check/Evaluate flow.
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions
@@ -134,9 +134,22 @@ Task 6 Web Adapter backend gate on `codex/v0.2-playground`:
 - `moon check --deny-warn`: pass.
 - `moon test cmd/playground --target wasm-gc`: 5 total, 5 passed, 0 failed.
 
+Task 7 Playground project shell and engine client on `codex/v0.2-playground`:
+
+- `npm init -y`: pass.
+- `npm install @codemirror/lang-json @codemirror/state @codemirror/view
+  codemirror`: pass; package-lock generated.
+- `npm install --save-dev vite typescript vitest jsdom @types/node`: pass.
+- `scripts/build_playground_engine.sh`: pass; generated selected JS engine for
+  local build/test and left it ignored by git.
+- `npm test`: 1 test file, 2 tests passed.
+- `npm run build`: initial failure found TypeScript 7 CSS side-effect import
+  declaration requirement; fixed with `src/vite-env.d.ts`.
+- `npm run build`: pass; Vite built `playground/dist/index.html`.
+
 ## Next action
 
-Task 7: Playground project shell and engine client.
+Task 8: examples, dual editors, and Check/Evaluate flow.
 
 ## External status
 
