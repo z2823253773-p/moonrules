@@ -2,9 +2,9 @@
 
 ## Current milestone
 
-MoonRules v0.2 implementation is active on `codex/v0.2-core`.
-Task 3 diagnostic JSON serialization passed. Next: Task 3 core phase PR,
-CI, merge, then Task 4 CLI configuration/output contract.
+MoonRules v0.2 implementation is active on `codex/v0.2-cli`.
+Tasks 1-3 core output phase passed, PR #5 was merged, and Task 4 CLI
+configuration/output contract is next.
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions
@@ -85,7 +85,7 @@ Task 3 diagnostic JSON serialization on `codex/v0.2-core`:
 
 ## Next action
 
-Task 3 core phase PR, CI, merge, then Task 4 CLI configuration/output contract.
+Task 4: CLI configuration/output contract.
 
 ## External status
 
@@ -103,6 +103,11 @@ Task 3 core phase PR, CI, merge, then Task 4 CLI configuration/output contract.
     `https://github.com/z2823253773-p/moonrules/issues/2`
   - `Prepare v0.2 evidence and release`:
     `https://github.com/z2823253773-p/moonrules/issues/3`
+- Core output phase PR:
+  - PR: `https://github.com/z2823253773-p/moonrules/pull/5`
+  - Merge commit: `07f86b3819e22844f6eeb12455db1ca604b9cc76`
+  - CI: `https://github.com/z2823253773-p/moonrules/actions/runs/30321323443/job/90157635140`
+  - Next branch: `codex/v0.2-cli`
 - Initial CI run `29984299189` failed before compilation because a fresh runner
   had not updated the MoonBit registry; the focused fix adds `moon update`.
 - Green CI: `https://github.com/z2823253773-p/moonrules/actions/runs/29985024289`.
