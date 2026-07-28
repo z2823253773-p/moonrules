@@ -2,9 +2,13 @@
 
 ## Current milestone
 
-MoonRules v0.2 implementation is active on `codex/v0.2-cli`.
-Task 5 CLI stdin, JSON execution, and black-box exit tests passed. Next: Task
-5 CLI phase PR, CI, merge, then Task 6 Web Adapter backend gate.
+MoonRules v0.2 implementation is active on `codex/v0.2-playground`.
+Task 9 status, Trace, diagnostics, JSON, stats, copy, and download passed.
+Task 8 and Task 9 playground changes were committed in
+  `feat: build interactive explainable playground`.
+Task 10 CI, e2e tests, and Pages workflow passed; review fixes are pending
+commit in this worktree.
+Next: Task 11 reproducible MoonBit benchmarks.
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions
@@ -109,9 +113,127 @@ Task 5 CLI stdin, JSON execution, and black-box exit tests on
 - `moon test --target wasm-gc`: 66 total, 66 passed, 0 failed.
 - `moon build --target native`: pass.
 
+Task 6 Web Adapter backend gate on `codex/v0.2-playground`:
+
+- `git status --short --branch`: clean branch confirmed at start.
+- `moon test cmd/playground --target wasm-gc`: initial failure observed because
+  `#export_name` is rejected under wbtest; package-level `exports` in
+  `cmd/playground/moon.pkg` is sufficient and tests pass after removing the
+  attribute.
+- `moon build cmd/playground --target wasm-gc --release`: pass; wasm artifact
+  `_build/wasm-gc/release/build/cmd/playground/playground.wasm`.
+- `moon build cmd/playground --target js --release`: pass; JS artifact
+  `_build/js/release/build/cmd/playground/playground.js`.
+- wasm-gc gate: Node could instantiate
+  `playground/public/engine/moonrules.wasm` and exports included `check_json`
+  and `evaluate_json`, but direct JS string calls failed with
+  `TypeError: type incompatibility when transforming from/to JS`.
+- `PLAYGROUND_BACKEND=js`: selected planned JS fallback. JS ESM import smoke
+  passed; `check_json` returned parseable `{ "ok": true, "kind": "check" }`,
+  and `evaluate_json` with `trace_mode: "off"` returned `evaluation fail 0`.
+- `scripts/build_playground_engine.sh`: pass; copies the selected JS artifact
+  to `playground/src/generated/moonrules.js`.
+- `moon fmt`: pass.
+- `moon fmt --check`: pass.
+- `moon check --deny-warn`: pass.
+- `moon test cmd/playground --target wasm-gc`: 5 total, 5 passed, 0 failed.
+
+Task 7 Playground project shell and engine client on `codex/v0.2-playground`:
+
+- `npm init -y`: pass.
+- `npm install @codemirror/lang-json @codemirror/state @codemirror/view
+  codemirror`: pass; package-lock generated.
+- `npm install --save-dev vite typescript vitest jsdom @types/node`: pass.
+- `scripts/build_playground_engine.sh`: pass; generated selected JS engine for
+  local build/test and left it ignored by git.
+- `npm test`: 1 test file, 2 tests passed.
+- `npm run build`: initial failure found TypeScript 7 CSS side-effect import
+  declaration requirement; fixed with `src/vite-env.d.ts`.
+- `npm run build`: pass; Vite built `playground/dist/index.html`.
+
+Task 8 examples, dual editors, and Check/Evaluate flow on
+`codex/v0.2-playground`:
+
+- Synced three browser examples with pass/fail data under
+  `playground/public/examples/`.
+- `npm test`: 2 test files, 3 tests passed.
+- `npm run build`: pass.
+- Default coupon/fail flow verified through the same generated engine module as
+  the page; `evaluate_json` returned `decision.status = "fail"`.
+
+Task 9 status, Trace, diagnostics, JSON, stats, copy, and download on
+`codex/v0.2-playground`:
+
+- `npm test`: expected TDD failure observed before implementation because
+  `playground/tests/renderers.test.ts` could not resolve `../src/renderers`.
+- Added DOM-safe result renderers that create elements with `document.createElement`
+  and assign untrusted adapter text with `textContent`.
+- Added result status card, Trace/Diagnostics/JSON/Stats tabs, copy JSON, and
+  `moonrules-report.json` download actions.
+- Addressed Task 8 review follow-ups while touching the same area: manifest
+  files are checked and pass/fail examples are evaluated in tests; selected
+  example loading now uses a monotonically increasing token; CodeMirror editable
+  content receives an aria label through `EditorView.contentAttributes`; example
+  URL bases work with or without a trailing slash; unused `.notice` CSS was
+  removed.
+- `playground/package.json` now runs `scripts/build_playground_engine.sh` before
+  `npm test` and `npm run build`, so clean checkouts regenerate the ignored
+  engine artifact automatically.
+- `scripts/build_playground_engine.sh`: pass.
+- `cd playground && npm test`: pretest regenerated the engine artifact; 3 test
+  files, 6 tests passed.
+- `cd playground && npm run build`: prebuild regenerated the engine artifact;
+  pass.
+- Generated-engine smoke: coupon fail returned `decision.status = "fail"` for
+  Full, Summary, and Off; malformed rule returned `ok=false`,
+  `kind=input_error`, and one diagnostic.
+- `moon fmt --check`: pass.
+- `moon check`: pass.
+- `moon test`: 71 total, 71 passed, 0 failed.
+- `moon build --target native`: pass.
+
+Task 10 browser smoke test and GitHub Pages workflow on
+`codex/v0.2-playground`:
+
+- Task 8/9 changes were committed as
+  `e3941ca feat: build interactive explainable playground`.
+- Initial Task 10 implementation was committed as
+  `5ec5d64 ci: test and deploy the playground`.
+- Added `@playwright/test`, Playwright e2e coverage, a Playground CI job, and a
+  Pages workflow with deployment intentionally left commented pending explicit
+  public deployment confirmation.
+- Review found and fixed three quality/spec issues: Playwright preview now binds
+  `127.0.0.1:4173` with `trace: retain-on-failure` and the Desktop Chrome
+  project; `npm run test:e2e` now runs a fresh build before preview so CI does
+  not test stale `dist`; the mobile editor test no longer hits duplicate
+  `aria-label` targets because the label lives on the CodeMirror textbox.
+- Copy JSON now guards missing `navigator.clipboard.writeText` before calling
+  it.
+- Quality review found and fixed a GitHub Actions portability risk:
+  Playwright now uses `ControlOrMeta+A` instead of macOS-only `Meta+a`, waits
+  for examples and the initial auto-evaluation before each e2e flow, and starts
+  preview with `--strictPort` without reusing stale local servers.
+- PR #7 CI initially failed in the `core` job on Ubuntu because the root native
+  build attempted to link the web adapter as a native artifact and reported
+  `undefined reference to main`; `cmd/playground` is now explicitly limited to
+  `wasm-gc` and `js` targets.
+- `cd playground && npm test`: pretest regenerated the engine artifact; 3 test
+  files, 6 tests passed.
+- `cd playground && npm run build`: prebuild regenerated the engine artifact;
+  pass.
+- `cd playground && npm run test:e2e`: pretest:e2e rebuilt the Playground; 11
+  Chromium tests passed.
+- `moon fmt --check`: pass.
+- `moon check`: pass.
+- `moon test`: 71 total, 71 passed, 0 failed.
+- `moon build --target native`: pass.
+- `moon build cmd/playground --target wasm-gc --release`: pass.
+- `moon build cmd/playground --target js --release`: pass.
+- `git diff --check`: pass.
+
 ## Next action
 
-Task 5 CLI phase PR, CI, merge, then Task 6 Web Adapter backend gate.
+Task 11: reproducible MoonBit benchmarks.
 
 ## External status
 
@@ -133,7 +255,11 @@ Task 5 CLI phase PR, CI, merge, then Task 6 Web Adapter backend gate.
   - PR: `https://github.com/z2823253773-p/moonrules/pull/5`
   - Merge commit: `07f86b3819e22844f6eeb12455db1ca604b9cc76`
   - CI: `https://github.com/z2823253773-p/moonrules/actions/runs/30321323443/job/90157635140`
-  - Next branch: `codex/v0.2-cli`
+- CLI phase PR:
+  - PR: `https://github.com/z2823253773-p/moonrules/pull/6`
+  - Merge commit: `508aabf8dff93b3f6b0b764499899cdff82a6903`
+  - CI: `https://github.com/z2823253773-p/moonrules/actions/runs/30322549792/job/90161256328`
+  - Next branch: `codex/v0.2-playground`
 - Initial CI run `29984299189` failed before compilation because a fresh runner
   had not updated the MoonBit registry; the focused fix adds `moon update`.
 - Green CI: `https://github.com/z2823253773-p/moonrules/actions/runs/29985024289`.

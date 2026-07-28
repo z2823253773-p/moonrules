@@ -1,0 +1,19 @@
+import {
+  "z2823253773-p/moonrules",
+  "moonbitlang/core/json",
+}
+
+import {
+  "moonbitlang/core/test",
+} for "wbtest"
+
+pkgtype(kind: "foreign_library")
+
+supported_targets = "-all+wasm-gc+js"
+
+options(
+  link: {
+    "wasm-gc": { "exports": [ "check_json", "evaluate_json" ] },
+    "js": { "exports": [ "check_json", "evaluate_json" ], "format": "esm" },
+  },
+)

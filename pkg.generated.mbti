@@ -10,6 +10,8 @@ pub fn check(RuleDocument, budget? : Budget) -> Array[Diagnostic]
 
 pub fn check_expr(Expr, Budget) -> Array[Diagnostic]
 
+pub fn diagnostics_to_json(Array[Diagnostic]) -> Json
+
 pub fn evaluate(RuleDocument, Json, Budget, trace_mode? : TraceMode) -> EvaluationReport
 
 pub fn evaluate_condition(Expr, Json, Budget, trace_mode? : TraceMode) -> EvaluationReport

@@ -1,0 +1,232 @@
+:root {
+  color: #182033;
+  background: #f4f6fb;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+.shell {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.eyebrow {
+  color: #5d52d6;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.editor-card,
+.result-card {
+  overflow: hidden;
+  background: white;
+  border: 1px solid #dfe3ec;
+  border-radius: 16px;
+}
+
+.editor-card h2 {
+  padding: 12px 16px;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.result-card {
+  margin-top: 16px;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid #e6e9f1;
+}
+
+.result-header h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.status-card {
+  margin: 16px;
+  padding: 14px 16px;
+  border: 1px solid #dfe3ec;
+  border-radius: 12px;
+  background: #f8f9fd;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.status-card[data-status="pass"],
+.status-card[data-status="checked"] {
+  border-color: #9ad6b8;
+  background: #ecfbf3;
+  color: #145f36;
+}
+
+.status-card[data-status="fail"] {
+  border-color: #f0a9a9;
+  background: #fff1f1;
+  color: #8f1d1d;
+}
+
+.status-card[data-status="indeterminate"],
+.status-card[data-status="error"] {
+  border-color: #f1cd74;
+  background: #fff8e6;
+  color: #765100;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+
+.tabs [role="tab"][aria-selected="true"] {
+  border-color: #5d52d6;
+  background: #f0efff;
+  color: #3730a3;
+  font-weight: 700;
+}
+
+.result-panel {
+  max-height: 420px;
+  padding: 16px;
+  margin: 0;
+  overflow: auto;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  border-top: 1px solid #eef1f6;
+}
+
+.json-panel,
+.stats-panel {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.empty-state {
+  margin: 0;
+  color: #626b7f;
+}
+
+.diagnostic {
+  padding: 12px;
+  border: 1px solid #f1cd74;
+  border-radius: 12px;
+  background: #fff8e6;
+}
+
+.diagnostic + .diagnostic {
+  margin-top: 10px;
+}
+
+.diagnostic p {
+  margin: 8px 0 0;
+}
+
+.suggestion {
+  color: #5b6476;
+}
+
+.trace-node {
+  margin-top: 8px;
+  padding-left: 12px;
+  border-left: 3px solid #dfe3ec;
+}
+
+.trace-node summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.trace-node p {
+  margin: 8px 0 8px 12px;
+  color: #4f596f;
+}
+
+.trace-node.status-pass {
+  border-left-color: #3aa66c;
+}
+
+.trace-node.status-fail,
+.trace-node.status-error {
+  border-left-color: #df4d4d;
+}
+
+.trace-node.status-skipped {
+  border-left-color: #9aa3b5;
+}
+
+.cm-editor {
+  min-height: 360px;
+  max-height: 54vh;
+}
+
+button,
+select {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid #c8cede;
+  border-radius: 10px;
+  background: white;
+  color: inherit;
+}
+
+button:focus-visible,
+select:focus-visible {
+  outline: 3px solid #8c83ff;
+  outline-offset: 2px;
+}
+
+@media (max-width: 720px) {
+  .shell {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 820px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .cm-editor {
+    min-height: 280px;
+  }
+}

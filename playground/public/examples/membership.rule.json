@@ -1,0 +1,11 @@
+{
+  "id": "membership-eligibility",
+  "description": "成年、所在地区开放且账户未停用的用户可以加入会员",
+  "condition": {
+    "and": [
+      { ">=": [{ "var": "user.age" }, 18] },
+      { "in": [{ "var": "user.region" }, ["CN", "SG"]] },
+      { "!=": [{ "var": "user.status" }, "suspended"] }
+    ]
+  }
+}

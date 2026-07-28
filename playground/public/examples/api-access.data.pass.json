@@ -1,0 +1,7 @@
+{
+  "request": {
+    "role": "operator",
+    "environment": "production",
+    "path": "/v1/orders"
+  }
+}
