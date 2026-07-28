@@ -4,6 +4,15 @@ fn evaluate_property_expr(expr : Expr) -> EvaluationReport {
 }
 
 ///|
+fn trace_node_count(node : TraceNode) -> Int {
+  let mut count = 1
+  for child in node.children {
+    count += trace_node_count(child)
+  }
+  count
+}
+
+///|
 test "property: double negation preserves booleans" {
   let values : Array[Bool] = @quickcheck.samples(100)
   for value in values {
@@ -164,6 +173,39 @@ test "property: trace budget uses its final slot for an error" {
       is Decision::Indeterminate(BudgetExceeded("max_trace_nodes", _, _)),
     )
     @test.assert_eq(report.stats.trace_nodes_emitted, 2)
+  }
+}
+
+///|
+test "property: trace modes preserve decisions and reduce output" {
+  let values : Array[Bool] = @quickcheck.samples(100)
+  for value in values {
+    let expr = Expr::Operation(Operator::And, [
+      Expr::Literal(Json::boolean(value)),
+      Expr::Literal(Json::boolean(true)),
+    ])
+    let full = evaluate_condition(
+      expr,
+      Json::empty_object(),
+      Budget::default(),
+      trace_mode=Full,
+    )
+    let summary = evaluate_condition(
+      expr,
+      Json::empty_object(),
+      Budget::default(),
+      trace_mode=Summary,
+    )
+    let off = evaluate_condition(
+      expr,
+      Json::empty_object(),
+      Budget::default(),
+      trace_mode=Off,
+    )
+    @test.assert_eq(full.decision, summary.decision)
+    @test.assert_eq(full.decision, off.decision)
+    assert_true(trace_node_count(summary.trace) <= trace_node_count(full.trace))
+    @test.assert_eq(trace_node_count(off.trace), 1)
   }
 }
 

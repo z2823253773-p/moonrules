@@ -3,7 +3,8 @@
 ## Current milestone
 
 MoonRules v0.2 implementation is active on `codex/v0.2-core`.
-Task 1 baseline passed. Next: Task 2 deterministic TraceMode compression.
+Task 2 TraceMode compression passed. Next: Task 3 stable diagnostic JSON
+serialization.
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions
@@ -56,9 +57,22 @@ Task 1 baseline on `codex/v0.2-core`:
 - `moon build --target native`: pass.
 - `moon build --target wasm-gc`: pass.
 
+Task 2 TraceMode compression on `codex/v0.2-core`:
+
+- `moon test evaluator_test.mbt --target native`: expected TDD failure observed
+  before implementation; 3 new mode tests failed with
+  `UnsupportedTraceMode("Summary")` / `UnsupportedTraceMode("Off")`.
+- `moon fmt`: pass.
+- `moon test evaluator_test.mbt --target native`: 21 total, 21 passed, 0 failed.
+- `moon test properties_test.mbt --target native`: 17 total, 17 passed, 0 failed.
+- `moon fmt --check`: pass.
+- `moon check --deny-warn`: pass.
+- `moon test --target native`: 66 total, 66 passed, 0 failed.
+- `moon test --target wasm-gc`: 63 total, 63 passed, 0 failed.
+
 ## Next action
 
-Task 2: deterministic TraceMode compression.
+Task 3: stable diagnostic JSON serialization.
 
 ## External status
 

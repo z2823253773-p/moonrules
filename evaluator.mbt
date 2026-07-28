@@ -26,15 +26,6 @@ fn eval_error_message(error : EvalError) -> String {
 }
 
 ///|
-fn trace_mode_name(mode : TraceMode) -> String {
-  match mode {
-    Off => "Off"
-    Summary => "Summary"
-    Full => "Full"
-  }
-}
-
-///|
 fn first_budget_excess(budget : Budget) -> EvalError? {
   let maximum = Budget::default()
   if budget.max_depth > maximum.max_depth {
@@ -99,13 +90,9 @@ pub fn evaluate(
   budget : Budget,
   trace_mode? : TraceMode = Full,
 ) -> EvaluationReport {
-  if trace_mode != Full {
-    return terminal_error_report(
-      UnsupportedTraceMode(trace_mode_name(trace_mode)),
-    )
-  }
   match first_budget_excess(budget) {
-    Some(error) => return terminal_error_report(error)
+    Some(error) =>
+      return apply_trace_mode(terminal_error_report(error), trace_mode)
     None => ()
   }
   let context : EvalContext = {
@@ -148,7 +135,7 @@ pub fn evaluate(
     message: "\{rule.id}\n\{root_detail}",
     children: raw_trace.children,
   }
-  {
+  let full_report : EvaluationReport = {
     decision,
     trace,
     stats: {
@@ -158,6 +145,7 @@ pub fn evaluate(
       trace_nodes_emitted: context.trace_nodes,
     },
   }
+  apply_trace_mode(full_report, trace_mode)
 }
 
 ///|
