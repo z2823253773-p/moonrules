@@ -4,8 +4,13 @@ import {
   "moonbitlang/async/fs",
   "moonbitlang/async/io",
   "moonbitlang/async/stdio",
+  "moonbitlang/core/json",
   "moonbitlang/x/sys",
 }
+
+import {
+  "moonbitlang/core/test",
+} for "wbtest"
 
 supported_targets = "-all+native"
 

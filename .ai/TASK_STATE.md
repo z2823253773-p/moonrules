@@ -2,9 +2,9 @@
 
 ## Current milestone
 
-MoonRules v0.2 implementation is active on `codex/v0.2-core`.
-Task 3 diagnostic JSON serialization passed. Next: Task 3 core phase PR,
-CI, merge, then Task 4 CLI configuration/output contract.
+MoonRules v0.2 implementation is active on `codex/v0.2-cli`.
+Task 5 CLI stdin, JSON execution, and black-box exit tests passed. Next: Task
+5 CLI phase PR, CI, merge, then Task 6 Web Adapter backend gate.
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions
@@ -83,9 +83,35 @@ Task 3 diagnostic JSON serialization on `codex/v0.2-core`:
 - `moon test --target native`: 69 total, 69 passed, 0 failed.
 - `moon test --target wasm-gc`: 66 total, 66 passed, 0 failed.
 
+Task 4 CLI configuration/output contract on `codex/v0.2-cli`:
+
+- `moon test cmd/main/main_wbtest.mbt --target native`: expected TDD failure
+  observed before implementation; new CLI config/output variants were missing.
+- `moon fmt`: pass.
+- `moon test cmd/main/main_wbtest.mbt --target native`: 5 total, 5 passed, 0
+  failed.
+- `moon check --target native --deny-warn`: pass.
+- `moon fmt --check`: pass.
+
+Task 5 CLI stdin, JSON execution, and black-box exit tests on
+`codex/v0.2-cli`:
+
+- `moon check cmd/main --target native --deny-warn`: pass; verified
+  `@stdio.stdin.read_all().text()` for `-` source input.
+- `scripts/test_cli.sh`: initial failure identified `moon run` option parsing
+  for `--help`/`--version`; fixed with `--` argument separator.
+- `scripts/test_cli.sh`: pass; JSON pass/fail parsed, Fail exited `1`, stdin
+  check succeeded, dual stdin exited `2`, help/version matched.
+- `moon fmt`: pass.
+- `moon fmt --check`: pass.
+- `moon check --deny-warn`: pass.
+- `moon test --target native`: 71 total, 71 passed, 0 failed.
+- `moon test --target wasm-gc`: 66 total, 66 passed, 0 failed.
+- `moon build --target native`: pass.
+
 ## Next action
 
-Task 3 core phase PR, CI, merge, then Task 4 CLI configuration/output contract.
+Task 5 CLI phase PR, CI, merge, then Task 6 Web Adapter backend gate.
 
 ## External status
 
@@ -103,6 +129,11 @@ Task 3 core phase PR, CI, merge, then Task 4 CLI configuration/output contract.
     `https://github.com/z2823253773-p/moonrules/issues/2`
   - `Prepare v0.2 evidence and release`:
     `https://github.com/z2823253773-p/moonrules/issues/3`
+- Core output phase PR:
+  - PR: `https://github.com/z2823253773-p/moonrules/pull/5`
+  - Merge commit: `07f86b3819e22844f6eeb12455db1ca604b9cc76`
+  - CI: `https://github.com/z2823253773-p/moonrules/actions/runs/30321323443/job/90157635140`
+  - Next branch: `codex/v0.2-cli`
 - Initial CI run `29984299189` failed before compilation because a fresh runner
   had not updated the MoonBit registry; the focused fix adds `moon update`.
 - Green CI: `https://github.com/z2823253773-p/moonrules/actions/runs/29985024289`.
