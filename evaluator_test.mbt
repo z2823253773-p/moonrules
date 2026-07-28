@@ -99,17 +99,59 @@ test "not inverts booleans and preserves errors" {
 }
 
 ///|
-test "V1 rejects unimplemented trace modes explicitly" {
-  let expr = Expr::Literal(Json::boolean(true))
-  debug_inspect(
-    evaluate_condition(
-      expr,
-      Json::empty_object(),
-      Budget::default(),
-      trace_mode=TraceMode::Off,
-    ).decision,
-    content="Indeterminate(UnsupportedTraceMode(\"Off\"))",
+test "summary removes ordinary value leaves but keeps decisions" {
+  let expr = Expr::Operation(Operator::GreaterOrEqual, [
+    Expr::Variable("user.age"),
+    Expr::Literal(Json::number(18.0)),
+  ])
+  let data = @json.parse("{\"user\":{\"age\":20}}")
+  let full = evaluate_condition(expr, data, Budget::default(), trace_mode=Full)
+  let summary = evaluate_condition(
+    expr,
+    data,
+    Budget::default(),
+    trace_mode=Summary,
   )
+  @test.assert_eq(summary.decision, full.decision)
+  @test.assert_eq(summary.trace.children.length(), 0)
+  @test.assert_eq(summary.trace.resolved_inputs.length(), 2)
+}
+
+///|
+test "summary keeps error and skipped nodes" {
+  let expr = Expr::Operation(Operator::And, [
+    Expr::Variable("missing"),
+    Expr::Literal(Json::boolean(false)),
+    Expr::Variable("never"),
+  ])
+  let report = evaluate_condition(
+    expr,
+    Json::empty_object(),
+    Budget::default(),
+    trace_mode=Summary,
+  )
+  @test.assert_eq(report.decision, Decision::Fail)
+  @test.assert_eq(report.trace.children[0].status, TraceStatus::Error)
+  @test.assert_eq(report.trace.children[1].status, TraceStatus::Skipped)
+}
+
+///|
+test "off returns one root and preserves report semantics" {
+  let expr = Expr::Operation(Operator::Equal, [
+    Expr::Literal(Json::number(1.0)),
+    Expr::Literal(Json::number(1.0)),
+  ])
+  let full = evaluate_condition(expr, Json::empty_object(), Budget::default())
+  let off = evaluate_condition(
+    expr,
+    Json::empty_object(),
+    Budget::default(),
+    trace_mode=Off,
+  )
+  @test.assert_eq(off.decision, full.decision)
+  @test.assert_eq(off.stats, full.stats)
+  @test.assert_eq(off.trace.children.length(), 0)
+  @test.assert_eq(off.trace.resolved_inputs.length(), 0)
 }
 
 ///|

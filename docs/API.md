@@ -16,7 +16,8 @@
 
 `evaluate(rule : RuleDocument, data : Json, budget : Budget, trace_mode? : TraceMode) -> EvaluationReport`
 
-执行已解析规则，返回三态 `decision`、完整 `trace` 和确定性 `stats`。V1 只实现 `TraceMode::Full`。
+执行已解析规则，返回三态 `decision`、按 `TraceMode::Full`、`TraceMode::Summary`
+或 `TraceMode::Off` 成形的 `trace`，以及确定性 `stats`。
 
 ## `evaluate_json`
 
@@ -28,6 +29,9 @@
 
 - `render_report(report, budget)` 生成受预览长度约束的人类可读树。
 - `report_to_json(report)` 生成稳定字段的 JSON：`decision`、`trace`、`stats`。
+- `diagnostics_to_json(diagnostics)` serializes every diagnostic as
+  `code`, `severity`, `rule_path`, `message`, and `suggestion`. Field names are
+  part of the v0.2 public JSON contract.
 
 ## Budget
 
