@@ -6,8 +6,9 @@ MoonRules v0.2 implementation is active on `codex/v0.2-playground`.
 Task 9 status, Trace, diagnostics, JSON, stats, copy, and download passed.
 Task 8 and Task 9 playground changes were committed in
   `feat: build interactive explainable playground`.
-Task 10 CI, e2e tests, and Pages workflow passed.
-Next: v0.2 release preparation (Task 11 if defined).
+Task 10 CI, e2e tests, and Pages workflow passed; review fixes are pending
+commit in this worktree.
+Next: Task 11 reproducible MoonBit benchmarks.
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions
@@ -191,9 +192,42 @@ Task 9 status, Trace, diagnostics, JSON, stats, copy, and download on
 - `moon test`: 71 total, 71 passed, 0 failed.
 - `moon build --target native`: pass.
 
+Task 10 browser smoke test and GitHub Pages workflow on
+`codex/v0.2-playground`:
+
+- Task 8/9 changes were committed as
+  `e3941ca feat: build interactive explainable playground`.
+- Initial Task 10 implementation was committed as
+  `5ec5d64 ci: test and deploy the playground`.
+- Added `@playwright/test`, Playwright e2e coverage, a Playground CI job, and a
+  Pages workflow with deployment intentionally left commented pending explicit
+  public deployment confirmation.
+- Review found and fixed three quality/spec issues: Playwright preview now binds
+  `127.0.0.1:4173` with `trace: retain-on-failure` and the Desktop Chrome
+  project; `npm run test:e2e` now runs a fresh build before preview so CI does
+  not test stale `dist`; the mobile editor test no longer hits duplicate
+  `aria-label` targets because the label lives on the CodeMirror textbox.
+- Copy JSON now guards missing `navigator.clipboard.writeText` before calling
+  it.
+- Quality review found and fixed a GitHub Actions portability risk:
+  Playwright now uses `ControlOrMeta+A` instead of macOS-only `Meta+a`, waits
+  for examples and the initial auto-evaluation before each e2e flow, and starts
+  preview with `--strictPort` without reusing stale local servers.
+- `cd playground && npm test`: pretest regenerated the engine artifact; 3 test
+  files, 6 tests passed.
+- `cd playground && npm run build`: prebuild regenerated the engine artifact;
+  pass.
+- `cd playground && npm run test:e2e`: pretest:e2e rebuilt the Playground; 11
+  Chromium tests passed.
+- `moon fmt --check`: pass.
+- `moon check`: pass.
+- `moon test`: 71 total, 71 passed, 0 failed.
+- `moon build --target native`: pass.
+- `git diff --check`: pass.
+
 ## Next action
 
-Task 10.
+Task 11: reproducible MoonBit benchmarks.
 
 ## External status
 

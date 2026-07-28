@@ -56,9 +56,9 @@ jobs:
         run: cd playground && npm ci
       - name: Run unit tests
         run: cd playground && npm test
+      - name: Build playground
+        run: cd playground && npm run build
       - name: Install Playwright Chromium
         run: cd playground && npx playwright install --with-deps chromium
       - name: Run e2e tests
         run: cd playground && npm run test:e2e
-      - name: Build playground
-        run: cd playground && npm run build

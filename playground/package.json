@@ -8,6 +8,7 @@
     "build": "tsc --noEmit && vite build",
     "pretest": "cd .. && scripts/build_playground_engine.sh",
     "test": "vitest run",
+    "pretest:e2e": "npm run build",
     "test:e2e": "playwright test",
     "preview": "vite preview"
   },

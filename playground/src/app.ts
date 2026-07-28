@@ -38,11 +38,11 @@ root.innerHTML = `
     <section class="workspace">
       <article class="editor-card">
         <h2>Rule JSON</h2>
-        <div id="rule-editor" aria-label="Rule JSON editor"></div>
+        <div id="rule-editor"></div>
       </article>
       <article class="editor-card">
         <h2>Data JSON</h2>
-        <div id="data-editor" aria-label="Data JSON editor"></div>
+        <div id="data-editor"></div>
       </article>
     </section>
     <section class="result-card" id="result" aria-live="polite">
@@ -246,6 +246,10 @@ formatButton.addEventListener("click", () => {
 });
 copyButton.addEventListener("click", () => {
   if (!lastResponse) return;
+  if (!navigator.clipboard?.writeText) {
+    renderError(new Error("Clipboard API is unavailable in this browser."));
+    return;
+  }
   navigator.clipboard
     .writeText(responseJson(lastResponse))
     .then(() => {
