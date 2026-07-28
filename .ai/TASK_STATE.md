@@ -3,8 +3,8 @@
 ## Current milestone
 
 MoonRules v0.2 implementation is active on `codex/v0.2-playground`.
-Tasks 4-5 CLI phase passed, PR #6 was merged, and Task 6 Web Adapter backend
-gate is next.
+Task 6 Web Adapter backend gate passed with `PLAYGROUND_BACKEND=js`. Next:
+Task 7 Playground project shell and engine client.
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions
@@ -109,9 +109,34 @@ Task 5 CLI stdin, JSON execution, and black-box exit tests on
 - `moon test --target wasm-gc`: 66 total, 66 passed, 0 failed.
 - `moon build --target native`: pass.
 
+Task 6 Web Adapter backend gate on `codex/v0.2-playground`:
+
+- `git status --short --branch`: clean branch confirmed at start.
+- `moon test cmd/playground --target wasm-gc`: initial failure observed because
+  `#export_name` is rejected under wbtest; package-level `exports` in
+  `cmd/playground/moon.pkg` is sufficient and tests pass after removing the
+  attribute.
+- `moon build cmd/playground --target wasm-gc --release`: pass; wasm artifact
+  `_build/wasm-gc/release/build/cmd/playground/playground.wasm`.
+- `moon build cmd/playground --target js --release`: pass; JS artifact
+  `_build/js/release/build/cmd/playground/playground.js`.
+- wasm-gc gate: Node could instantiate
+  `playground/public/engine/moonrules.wasm` and exports included `check_json`
+  and `evaluate_json`, but direct JS string calls failed with
+  `TypeError: type incompatibility when transforming from/to JS`.
+- `PLAYGROUND_BACKEND=js`: selected planned JS fallback. JS ESM import smoke
+  passed; `check_json` returned parseable `{ "ok": true, "kind": "check" }`,
+  and `evaluate_json` with `trace_mode: "off"` returned `evaluation fail 0`.
+- `scripts/build_playground_engine.sh`: pass; copies the selected JS artifact
+  to `playground/src/generated/moonrules.js`.
+- `moon fmt`: pass.
+- `moon fmt --check`: pass.
+- `moon check --deny-warn`: pass.
+- `moon test cmd/playground --target wasm-gc`: 5 total, 5 passed, 0 failed.
+
 ## Next action
 
-Task 6: Web Adapter backend gate.
+Task 7: Playground project shell and engine client.
 
 ## External status
 
