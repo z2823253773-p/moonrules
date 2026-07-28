@@ -316,3 +316,26 @@ test "property: checker and report JSON are deterministic" {
     @test.assert_eq(report_to_json(report), report_to_json(report))
   }
 }
+
+///|
+test "property: report and diagnostic JSON round-trip through text" {
+  let values : Array[Bool] = @quickcheck.samples(100)
+  for value in values {
+    let report = evaluate_condition(
+      Expr::Literal(Json::boolean(value)),
+      Json::empty_object(),
+      Budget::default(),
+    )
+    let report_text = report_to_json(report).stringify()
+    @test.assert_eq(@json.parse(report_text), report_to_json(report))
+    let diagnostics = check_expr(
+      Expr::Operation(Operator::And, []),
+      Budget::default(),
+    )
+    let diagnostic_text = diagnostics_to_json(diagnostics).stringify()
+    @test.assert_eq(
+      @json.parse(diagnostic_text),
+      diagnostics_to_json(diagnostics),
+    )
+  }
+}

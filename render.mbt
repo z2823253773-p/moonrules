@@ -224,3 +224,27 @@ pub fn report_to_json(report : EvaluationReport) -> Json {
     }),
   })
 }
+
+///|
+fn diagnostic_severity_json(severity : DiagnosticSeverity) -> String {
+  match severity {
+    DiagnosticSeverity::Error => "error"
+    DiagnosticSeverity::Warning => "warning"
+  }
+}
+
+///|
+fn diagnostic_to_json(diagnostic : Diagnostic) -> Json {
+  Json::object({
+    "code": Json::string(diagnostic.code),
+    "severity": Json::string(diagnostic_severity_json(diagnostic.severity)),
+    "rule_path": Json::string(diagnostic.rule_path),
+    "message": Json::string(diagnostic.message),
+    "suggestion": Json::string(diagnostic.suggestion),
+  })
+}
+
+///|
+pub fn diagnostics_to_json(diagnostics : Array[Diagnostic]) -> Json {
+  Json::array(diagnostics.map(diagnostic_to_json))
+}

@@ -84,3 +84,24 @@ test "public facade parses checks and evaluates JSON sources" {
   }
   debug_inspect(parse("{") is Err(_), content="true")
 }
+
+///|
+test "diagnostics JSON has stable public fields" {
+  let diagnostic : Diagnostic = {
+    code: "E_ARITY",
+    severity: Error,
+    rule_path: "condition.and",
+    message: "operator and expects at least 1 argument",
+    suggestion: "provide at least 1 argument",
+  }
+  let json = diagnostics_to_json([diagnostic])
+  @test.assert_eq(
+    json.stringify(),
+    "[{\"code\":\"E_ARITY\",\"severity\":\"error\",\"rule_path\":\"condition.and\",\"message\":\"operator and expects at least 1 argument\",\"suggestion\":\"provide at least 1 argument\"}]",
+  )
+}
+
+///|
+test "empty diagnostics serialize as an array" {
+  @test.assert_eq(diagnostics_to_json([]).stringify(), "[]")
+}
