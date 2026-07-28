@@ -1,31 +1,4 @@
 ///|
-pub(all) enum CliConfig {
-  Check(String)
-  Eval(String, String)
-} derive(Eq, Debug)
-
-///|
-pub(all) enum CliParseError {
-  Usage
-} derive(Eq, Debug)
-
-///|
-pub fn parse_cli(
-  arguments : ArrayView[String],
-) -> Result[CliConfig, CliParseError] {
-  match arguments {
-    ["check", rule_path] => Ok(Check(rule_path))
-    ["eval", rule_path, "--data", data_path] => Ok(Eval(rule_path, data_path))
-    _ => Err(Usage)
-  }
-}
-
-///|
-fn usage() -> String {
-  "Usage:\n  moonrules check <rule.json>\n  moonrules eval <rule.json> --data <data.json>\n"
-}
-
-///|
 async fn read_text(path : String) -> Result[String, String] {
   Ok(@fs.read_file(path).text()) catch {
     error => Err("failed to read \{path}: \{error}")
@@ -47,7 +20,7 @@ fn diagnostics_text(diagnostics : Array[@moonrules.Diagnostic]) -> String {
 }
 
 ///|
-async fn run_check(rule_path : String) -> Int {
+async fn run_check(rule_path : String, output_mode : OutputMode) -> Int {
   let rule_source = match read_text(rule_path) {
     Ok(value) => value
     Err(message) => {
@@ -63,6 +36,10 @@ async fn run_check(rule_path : String) -> Int {
     }
   }
   let diagnostics = @moonrules.check(rule)
+  if output_mode == OutputMode::Json {
+    @stdio.stdout.write("\{cli_check_json(diagnostics)}\n")
+    return if diagnostics.length() == 0 { 0 } else { 2 }
+  }
   if diagnostics.length() == 0 {
     @stdio.stdout.write("MoonRules check: OK\n")
     0
@@ -73,7 +50,11 @@ async fn run_check(rule_path : String) -> Int {
 }
 
 ///|
-async fn run_eval(rule_path : String, data_path : String) -> Int {
+async fn run_eval(
+  rule_path : String,
+  data_path : String,
+  output_mode : OutputMode,
+) -> Int {
   let rule_source = match read_text(rule_path) {
     Ok(value) => value
     Err(message) => {
@@ -94,9 +75,13 @@ async fn run_eval(rule_path : String, data_path : String) -> Int {
       2
     }
     Ok(report) => {
-      @stdio.stdout.write(
-        "\{@moonrules.render_report(report, @moonrules.Budget::default())}\n",
-      )
+      if output_mode == OutputMode::Json {
+        @stdio.stdout.write("\{cli_report_json(report)}\n")
+      } else {
+        @stdio.stdout.write(
+          "\{@moonrules.render_report(report, @moonrules.Budget::default())}\n",
+        )
+      }
       report.decision.exit_code()
     }
   }
@@ -106,12 +91,28 @@ async fn run_eval(rule_path : String, data_path : String) -> Int {
 async fn main {
   let arguments = @sys.get_cli_args()
   let code = match parse_cli(arguments[1:]) {
-    Err(Usage) => {
+    Err(CliParseError::Usage) => {
       @stdio.stderr.write(usage())
       2
     }
-    Ok(Check(rule_path)) => run_check(rule_path)
-    Ok(Eval(rule_path, data_path)) => run_eval(rule_path, data_path)
+    Err(CliParseError::DualStdin) => {
+      @stdio.stderr.write(
+        "rule and data cannot both use stdin; provide one file path\n",
+      )
+      2
+    }
+    Ok(CliConfig::Check(rule_path, output_mode)) =>
+      run_check(rule_path, output_mode)
+    Ok(CliConfig::Eval(rule_path, data_path, output_mode)) =>
+      run_eval(rule_path, data_path, output_mode)
+    Ok(CliConfig::Help) => {
+      @stdio.stdout.write(usage())
+      0
+    }
+    Ok(CliConfig::Version) => {
+      @stdio.stdout.write("moonrules 0.2.0\n")
+      0
+    }
   }
   @sys.exit(code)
 }

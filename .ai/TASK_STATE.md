@@ -3,8 +3,8 @@
 ## Current milestone
 
 MoonRules v0.2 implementation is active on `codex/v0.2-cli`.
-Tasks 1-3 core output phase passed, PR #5 was merged, and Task 4 CLI
-configuration/output contract is next.
+Task 4 CLI configuration/output contract passed. Next: Task 5 CLI stdin,
+JSON execution, and black-box exit tests.
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions
@@ -83,9 +83,19 @@ Task 3 diagnostic JSON serialization on `codex/v0.2-core`:
 - `moon test --target native`: 69 total, 69 passed, 0 failed.
 - `moon test --target wasm-gc`: 66 total, 66 passed, 0 failed.
 
+Task 4 CLI configuration/output contract on `codex/v0.2-cli`:
+
+- `moon test cmd/main/main_wbtest.mbt --target native`: expected TDD failure
+  observed before implementation; new CLI config/output variants were missing.
+- `moon fmt`: pass.
+- `moon test cmd/main/main_wbtest.mbt --target native`: 5 total, 5 passed, 0
+  failed.
+- `moon check --target native --deny-warn`: pass.
+- `moon fmt --check`: pass.
+
 ## Next action
 
-Task 4: CLI configuration/output contract.
+Task 5: CLI stdin, JSON execution, and black-box exit tests.
 
 ## External status
 
