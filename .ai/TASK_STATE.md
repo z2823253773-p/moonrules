@@ -4,8 +4,10 @@
 
 MoonRules v0.2 implementation is active on `codex/v0.2-playground`.
 Task 9 status, Trace, diagnostics, JSON, stats, copy, and download passed.
-Next: Task 10.
-Task 8 and Task 9 playground changes remain uncommitted in this worktree.
+Task 8 and Task 9 playground changes were committed in
+  `feat: build interactive explainable playground`.
+Task 10 CI, e2e tests, and Pages workflow passed.
+Next: v0.2 release preparation (Task 11 if defined).
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions

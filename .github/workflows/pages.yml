@@ -1,0 +1,57 @@
+name: Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Update MoonBit registry
+        run: moon update
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: playground/package-lock.json
+      - name: Build engine
+        run: scripts/build_playground_engine.sh
+      - name: Install dependencies
+        run: cd playground && npm ci
+      - name: Build playground
+        run: cd playground && npm run build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: playground/dist
+
+  # Deploy is deliberately separated: push the Pages artifact manually
+  # through the GitHub UI or run `actions/deploy-pages` only after
+  # explicit user confirmation. This job is left commented out until
+  # the maintainer explicitly opts in.
+  #
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: github-pages
+  #     url: ${{ steps.deployment.outputs.page_url }}
+  #   steps:
+  #     - name: Deploy to GitHub Pages
+  #       id: deployment
+  #       uses: actions/deploy-pages@v4
