@@ -213,6 +213,10 @@ Task 10 browser smoke test and GitHub Pages workflow on
   Playwright now uses `ControlOrMeta+A` instead of macOS-only `Meta+a`, waits
   for examples and the initial auto-evaluation before each e2e flow, and starts
   preview with `--strictPort` without reusing stale local servers.
+- PR #7 CI initially failed in the `core` job on Ubuntu because the root native
+  build attempted to link the web adapter as a native artifact and reported
+  `undefined reference to main`; `cmd/playground` is now explicitly limited to
+  `wasm-gc` and `js` targets.
 - `cd playground && npm test`: pretest regenerated the engine artifact; 3 test
   files, 6 tests passed.
 - `cd playground && npm run build`: prebuild regenerated the engine artifact;
@@ -223,6 +227,8 @@ Task 10 browser smoke test and GitHub Pages workflow on
 - `moon check`: pass.
 - `moon test`: 71 total, 71 passed, 0 failed.
 - `moon build --target native`: pass.
+- `moon build cmd/playground --target wasm-gc --release`: pass.
+- `moon build cmd/playground --target js --release`: pass.
 - `git diff --check`: pass.
 
 ## Next action

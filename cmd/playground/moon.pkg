@@ -9,6 +9,8 @@ import {
 
 pkgtype(kind: "foreign_library")
 
+supported_targets = "-all+wasm-gc+js"
+
 options(
   link: {
     "wasm-gc": { "exports": [ "check_json", "evaluate_json" ] },
