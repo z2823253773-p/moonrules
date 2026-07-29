@@ -14,14 +14,24 @@
 
 ## `evaluate`
 
-`evaluate(rule : RuleDocument, data : Json, budget : Budget, trace_mode? : TraceMode) -> EvaluationReport`
+`evaluate(rule : RuleDocument, data : Json, budget : Budget, trace_mode? : TraceMode = Full) -> EvaluationReport`
 
-执行已解析规则，返回三态 `decision`、按 `TraceMode::Full`、`TraceMode::Summary`
-或 `TraceMode::Off` 成形的 `trace`，以及确定性 `stats`。
+执行已解析规则。返回三态 `decision`、按 `TraceMode` 成形的 `trace`，以及确定性 `stats`。
+
+v0.2 支持三种 Trace 模式：
+
+```moonbit
+let full    = evaluate(rule, data, Budget::default(), trace_mode=Full)
+let summary = evaluate(rule, data, Budget::default(), trace_mode=Summary)
+let off     = evaluate(rule, data, Budget::default(), trace_mode=Off)
+```
+
+三种模式先执行相同的完整求值，再做输出成形，因此 `Decision` 和 `ExecutionStats` 始终一致。
+`UnsupportedTraceMode` 是保留的兼容性变体，v0.2 正常路径不会产生。
 
 ## `evaluate_json`
 
-`evaluate_json(rule_source : String, data_source : String, budget? : Budget, trace_mode? : TraceMode) -> Result[EvaluationReport, String]`
+`evaluate_json(rule_source : String, data_source : String, budget? : Budget, trace_mode? : TraceMode = Full) -> Result[EvaluationReport, String]`
 
 便利入口，依次完成规则解析、运行前检查、数据 JSON 解析和求值。解析或检查失败返回 `Err`；规则运行时错误保留在 `EvaluationReport.decision` 的 `Indeterminate` 中。
 

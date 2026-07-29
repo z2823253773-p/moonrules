@@ -9,7 +9,8 @@ Task 8 and Task 9 playground changes were committed in
 Task 10 CI, e2e tests, and Pages workflow passed and merged through PR #7.
 Task 11 reproducible MoonBit benchmarks passed.
 Task 12 repository maturity and contribution documents passed.
-Next: Task 13 architecture, API, README, and technical report.
+Task 13 architecture, API, README, and technical report passed.
+Next: Task 14 application PDF, screenshots, GIF, and demo script.
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions
