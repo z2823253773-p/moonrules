@@ -8,7 +8,8 @@ Task 8 and Task 9 playground changes were committed in
   `feat: build interactive explainable playground`.
 Task 10 CI, e2e tests, and Pages workflow passed and merged through PR #7.
 Task 11 reproducible MoonBit benchmarks passed.
-Next: Task 12 repository maturity and contribution documents.
+Task 12 repository maturity and contribution documents passed.
+Next: Task 13 architecture, API, README, and technical report.
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions

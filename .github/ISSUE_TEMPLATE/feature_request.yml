@@ -1,0 +1,59 @@
+name: Feature Request
+description: Propose a new capability for MoonRules
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the problem you want to solve and how you imagine MoonRules helping. We evaluate every request against the project's scope and roadmap.
+
+  - type: textarea
+    id: usecase
+    attributes:
+      label: Use case
+      description: What real-world scenario needs this feature? Be specific about the user, their goal, and the context.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: What should the feature do? If it involves a new operator or DSL extension, include an example rule snippet.
+      render: json
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope fit
+      description: Where does this belong?
+      options:
+        - Core rule engine (parser / checker / evaluator)
+        - Trace and explainability
+        - CLI
+        - Web Playground
+        - Documentation or examples
+        - CI / release tooling
+        - Not sure — please advise
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What workarounds or alternative approaches have you tried or considered?
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Project boundaries
+      options:
+        - label: This feature does not require full JSONLogic compatibility.
+          required: true
+        - label: This feature does not require arbitrary code execution, network access, or a server.
+          required: true

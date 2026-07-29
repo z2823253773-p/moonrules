@@ -1,0 +1,86 @@
+name: Bug Report
+description: Report a problem with MoonRules
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please provide enough detail so we can reproduce it.
+
+  - type: input
+    id: version
+    attributes:
+      label: MoonRules version
+      description: "Run `moonrules --version` or check `moon.mod`."
+      placeholder: "0.2.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: target
+    attributes:
+      label: Target
+      description: Which entry point are you using?
+      options:
+        - Library API (moonbit)
+        - Native CLI
+        - Web Playground
+        - Web Adapter
+        - mooncakes.io package consumer
+    validations:
+      required: true
+
+  - type: textarea
+    id: rule
+    attributes:
+      label: Minimal rule JSON
+      description: "Share the smallest rule that reproduces the issue. Remove secrets and PII."
+      render: json
+    validations:
+      required: true
+
+  - type: textarea
+    id: data
+    attributes:
+      label: Data JSON (if applicable)
+      description: "Share input data that triggers the issue. Remove secrets and PII."
+      render: json
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead? Include the full error message, Trace output, or screenshot.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction commands
+      description: Exact commands or Playground steps to reproduce.
+      placeholder: |
+        moonrules eval rule.json --data data.json --json
+        # or Playground: select coupon, fail data, Evaluate
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Quick checks
+      options:
+        - label: I removed secrets, tokens, and personally identifiable information from the inputs above.
+          required: true
+        - label: I can reproduce this on the latest published version.
+          required: true
