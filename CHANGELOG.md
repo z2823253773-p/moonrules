@@ -4,7 +4,7 @@ All notable changes to MoonRules are documented here.
 
 ## 0.2.0 — 2026-07-29
 
-Release candidate. Playground, Trace output modes, and scriptable CLI.
+Released v0.2.0 with the static Playground, Trace output modes, and scriptable CLI.
 
 ### Added
 
@@ -18,7 +18,7 @@ Release candidate. Playground, Trace output modes, and scriptable CLI.
 - `docs/ARCHITECTURE.md`, `docs/technical-report.md`, `docs/BENCHMARKS.md`, `docs/demo-script.md`, `docs/acceptance-checklist.md`.
 - `CONTRIBUTING.md`, `SECURITY.md`, `ROADMAP.md`, `THIRD_PARTY_NOTICES.md`.
 - GitHub Issue forms (YAML) and PR template.
-- Pages workflow (`.github/workflows/pages.yml`, deploy commented out pending user confirmation).
+- Pages workflow (`.github/workflows/pages.yml`) for the static Playground.
 
 ### Changed
 

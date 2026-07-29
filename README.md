@@ -8,7 +8,7 @@ MoonRules 把动态业务条件解析成类型明确的规则树，在执行前�
 
 ## 在线 Playground
 
-**[打开 MoonRules Playground](https://z2823253773-p.github.io/moonrules/)**（部署需用户确认）
+**[打开 MoonRules Playground](https://z2823253773-p.github.io/moonrules/)**
 
 无需安装，直接在浏览器中编写规则、选择示例、观察可解释 Trace。所有数据仅在本机浏览器处理，不会上传服务器。
 

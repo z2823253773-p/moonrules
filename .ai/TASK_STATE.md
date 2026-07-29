@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-MoonRules v0.2 implementation is active on `codex/v0.2-evidence`.
+MoonRules v0.2 publication is active on `codex/v0.2-publish`.
 Task 9 status, Trace, diagnostics, JSON, stats, copy, and download passed.
 Task 8 and Task 9 playground changes were committed in
   `feat: build interactive explainable playground`.
@@ -12,8 +12,12 @@ Task 12 repository maturity and contribution documents passed.
 Task 13 architecture, API, README, and technical report passed.
 Task 14 application PDF, demo script, and acceptance checklist passed.
 Task 15 full CI, package audit, and pre-release candidate passed.
-Next: Task 16 authorized publication/final freeze (awaiting user confirmation).
-No public v0.2 release action is authorized yet.
+Task 16 public publication was explicitly authorized by the user on
+2026-07-29. Pages deployment, Mooncakes publication, and GitHub Release are now
+in progress.
+Release preflight fixed one package-audit issue: the local untracked root
+`项目申报书样版.pdf` is ignored and is no longer included in the Mooncakes
+archive.
 
 ## Locked decisions
 
