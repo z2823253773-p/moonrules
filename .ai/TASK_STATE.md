@@ -13,11 +13,14 @@ Task 13 architecture, API, README, and technical report passed.
 Task 14 application PDF, demo script, and acceptance checklist passed.
 Task 15 full CI, package audit, and pre-release candidate passed.
 Task 16 public publication was explicitly authorized by the user on
-2026-07-29. Pages deployment, Mooncakes publication, and GitHub Release are now
-in progress.
+2026-07-29. Pages deployment, Mooncakes publication, and GitHub Release are
+complete.
 Release preflight fixed one package-audit issue: the local untracked root
 `项目申报书样版.pdf` is ignored and is no longer included in the Mooncakes
 archive.
+MoonRules v0.2.0 is complete: core/CLI/Playground tests green, GitHub Pages
+public, Mooncakes 0.2.0 published and consumer-verified, GitHub Release created,
+and submission/demo evidence finalized. Further features belong to v0.3.
 
 ## Locked decisions
 

@@ -131,7 +131,7 @@ All processing happens in the local browser. No data is sent to a server. The pa
 | Category | Count | Notes |
 |---|---|---|
 | MoonBit unit/property/golden tests (native) | 71 | Covers parser, checker, evaluator, trace modes, renderer, CLI, adapter |
-| MoonBit tests (wasm-gc) | 66 | Excludes native-only CLI tests |
+| MoonBit tests (wasm-gc) | 71 | Cross-target regression coverage |
 | QuickCheck property tests | 18 | Double-negation, determinism, short-circuit, budget safety, mode invariants, JSON round-trip |
 | Playground unit tests (Vitest) | 6 | Engine client, example loading, render helpers |
 | Playground e2e tests (Playwright) | 11 | Page shell, evaluate, check, pass/fail variants, tabs, copy, download, malformed input, trace modes |

@@ -4,13 +4,15 @@
 
 MoonRules 是 MoonBit 原生的可解释、受预算限制的 JSON 业务规则引擎，面向 API 准入、资格判断、表单逻辑和配置策略。JSON Schema 验证数据结构是否合法；MoonRules 判断合法数据是否满足动态业务条件，并解释每一步原因。
 
-v0.1.0 已发布至 mooncakes.io，具备完整核心闭环。v0.2.0 新增在线 Playground、三种 Trace 输出模式和 CLI JSON/stdin 支持，并进入公开发布流程。
+v0.1.0 已发布至 mooncakes.io，具备完整核心闭环。v0.2.0 新增在线 Playground、三种 Trace 输出模式和 CLI JSON/stdin 支持，已公开发布至 Mooncakes 并创建 GitHub Release。
 
 公开仓库：[github.com/z2823253773-p/moonrules](https://github.com/z2823253773-p/moonrules)
+在线 Playground：[z2823253773-p.github.io/moonrules](https://z2823253773-p.github.io/moonrules/)
+Mooncakes 文档：[mooncakes.io/docs/z2823253773-p/moonrules](https://mooncakes.io/docs/z2823253773-p/moonrules)
 
 ## 已有基础
 
-v0.1.0 核心引擎通过 GitHub Actions CI 的完整验证矩阵（原生 71 测试、wasm-gc 66 测试），格式检查、零警告检查和双目标构建全部通过。包 `z2823253773-p/moonrules@0.1.0` 已发布至 mooncakes.io。
+v0.1.0 核心引擎完成后继续演进到 v0.2.0；当前完整验证矩阵包含原生 71 测试、wasm-gc 71 测试，格式检查、零警告检查和双目标构建全部通过。包 `z2823253773-p/moonrules@0.2.0` 已发布至 mooncakes.io。
 
 v0.2.0 在此基础上完成：三种 Trace 模式、诊断 JSON 序列化、CLI JSON/stdin/help/version、Web Adapter（JS 目标）、静态 Playground、浏览器冒烟测试、可复现基准测试、架构文档和技术报告。
 
@@ -42,7 +44,7 @@ Web Adapter 经两小时技术闸门评估，wasm-gc 字符串互操作在当前
 | 类别 | 数量 | 说明 |
 |---|---|---|
 | MoonBit 测试（native） | 71 | Parser、checker、evaluator、trace mode、renderer、CLI、adapter |
-| MoonBit 测试（wasm-gc） | 66 | 跨目标核心测试 |
+| MoonBit 测试（wasm-gc） | 71 | 跨目标核心测试 |
 | QuickCheck 性质测试 | 18 | 双否定、确定性、短路、预算安全、模式不变性、JSON 往返 |
 | Playwright e2e 测试 | 11 | Playground：页面外壳、Check/Evaluate、pass/fail、Tab、Copy、Download、错误输入、Trace 模式 |
 | Vitest 单元测试 | 6 | Engine 客户端、示例加载、渲染器 helper |
@@ -54,7 +56,7 @@ Web Adapter 经两小时技术闸门评估，wasm-gc 字符串互操作在当前
 
 ## 开源与许可证
 
-Apache-2.0。提交作者已统一为 GitHub noreply 身份。GitHub 仓库公开，CI 绿色，包 `z2823253773-p/moonrules@0.1.0` 已发布至 mooncakes.io，v0.2.0 进入公开发布流程。
+Apache-2.0。提交作者已统一为 GitHub noreply 身份。GitHub 仓库公开，CI 绿色，包 `z2823253773-p/moonrules@0.2.0` 已发布至 mooncakes.io，GitHub Release `v0.2.0` 已创建。
 
 ## AI 辅助开发声明
 

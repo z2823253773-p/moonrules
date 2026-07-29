@@ -140,7 +140,7 @@ def build() -> None:
     c.drawString(33, page_h - 70, "MoonBit 原生的可解释 API 动态规则校验引擎")
     c.setFillColor(HexColor("#D8DDF6"))
     c.setFont("CJK", 8.4)
-    c.drawString(33, page_h - 91, "V2 · 0.2.0-rc   |   Apache-2.0   |   71 native / 66 wasm-gc tests   |   11 browser e2e")
+    c.drawString(33, page_h - 91, "V2 · 0.2.0   |   Apache-2.0   |   71 native / 71 wasm-gc tests   |   11 browser e2e")
 
     margin = 32
     gutter = 14
@@ -157,7 +157,7 @@ def build() -> None:
         col_w,
         86,
         "项目定位与生态价值",
-        "面向 API 准入、资格判断和配置策略。JSON Schema 验证结构；MoonRules 判断合法数据是否满足动态业务条件，并解释每一步原因。v0.1 已发布 mooncakes.io，v0.2 新增 Playground 与 Trace 模式。",
+        "面向 API 准入、资格判断和配置策略。JSON Schema 验证结构；MoonRules 判断合法数据是否满足动态业务条件，并解释每一步原因。",
         fill=PALE,
     )
     top_l = top - 86 - gap
@@ -200,7 +200,7 @@ def build() -> None:
         col_w,
         82,
         "开源与许可证",
-        "Apache-2.0；GitHub 与 CI 已公开；mooncakes.io 已发布 v0.1.0。v0.2.0 发布待用户确认。AI 辅助开发：规划/实现/测试/文档经人工逐项审核。",
+        "Apache-2.0；GitHub、CI、Pages 与 Mooncakes 均已公开；z2823253773-p/moonrules@0.2.0 已发布。AI 辅助开发：规划/实现/测试/文档经人工逐项审核。",
         fill=PALE,
     )
 
@@ -223,7 +223,7 @@ def build() -> None:
         col_w,
         136,
         "交付、测试与文档",
-        "71 原生 + 66 wasm-gc + 18 QuickCheck + 11 Playwright + 6 Vitest 测试。3 组业务示例（含 pass/fail 数据）。CLI 黑盒脚本。可复现基准（1-1000 节点）。中文主 README、英文入口、5 份参考文档。",
+        "71 原生 + 71 wasm-gc + 18 QuickCheck + 11 Playwright + 6 Vitest 测试。3 组业务示例（含 pass/fail 数据）。CLI 黑盒脚本。可复现基准（1-1000 节点）。中文主 README、英文入口、5 份参考文档。",
         fill=PALE_2,
         accent=ACCENT_2,
     )
@@ -260,7 +260,7 @@ def build() -> None:
     c.drawString(
         margin + 14,
         evidence_y + 14,
-        "GitHub: z2823253773-p/moonrules   ·   CI: PASS   ·   Mooncakes: v0.1.0 published   ·   v0.2.0-rc ready",
+        "GitHub: z2823253773-p/moonrules   ·   Pages: public   ·   Mooncakes: v0.2.0 published   ·   Release: v0.2.0",
     )
 
     c.setFillColor(MUTED)

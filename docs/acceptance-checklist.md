@@ -7,7 +7,7 @@ Every item from the design document (section 16: 完成定义) is listed with it
 - [x] `moon fmt --check` passes
 - [x] `moon check --deny-warn` passes
 - [x] `moon test --target native` passes (71 tests)
-- [x] `moon test --target wasm-gc` passes (66 tests)
+- [x] `moon test --target wasm-gc` passes (71 tests)
 - [x] `moon build --target native` passes
 - [x] `moon build --target wasm-gc` passes
 - [x] Existing target regression tests pass
@@ -52,8 +52,8 @@ Every item from the design document (section 16: 完成定义) is listed with it
 
 ## GitHub Pages
 
-- [ ] GitHub Pages publicly accessible
-- [ ] Three examples demonstrate pass, fail, and error paths
+- [x] GitHub Pages publicly accessible: https://z2823253773-p.github.io/moonrules/
+- [x] Three examples demonstrate pass, fail, and error paths
 - [x] Pages workflow exists (`.github/workflows/pages.yml`)
 - [x] Deploy job enabled after explicit user confirmation
 
@@ -82,21 +82,21 @@ Every item from the design document (section 16: 完成定义) is listed with it
 - [x] `docs/demo-script.md`
 - [x] `docs/acceptance-checklist.md` (this file)
 
-## Release (pending user confirmation)
+## Release
 
 - [x] `moon.mod` version bumped to `0.2.0`
 - [x] `CHANGELOG.md` updated with v0.2.0 entries
 - [x] `moon package --list` audit clean (no credentials, `.env`, `node_modules`, build artifacts; local sample PDF excluded)
-- [ ] Consumer install test: `moon add z2823253773-p/moonrules@0.2.0 && moon check`
-- [ ] `moon publish` successful
-- [ ] GitHub Release `v0.2.0` created with release notes
-- [ ] Pages URL verified
-- [ ] Mooncakes docs page verified
-- [ ] All README links verified
+- [x] Consumer install test: `moon add z2823253773-p/moonrules@0.2.0 && moon check`
+- [x] `moon publish` successful
+- [x] GitHub Release `v0.2.0` created with release notes
+- [x] Pages URL verified
+- [x] Mooncakes docs page verified: https://mooncakes.io/docs/z2823253773-p/moonrules
+- [x] All README links verified
 
 ## Submission materials
 
 - [x] Application source (`docs/submission/moonrules-application.md`) updated for v0.2
 - [x] One-page PDF built and visually verified
 - [x] GIF or screenshot walkthrough captured
-- [ ] All claims in application match measured results
+- [x] All claims in application match measured results
