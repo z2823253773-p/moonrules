@@ -10,7 +10,8 @@ Task 10 CI, e2e tests, and Pages workflow passed and merged through PR #7.
 Task 11 reproducible MoonBit benchmarks passed.
 Task 12 repository maturity and contribution documents passed.
 Task 13 architecture, API, README, and technical report passed.
-Next: Task 14 application PDF, screenshots, GIF, and demo script.
+Task 14 application PDF, demo script, and acceptance checklist passed.
+Next: Task 15 full CI, package audit, PR, pre-release candidate.
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions
