@@ -24,6 +24,10 @@ and submission/demo evidence finalized. Further features belong to v0.3.
 P1 submission polish is in progress on `codex/p1-polish`: README first screen,
 submission markdown, and the one-page PDF were rewritten for judge-facing
 clarity without changing core code.
+Final submission packaging is in progress on `codex/final-submission`:
+`docs/submission/final-submission.md` centralizes platform copy, public links,
+local artifacts, validation evidence, the demo path, and the AI assistance
+statement.
 
 ## Locked decisions
 
