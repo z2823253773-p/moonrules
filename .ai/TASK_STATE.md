@@ -2,13 +2,17 @@
 
 ## Current milestone
 
-MoonRules v0.2 implementation is active on `codex/v0.2-playground`.
+MoonRules v0.2 implementation is active on `codex/v0.2-evidence`.
 Task 9 status, Trace, diagnostics, JSON, stats, copy, and download passed.
 Task 8 and Task 9 playground changes were committed in
   `feat: build interactive explainable playground`.
-Task 10 CI, e2e tests, and Pages workflow passed; review fixes are pending
-commit in this worktree.
-Next: Task 11 reproducible MoonBit benchmarks.
+Task 10 CI, e2e tests, and Pages workflow passed and merged through PR #7.
+Task 11 reproducible MoonBit benchmarks passed.
+Task 12 repository maturity and contribution documents passed.
+Task 13 architecture, API, README, and technical report passed.
+Task 14 application PDF, demo script, and acceptance checklist passed.
+Task 15 full CI, package audit, and pre-release candidate passed.
+Next: Task 16 authorized publication/final freeze (awaiting user confirmation).
 No public v0.2 release action is authorized yet.
 
 ## Locked decisions
@@ -231,9 +235,44 @@ Task 10 browser smoke test and GitHub Pages workflow on
 - `moon build cmd/playground --target js --release`: pass.
 - `git diff --check`: pass.
 
+Task 11 reproducible MoonBit benchmarks on `codex/v0.2-evidence`:
+
+- Added deterministic benchmark fixtures for 1, 10, 100, and 1000-comparison
+  `and` rules.
+- Added benchmark phases for parse, check, evaluate, render Full, render
+  Summary, and render Off.
+- The current MoonBit toolchain checks `benchmark_*.mbt` as package sources, so
+  `moonbitlang/core/bench` is imported in `moon.pkg` to keep
+  `moon check --deny-warn` clean.
+- Environment captured for `docs/BENCHMARKS.md`: date `2026-07-28`,
+  architecture `arm64`, Moon `0.1.20260713`, Moonc `0.10.4`, target native
+  release.
+- `moon bench benchmark_parse.mbt --target native --release`: 1 node
+  `1.07 µs`, 10 nodes `5.25 µs`, 100 nodes `46.78 µs`, 1000 nodes
+  `449.78 µs`.
+- `moon bench benchmark_check.mbt --target native --release`: 1 node
+  `333.85 ns`, 10 nodes `2.33 µs`, 100 nodes `21.75 µs`, 1000 nodes
+  `237.79 µs`.
+- `moon bench benchmark_evaluate.mbt --target native --release`: 1 node
+  `1.34 µs`, 10 nodes `10.06 µs`, 100 nodes `104.74 µs`, 1000 nodes
+  `1.08 ms`.
+- `moon bench benchmark_render.mbt --target native --release`: 1 node
+  `8.10 µs`, 10 nodes `52.73 µs`, 100 nodes `511.56 µs`, 1000 nodes
+  `5.18 ms`.
+- `moon bench benchmark_render_summary.mbt --target native --release`: 1 node
+  `4.82 µs`, 10 nodes `23.29 µs`, 100 nodes `207.84 µs`, 1000 nodes
+  `2.08 ms`.
+- `moon bench benchmark_render_off.mbt --target native --release`: 1 node
+  `2.61 µs`, 10 nodes `2.58 µs`, 100 nodes `2.66 µs`, 1000 nodes
+  `2.61 µs`.
+- `scripts/build_playground_engine.sh`: pass.
+- `wc -c playground/src/generated/moonrules.js`: `309275` bytes.
+- `playground/public/engine/moonrules.wasm`: not emitted for the selected JS
+  fallback backend.
+
 ## Next action
 
-Task 11: reproducible MoonBit benchmarks.
+Task 12: repository maturity and contribution documents.
 
 ## External status
 

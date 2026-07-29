@@ -4,9 +4,9 @@
 
 - `Pass`：规则可靠地求值为 `true`。
 - `Fail`：规则可靠地求值为 `false`。
-- `Indeterminate(EvalError)`：缺失变量、类型不匹配、预算超限或不支持的 Trace 模式使结果无法可靠确定。
+- `Indeterminate(EvalError)`：缺失变量、类型不匹配或预算超限使结果无法可靠确定。
 
-CLI 不把 `Indeterminate` 当成通过。
+CLI 不把 `Indeterminate` 当成通过。`UnsupportedTraceMode` 是 v0.1 保留的兼容性变体，v0.2 正常路径不会产生。
 
 ## 错误传播
 

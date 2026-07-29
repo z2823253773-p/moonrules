@@ -140,7 +140,7 @@ def build() -> None:
     c.drawString(33, page_h - 70, "MoonBit 原生的可解释 API 动态规则校验引擎")
     c.setFillColor(HexColor("#D8DDF6"))
     c.setFont("CJK", 8.4)
-    c.drawString(33, page_h - 91, "V1 · 0.1.0   |   Apache-2.0   |   63 native / 60 wasm-gc tests")
+    c.drawString(33, page_h - 91, "V2 · 0.2.0-rc   |   Apache-2.0   |   71 native / 66 wasm-gc tests   |   11 browser e2e")
 
     margin = 32
     gutter = 14
@@ -157,7 +157,7 @@ def build() -> None:
         col_w,
         86,
         "项目定位与生态价值",
-        "面向 API 准入、资格判断、表单逻辑和配置策略。JSON Schema 验证结构；MoonRules 判断合法数据是否满足动态业务条件，并解释每一步原因。",
+        "面向 API 准入、资格判断和配置策略。JSON Schema 验证结构；MoonRules 判断合法数据是否满足动态业务条件，并解释每一步原因。v0.1 已发布 mooncakes.io，v0.2 新增 Playground 与 Trace 模式。",
         fill=PALE,
     )
     top_l = top - 86 - gap
@@ -168,7 +168,7 @@ def build() -> None:
         col_w,
         78,
         "已有基础",
-        "核心库、原生 CLI、三个业务示例、中英文文档和许可证已完成。格式、零警告检查、native 与 wasm-gc 构建全部通过。",
+        "核心引擎、原生 CLI、Web Adapter、静态 Playground、三个业务示例、中英文文档、Issue/PR 模板和贡献指南均已完成。格式、零警告检查、native/wasm-gc 构建全部通过。",
     )
     top_l -= 78 + gap
     draw_card(
@@ -177,8 +177,8 @@ def build() -> None:
         top_l,
         col_w,
         98,
-        "本次新增范围",
-        "15 种节点/操作符形式；JSON DSL 解析；运行前检查；三态求值；结构化 Trace；确定性预算；check/eval CLI；QuickCheck；CI 与发布包。",
+        "本次新增范围（v0.2）",
+        "三种 Trace 输出模式；诊断 JSON 序列化；CLI JSON/stdin/help/version；Web Adapter（JS 目标）；静态 Playground（Vite + CodeMirror 6 + Playwright 测试）；可复现基准测试；架构文档和技术报告。",
         fill=PALE_2,
         accent=ACCENT_2,
     )
@@ -190,7 +190,7 @@ def build() -> None:
         col_w,
         126,
         "技术路线",
-        "JSON 规则依次通过 Parser → Checker → Evaluator → Renderer。可移植核心不依赖文件、环境、进程或网络 API，副作用仅位于 native CLI。and: false > error > true；or: true > error > false。",
+        "JSON 规则依次通过 Parser → Checker → Evaluator → Full Report → TraceMode 压缩。可移植核心不依赖文件/环境/进程/网络 API；原生 I/O 仅存在于 CLI，DOM 副作用仅存在于 Playground。",
     )
     top_l -= 126 + gap
     draw_card(
@@ -200,7 +200,7 @@ def build() -> None:
         col_w,
         82,
         "开源与许可证",
-        "Apache-2.0；GitHub 与 CI 已公开；mooncakes.io 已发布。包名 z2823253773-p/moonrules@0.1.0。",
+        "Apache-2.0；GitHub 与 CI 已公开；mooncakes.io 已发布 v0.1.0。v0.2.0 发布待用户确认。AI 辅助开发：规划/实现/测试/文档经人工逐项审核。",
         fill=PALE,
     )
 
@@ -211,7 +211,7 @@ def build() -> None:
         col_w,
         166,
         "核心创新",
-        "1. 可解释执行：变量、字面量和操作符均为独立 Trace 节点。\n2. 运行前诊断：提前发现参数、路径、字面量类型和静态预算问题。\n3. 确定性预算：限制深度、节点、步骤和 Trace；超限保留部分 Trace，并在截断点写入结构化错误。",
+        "1. 可解释执行：独立变量/字面量/操作符 Trace 节点，Full/Summary/Off 三种输出模式。\n2. 运行前诊断：操作符存在性、参数数量、路径格式、字面量类型、预算超限。\n3. 确定性预算：深度/节点/步骤/Trace 五重限制，超限安全失败并保留部分 Trace。",
         fill=PALE,
         body_size=8.25,
     )
@@ -223,7 +223,7 @@ def build() -> None:
         col_w,
         136,
         "交付、测试与文档",
-        "优惠券、API 准入、会员资格三组可运行示例。60 个跨目标核心测试 + 3 个 native CLI 测试，其中含 16 个固定种子性质测试。中文主 README、英文入口及 DSL/API/错误参考齐备。",
+        "71 原生 + 66 wasm-gc + 18 QuickCheck + 11 Playwright + 6 Vitest 测试。3 组业务示例（含 pass/fail 数据）。CLI 黑盒脚本。可复现基准（1-1000 节点）。中文主 README、英文入口、5 份参考文档。",
         fill=PALE_2,
         accent=ACCENT_2,
     )
@@ -235,7 +235,7 @@ def build() -> None:
         col_w,
         94,
         "时间安排",
-        "核心实现、GitHub、CI、mooncakes.io 发布和证据回填均已完成。下一步：演示录制与正式申报。工作日每天 1-2 小时，小步提交。",
+        "7/27 设计定稿 → 7/28 TraceMode/CLI → 7/29 Playground → 7/30 基准/文档/CI → 7/31 申报材料/预发布。工作日每天持续提交、持续跑全量矩阵。",
     )
     top_r -= 94 + gap
     draw_card(
@@ -245,7 +245,7 @@ def build() -> None:
         col_w,
         116,
         "评审演示主线",
-        "输入优惠券规则与 guest 数据 → 运行前检查通过 → 输出 FAIL → 展示 user.age 与字面量 18 的独立节点 → user.role 比较失败 → order.total 分支明确标记 SKIPPED。",
+        "打开优惠券规则与 guest 数据 → FAIL → user.age 满足但 user.role 不匹配 → order.total 短路跳过 → 切换 Summary/Off → 展示 CLI JSON 输出和退出码 → 测试/Benchmark/仓库链接。",
         fill=PALE,
     )
 
@@ -260,12 +260,12 @@ def build() -> None:
     c.drawString(
         margin + 14,
         evidence_y + 14,
-        "GitHub: z2823253773-p/moonrules   ·   CI: PASS   ·   Mooncakes: docs/z2823253773-p/moonrules",
+        "GitHub: z2823253773-p/moonrules   ·   CI: PASS   ·   Mooncakes: v0.1.0 published   ·   v0.2.0-rc ready",
     )
 
     c.setFillColor(MUTED)
     c.setFont("CJK", 7.2)
-    c.drawRightString(page_w - margin, 20, "MoonRules · 2026-07-23 · z2823253773-p")
+    c.drawRightString(page_w - margin, 20, "MoonRules · 2026-07-29 · z2823253773-p")
     c.showPage()
     c.save()
 
