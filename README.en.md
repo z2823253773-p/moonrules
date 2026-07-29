@@ -8,7 +8,7 @@ JSON Schema validates structure; MoonRules evaluates business decisions and expl
 
 ## Online Playground
 
-**[Open the MoonRules Playground](https://z2823253773-p.github.io/moonrules/)** (deployment requires user confirmation)
+**[Open the MoonRules Playground](https://z2823253773-p.github.io/moonrules/)**
 
 Write rules, select examples, and explore explainable Traces directly in your browser. All data is processed locally — nothing is sent to a server.
 

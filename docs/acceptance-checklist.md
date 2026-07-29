@@ -54,8 +54,8 @@ Every item from the design document (section 16: 完成定义) is listed with it
 
 - [ ] GitHub Pages publicly accessible
 - [ ] Three examples demonstrate pass, fail, and error paths
-- [ ] Pages workflow exists (`.github/workflows/pages.yml`)
-- [ ] Deploy job is commented out pending user confirmation
+- [x] Pages workflow exists (`.github/workflows/pages.yml`)
+- [x] Deploy job enabled after explicit user confirmation
 
 ## Repository maturity
 
@@ -86,7 +86,7 @@ Every item from the design document (section 16: 完成定义) is listed with it
 
 - [x] `moon.mod` version bumped to `0.2.0`
 - [x] `CHANGELOG.md` updated with v0.2.0 entries
-- [ ] `moon package --list` audit clean (no credentials, `.env`, `node_modules`, build artifacts)
+- [x] `moon package --list` audit clean (no credentials, `.env`, `node_modules`, build artifacts; local sample PDF excluded)
 - [ ] Consumer install test: `moon add z2823253773-p/moonrules@0.2.0 && moon check`
 - [ ] `moon publish` successful
 - [ ] GitHub Release `v0.2.0` created with release notes

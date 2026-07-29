@@ -4,7 +4,7 @@
 
 MoonRules 是 MoonBit 原生的可解释、受预算限制的 JSON 业务规则引擎，面向 API 准入、资格判断、表单逻辑和配置策略。JSON Schema 验证数据结构是否合法；MoonRules 判断合法数据是否满足动态业务条件，并解释每一步原因。
 
-v0.1.0 已发布至 mooncakes.io，具备完整核心闭环。v0.2.0 新增在线 Playground、三种 Trace 输出模式和 CLI JSON/stdin 支持，目前处于 release-candidate 状态，待用户确认后正式发布。
+v0.1.0 已发布至 mooncakes.io，具备完整核心闭环。v0.2.0 新增在线 Playground、三种 Trace 输出模式和 CLI JSON/stdin 支持，并进入公开发布流程。
 
 公开仓库：[github.com/z2823253773-p/moonrules](https://github.com/z2823253773-p/moonrules)
 
@@ -54,7 +54,7 @@ Web Adapter 经两小时技术闸门评估，wasm-gc 字符串互操作在当前
 
 ## 开源与许可证
 
-Apache-2.0。提交作者已统一为 GitHub noreply 身份。GitHub 仓库公开，CI 绿色，包 `z2823253773-p/moonrules@0.1.0` 已发布至 mooncakes.io。v0.2.0 发布待用户确认。
+Apache-2.0。提交作者已统一为 GitHub noreply 身份。GitHub 仓库公开，CI 绿色，包 `z2823253773-p/moonrules@0.1.0` 已发布至 mooncakes.io，v0.2.0 进入公开发布流程。
 
 ## AI 辅助开发声明
 
