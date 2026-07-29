@@ -21,6 +21,9 @@ archive.
 MoonRules v0.2.0 is complete: core/CLI/Playground tests green, GitHub Pages
 public, Mooncakes 0.2.0 published and consumer-verified, GitHub Release created,
 and submission/demo evidence finalized. Further features belong to v0.3.
+P1 submission polish is in progress on `codex/p1-polish`: README first screen,
+submission markdown, and the one-page PDF were rewritten for judge-facing
+clarity without changing core code.
 
 ## Locked decisions
 

@@ -137,10 +137,10 @@ def build() -> None:
     c.setFont("CJK", 23)
     c.drawString(32, page_h - 47, "MoonRules 项目申报书")
     c.setFont("CJK", 10.5)
-    c.drawString(33, page_h - 70, "MoonBit 原生的可解释 API 动态规则校验引擎")
+    c.drawString(33, page_h - 70, "让动态 API 规则可解释、可检查、可复现")
     c.setFillColor(HexColor("#D8DDF6"))
     c.setFont("CJK", 8.4)
-    c.drawString(33, page_h - 91, "V2 · 0.2.0   |   Apache-2.0   |   71 native / 71 wasm-gc tests   |   11 browser e2e")
+    c.drawString(33, page_h - 91, "v0.2.0   |   Apache-2.0   |   71 native + 71 wasm-gc tests   |   公开 Release / Playground")
 
     margin = 32
     gutter = 14
@@ -156,8 +156,8 @@ def build() -> None:
         top,
         col_w,
         86,
-        "项目定位与生态价值",
-        "面向 API 准入、资格判断和配置策略。JSON Schema 验证结构；MoonRules 判断合法数据是否满足动态业务条件，并解释每一步原因。",
+        "项目定位",
+        "MoonBit 原生的 API 动态规则校验引擎。JSON Schema 检查字段结构；MoonRules 判断合法输入是否满足业务条件，并解释每一步原因。",
         fill=PALE,
     )
     top_l = top - 86 - gap
@@ -167,8 +167,8 @@ def build() -> None:
         top_l,
         col_w,
         78,
-        "已有基础",
-        "核心引擎、原生 CLI、Web Adapter、静态 Playground、三个业务示例、中英文文档、Issue/PR 模板和贡献指南均已完成。格式、零警告检查、native/wasm-gc 构建全部通过。",
+        "公开交付",
+        "核心引擎、原生 CLI、Web Adapter、静态 Playground、三个业务示例、中英文文档、Issue/PR 模板和贡献指南均已完成。Pages、Mooncakes 与 Release 均已公开。",
     )
     top_l -= 78 + gap
     draw_card(
@@ -177,8 +177,8 @@ def build() -> None:
         top_l,
         col_w,
         98,
-        "本次新增范围（v0.2）",
-        "三种 Trace 输出模式；诊断 JSON 序列化；CLI JSON/stdin/help/version；Web Adapter（JS 目标）；静态 Playground（Vite + CodeMirror 6 + Playwright 测试）；可复现基准测试；架构文档和技术报告。",
+        "v0.2 交付范围",
+        "三种 Trace 输出模式；诊断 JSON 序列化；CLI JSON/stdin/help/version；Web Adapter（JS 目标）；静态 Playground（Vite + CodeMirror 6 + Playwright 测试）；可复现基准测试。",
         fill=PALE_2,
         accent=ACCENT_2,
     )
@@ -190,7 +190,7 @@ def build() -> None:
         col_w,
         126,
         "技术路线",
-        "JSON 规则依次通过 Parser → Checker → Evaluator → Full Report → TraceMode 压缩。可移植核心不依赖文件/环境/进程/网络 API；原生 I/O 仅存在于 CLI，DOM 副作用仅存在于 Playground。",
+        "JSON 规则依次通过 Parser → Checker → Evaluator → Report → TraceMode。可移植核心不依赖文件/环境/进程/网络 API；原生 I/O 只在 CLI，DOM 副作用只在 Playground。",
     )
     top_l -= 126 + gap
     draw_card(
@@ -198,9 +198,9 @@ def build() -> None:
         left,
         top_l,
         col_w,
-        82,
+        92,
         "开源与许可证",
-        "Apache-2.0；GitHub、CI、Pages 与 Mooncakes 均已公开；z2823253773-p/moonrules@0.2.0 已发布。AI 辅助开发：规划/实现/测试/文档经人工逐项审核。",
+        "Apache-2.0。GitHub、CI、Pages、Mooncakes 已公开；z2823253773-p/moonrules@0.2.0 已发布。AI 辅助（Codex、Claude Code），人工逐项审核。",
         fill=PALE,
     )
 
@@ -211,7 +211,7 @@ def build() -> None:
         col_w,
         166,
         "核心创新",
-        "1. 可解释执行：独立变量/字面量/操作符 Trace 节点，Full/Summary/Off 三种输出模式。\n2. 运行前诊断：操作符存在性、参数数量、路径格式、字面量类型、预算超限。\n3. 确定性预算：深度/节点/步骤/Trace 五重限制，超限安全失败并保留部分 Trace。",
+        "1. 可解释执行：变量、字面量和操作符都是独立 Trace 节点，失败原因可以直接展开查看。\n2. 运行前诊断：操作符、参数数量、路径格式、字面量类型和预算问题在执行前暴露。\n3. 确定性预算：深度、节点、步骤和 Trace 限制固定，超限返回结构化错误。",
         fill=PALE,
         body_size=8.25,
     )
@@ -234,8 +234,8 @@ def build() -> None:
         top_r,
         col_w,
         94,
-        "时间安排",
-        "7/27 设计定稿 → 7/28 TraceMode/CLI → 7/29 Playground → 7/30 基准/文档/CI → 7/31 申报材料/预发布。工作日每天持续提交、持续跑全量矩阵。",
+        "开发节奏",
+        "设计定稿 → TraceMode/CLI → Playground → 基准/文档/CI → 申报材料与公开发布。每个阶段都有提交、测试和验收记录。",
     )
     top_r -= 94 + gap
     draw_card(
