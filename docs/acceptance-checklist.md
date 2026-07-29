@@ -84,8 +84,8 @@ Every item from the design document (section 16: 完成定义) is listed with it
 
 ## Release (pending user confirmation)
 
-- [ ] `moon.mod` version bumped to `0.2.0`
-- [ ] `CHANGELOG.md` updated with v0.2.0 entries
+- [x] `moon.mod` version bumped to `0.2.0`
+- [x] `CHANGELOG.md` updated with v0.2.0 entries
 - [ ] `moon package --list` audit clean (no credentials, `.env`, `node_modules`, build artifacts)
 - [ ] Consumer install test: `moon add z2823253773-p/moonrules@0.2.0 && moon check`
 - [ ] `moon publish` successful
@@ -97,6 +97,6 @@ Every item from the design document (section 16: 完成定义) is listed with it
 ## Submission materials
 
 - [x] Application source (`docs/submission/moonrules-application.md`) updated for v0.2
-- [ ] One-page PDF built and visually verified
-- [ ] GIF or screenshot walkthrough captured
+- [x] One-page PDF built and visually verified
+- [x] GIF or screenshot walkthrough captured
 - [ ] All claims in application match measured results
