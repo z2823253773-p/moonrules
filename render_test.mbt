@@ -1,14 +1,14 @@
 ///|
-fn coupon_report_for_test() -> EvaluationReport raise {
+fn coupon_report_for_test() -> @moonrules.EvaluationReport raise {
   let rule_source = "{\"id\":\"student-coupon\",\"description\":\"coupon\",\"condition\":{\"and\":[{\">=\":[{\"var\":\"user.age\"},18]},{\"==\":[{\"var\":\"user.role\"},\"student\"]},{\">=\":[{\"var\":\"order.total\"},100]}]}}"
-  let rule = match parse_rule_document(@json.parse(rule_source)) {
+  let rule = match @moonrules.parse_rule_document(@json.parse(rule_source)) {
     Ok(value) => value
     Err(_) => fail("coupon rule must parse")
   }
   let data = @json.parse(
     "{\"user\":{\"age\":20,\"role\":\"guest\"},\"order\":{\"total\":128}}",
   )
-  evaluate(rule, data, Budget::default())
+  @moonrules.evaluate(rule, data, @moonrules.Budget::default())
 }
 
 ///|
@@ -31,12 +31,15 @@ test "coupon text trace is stable and explainable" {
     #|├─ SKIPPED >=
     #|│  └─ reason: and short-circuited
     #|└─ result = false
-  @test.assert_eq(render_report(report, Budget::default()), expected)
+  @test.assert_eq(
+    @moonrules.render_report(report, @moonrules.Budget::default()),
+    expected,
+  )
 }
 
 ///|
 test "structured report JSON exposes decision trace and stats" {
-  let json = report_to_json(coupon_report_for_test())
+  let json = @moonrules.report_to_json(coupon_report_for_test())
   guard json is Object(fields) else { fail("report JSON must be an object") }
   debug_inspect(fields.contains("decision"), content="true")
   debug_inspect(fields.contains("trace"), content="true")
@@ -52,13 +55,15 @@ test "structured report JSON exposes decision trace and stats" {
 
 ///|
 test "text rendering truncates long JSON previews" {
-  let long_value = Expr::Literal(@json.parse("\"abcdefghij\""))
-  let report = evaluate_condition(
-    Expr::Operation(Operator::Equal, [long_value, long_value]),
+  let long_value = @moonrules.Expr::Literal(@json.parse("\"abcdefghij\""))
+  let report = @moonrules.evaluate_condition(
+    @moonrules.Expr::Operation(@moonrules.Operator::Equal, [
+      long_value, long_value,
+    ]),
     Json::empty_object(),
-    Budget::default(),
+    @moonrules.Budget::default(),
   )
-  let budget : Budget = {
+  let budget : @moonrules.Budget = {
     max_depth: 64,
     max_rule_nodes: 4096,
     max_steps: 10000,
@@ -66,7 +71,7 @@ test "text rendering truncates long JSON previews" {
     max_preview_chars: 5,
   }
   debug_inspect(
-    render_report(report, budget).contains("…(truncated)"),
+    @moonrules.render_report(report, budget).contains("…(truncated)"),
     content="true",
   )
 }
@@ -74,27 +79,27 @@ test "text rendering truncates long JSON previews" {
 ///|
 test "public facade parses checks and evaluates JSON sources" {
   let rule_source = "{\"id\":\"x\",\"description\":\"x\",\"condition\":{\"==\":[1,1.0]}}"
-  match parse(rule_source) {
-    Ok(rule) => debug_inspect(check(rule), content="[]")
+  match @moonrules.parse(rule_source) {
+    Ok(rule) => debug_inspect(@moonrules.check(rule), content="[]")
     Err(_) => fail("valid rule must parse")
   }
-  match evaluate_json(rule_source, "{}") {
+  match @moonrules.evaluate_json(rule_source, "{}") {
     Ok(report) => debug_inspect(report.decision, content="Pass")
     Err(_) => fail("valid rule and data must evaluate")
   }
-  debug_inspect(parse("{") is Err(_), content="true")
+  debug_inspect(@moonrules.parse("{") is Err(_), content="true")
 }
 
 ///|
 test "diagnostics JSON has stable public fields" {
-  let diagnostic : Diagnostic = {
+  let diagnostic : @moonrules.Diagnostic = {
     code: "E_ARITY",
     severity: Error,
     rule_path: "condition.and",
     message: "operator and expects at least 1 argument",
     suggestion: "provide at least 1 argument",
   }
-  let json = diagnostics_to_json([diagnostic])
+  let json = @moonrules.diagnostics_to_json([diagnostic])
   @test.assert_eq(
     json.stringify(),
     "[{\"code\":\"E_ARITY\",\"severity\":\"error\",\"rule_path\":\"condition.and\",\"message\":\"operator and expects at least 1 argument\",\"suggestion\":\"provide at least 1 argument\"}]",
@@ -103,5 +108,5 @@ test "diagnostics JSON has stable public fields" {
 
 ///|
 test "empty diagnostics serialize as an array" {
-  @test.assert_eq(diagnostics_to_json([]).stringify(), "[]")
+  @test.assert_eq(@moonrules.diagnostics_to_json([]).stringify(), "[]")
 }

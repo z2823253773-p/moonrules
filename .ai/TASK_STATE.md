@@ -25,6 +25,15 @@ native runtime boundary without changing MoonRules v0.2 behavior.
 - `moon check --deny-warn` now reaches only the planned black-box-test package
   qualification migration; that is Task 2.
 
+Task 2 public API test migration:
+
+- Root `*_test.mbt` files remain black-box tests and now refer to MoonRules
+  public types and functions explicitly through `@moonrules`.
+- `moon fmt --check`: pass.
+- `moon check --deny-warn`: pass with 0 warnings/errors.
+- `moon test --target native`: 71 total, 71 passed, 0 failed.
+- `moon test --target wasm-gc`: 71 total, 71 passed, 0 failed.
+
 No global toolchain, remote branch, release, package, or Pages deployment has
 been changed.
 

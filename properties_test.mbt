@@ -1,10 +1,16 @@
 ///|
-fn evaluate_property_expr(expr : Expr) -> EvaluationReport {
-  evaluate_condition(expr, Json::empty_object(), Budget::default())
+fn evaluate_property_expr(
+  expr : @moonrules.Expr,
+) -> @moonrules.EvaluationReport {
+  @moonrules.evaluate_condition(
+    expr,
+    Json::empty_object(),
+    @moonrules.Budget::default(),
+  )
 }
 
 ///|
-fn trace_node_count(node : TraceNode) -> Int32 {
+fn trace_node_count(node : @moonrules.TraceNode) -> Int32 {
   let mut count = 1
   for child in node.children {
     count += trace_node_count(child)
@@ -16,10 +22,16 @@ fn trace_node_count(node : TraceNode) -> Int32 {
 test "property: double negation preserves booleans" {
   let values : Array[Bool] = @quickcheck.samples(100)
   for value in values {
-    let expr = Expr::Operation(Operator::Not, [
-      Expr::Operation(Operator::Not, [Expr::Literal(Json::boolean(value))]),
+    let expr = @moonrules.Expr::Operation(@moonrules.Operator::Not, [
+      @moonrules.Expr::Operation(@moonrules.Operator::Not, [
+        @moonrules.Expr::Literal(Json::boolean(value)),
+      ]),
     ])
-    let expected = if value { Decision::Pass } else { Decision::Fail }
+    let expected = if value {
+      @moonrules.Decision::Pass
+    } else {
+      @moonrules.Decision::Fail
+    }
     @test.assert_eq(evaluate_property_expr(expr).decision, expected)
   }
 }
@@ -29,9 +41,9 @@ test "property: evaluation is deterministic" {
   let values : Array[Int32] = @quickcheck.samples(100)
   for value in values {
     let json = Json::number(value.to_double())
-    let expr = Expr::Operation(Operator::Equal, [
-      Expr::Literal(json),
-      Expr::Literal(json),
+    let expr = @moonrules.Expr::Operation(@moonrules.Operator::Equal, [
+      @moonrules.Expr::Literal(json),
+      @moonrules.Expr::Literal(json),
     ])
     let first = evaluate_property_expr(expr)
     let second = evaluate_property_expr(expr)
@@ -43,14 +55,17 @@ test "property: evaluation is deterministic" {
 test "property: and false short-circuits every later node" {
   let values : Array[Bool] = @quickcheck.samples(100)
   for value in values {
-    let expr = Expr::Operation(Operator::And, [
-      Expr::Literal(Json::boolean(value)),
-      Expr::Literal(Json::boolean(false)),
-      Expr::Variable("must.not.execute"),
+    let expr = @moonrules.Expr::Operation(@moonrules.Operator::And, [
+      @moonrules.Expr::Literal(Json::boolean(value)),
+      @moonrules.Expr::Literal(Json::boolean(false)),
+      @moonrules.Expr::Variable("must.not.execute"),
     ])
     let report = evaluate_property_expr(expr)
-    @test.assert_eq(report.decision, Decision::Fail)
-    @test.assert_eq(report.trace.children[2].status, TraceStatus::Skipped)
+    @test.assert_eq(report.decision, @moonrules.Decision::Fail)
+    @test.assert_eq(
+      report.trace.children[2].status,
+      @moonrules.TraceStatus::Skipped,
+    )
   }
 }
 
@@ -58,14 +73,17 @@ test "property: and false short-circuits every later node" {
 test "property: or true short-circuits every later node" {
   let values : Array[Bool] = @quickcheck.samples(100)
   for value in values {
-    let expr = Expr::Operation(Operator::Or, [
-      Expr::Literal(Json::boolean(value)),
-      Expr::Literal(Json::boolean(true)),
-      Expr::Variable("must.not.execute"),
+    let expr = @moonrules.Expr::Operation(@moonrules.Operator::Or, [
+      @moonrules.Expr::Literal(Json::boolean(value)),
+      @moonrules.Expr::Literal(Json::boolean(true)),
+      @moonrules.Expr::Variable("must.not.execute"),
     ])
     let report = evaluate_property_expr(expr)
-    @test.assert_eq(report.decision, Decision::Pass)
-    @test.assert_eq(report.trace.children[2].status, TraceStatus::Skipped)
+    @test.assert_eq(report.decision, @moonrules.Decision::Pass)
+    @test.assert_eq(
+      report.trace.children[2].status,
+      @moonrules.TraceStatus::Skipped,
+    )
   }
 }
 
@@ -78,11 +96,11 @@ test "property: missing variables are deterministic errors" {
     } else {
       raw_name
     }
-    let expr = Expr::Variable(name)
+    let expr = @moonrules.Expr::Variable(name)
     let first = evaluate_property_expr(expr)
     let second = evaluate_property_expr(expr)
     @test.assert_eq(first, second)
-    assert_true(first.decision is Decision::Indeterminate(_))
+    assert_true(first.decision is @moonrules.Decision::Indeterminate(_))
   }
 }
 
@@ -90,20 +108,24 @@ test "property: missing variables are deterministic errors" {
 test "property: depth budget always returns a structured error" {
   let values : Array[Bool] = @quickcheck.samples(50)
   for value in values {
-    let budget : Budget = {
+    let budget : @moonrules.Budget = {
       max_depth: 1,
       max_rule_nodes: 4096,
       max_steps: 10000,
       max_trace_nodes: 4096,
       max_preview_chars: 256,
     }
-    let expr = Expr::Operation(Operator::Not, [
-      Expr::Literal(Json::boolean(value)),
+    let expr = @moonrules.Expr::Operation(@moonrules.Operator::Not, [
+      @moonrules.Expr::Literal(Json::boolean(value)),
     ])
-    let report = evaluate_condition(expr, Json::empty_object(), budget)
+    let report = @moonrules.evaluate_condition(
+      expr,
+      Json::empty_object(),
+      budget,
+    )
     assert_true(
       report.decision
-      is Decision::Indeterminate(BudgetExceeded("max_depth", _, _)),
+      is @moonrules.Decision::Indeterminate(BudgetExceeded("max_depth", _, _)),
     )
   }
 }
@@ -112,21 +134,27 @@ test "property: depth budget always returns a structured error" {
 test "property: rule node budget always returns a structured error" {
   let values : Array[Bool] = @quickcheck.samples(50)
   for value in values {
-    let budget : Budget = {
+    let budget : @moonrules.Budget = {
       max_depth: 64,
       max_rule_nodes: 1,
       max_steps: 10000,
       max_trace_nodes: 4096,
       max_preview_chars: 256,
     }
-    let expr = Expr::Operation(Operator::And, [
-      Expr::Literal(Json::boolean(value)),
-      Expr::Literal(Json::boolean(true)),
+    let expr = @moonrules.Expr::Operation(@moonrules.Operator::And, [
+      @moonrules.Expr::Literal(Json::boolean(value)),
+      @moonrules.Expr::Literal(Json::boolean(true)),
     ])
-    let report = evaluate_condition(expr, Json::empty_object(), budget)
+    let report = @moonrules.evaluate_condition(
+      expr,
+      Json::empty_object(),
+      budget,
+    )
     assert_true(
       report.decision
-      is Decision::Indeterminate(BudgetExceeded("max_rule_nodes", _, _)),
+      is @moonrules.Decision::Indeterminate(
+        BudgetExceeded("max_rule_nodes", _, _)
+      ),
     )
   }
 }
@@ -135,20 +163,24 @@ test "property: rule node budget always returns a structured error" {
 test "property: step budget always returns a structured error" {
   let values : Array[Bool] = @quickcheck.samples(50)
   for value in values {
-    let budget : Budget = {
+    let budget : @moonrules.Budget = {
       max_depth: 64,
       max_rule_nodes: 4096,
       max_steps: 1,
       max_trace_nodes: 4096,
       max_preview_chars: 256,
     }
-    let expr = Expr::Operation(Operator::Not, [
-      Expr::Literal(Json::boolean(value)),
+    let expr = @moonrules.Expr::Operation(@moonrules.Operator::Not, [
+      @moonrules.Expr::Literal(Json::boolean(value)),
     ])
-    let report = evaluate_condition(expr, Json::empty_object(), budget)
+    let report = @moonrules.evaluate_condition(
+      expr,
+      Json::empty_object(),
+      budget,
+    )
     assert_true(
       report.decision
-      is Decision::Indeterminate(BudgetExceeded("max_steps", _, _)),
+      is @moonrules.Decision::Indeterminate(BudgetExceeded("max_steps", _, _)),
     )
   }
 }
@@ -157,20 +189,26 @@ test "property: step budget always returns a structured error" {
 test "property: trace budget uses its final slot for an error" {
   let values : Array[Bool] = @quickcheck.samples(50)
   for value in values {
-    let budget : Budget = {
+    let budget : @moonrules.Budget = {
       max_depth: 64,
       max_rule_nodes: 4096,
       max_steps: 10000,
       max_trace_nodes: 2,
       max_preview_chars: 256,
     }
-    let expr = Expr::Operation(Operator::Not, [
-      Expr::Literal(Json::boolean(value)),
+    let expr = @moonrules.Expr::Operation(@moonrules.Operator::Not, [
+      @moonrules.Expr::Literal(Json::boolean(value)),
     ])
-    let report = evaluate_condition(expr, Json::empty_object(), budget)
+    let report = @moonrules.evaluate_condition(
+      expr,
+      Json::empty_object(),
+      budget,
+    )
     assert_true(
       report.decision
-      is Decision::Indeterminate(BudgetExceeded("max_trace_nodes", _, _)),
+      is @moonrules.Decision::Indeterminate(
+        BudgetExceeded("max_trace_nodes", _, _)
+      ),
     )
     @test.assert_eq(report.stats.trace_nodes_emitted, 2)
   }
@@ -180,26 +218,26 @@ test "property: trace budget uses its final slot for an error" {
 test "property: trace modes preserve decisions and reduce output" {
   let values : Array[Bool] = @quickcheck.samples(100)
   for value in values {
-    let expr = Expr::Operation(Operator::And, [
-      Expr::Literal(Json::boolean(value)),
-      Expr::Literal(Json::boolean(true)),
+    let expr = @moonrules.Expr::Operation(@moonrules.Operator::And, [
+      @moonrules.Expr::Literal(Json::boolean(value)),
+      @moonrules.Expr::Literal(Json::boolean(true)),
     ])
-    let full = evaluate_condition(
+    let full = @moonrules.evaluate_condition(
       expr,
       Json::empty_object(),
-      Budget::default(),
+      @moonrules.Budget::default(),
       trace_mode=Full,
     )
-    let summary = evaluate_condition(
+    let summary = @moonrules.evaluate_condition(
       expr,
       Json::empty_object(),
-      Budget::default(),
+      @moonrules.Budget::default(),
       trace_mode=Summary,
     )
-    let off = evaluate_condition(
+    let off = @moonrules.evaluate_condition(
       expr,
       Json::empty_object(),
-      Budget::default(),
+      @moonrules.Budget::default(),
       trace_mode=Off,
     )
     @test.assert_eq(full.decision, summary.decision)
@@ -214,7 +252,7 @@ test "property: JSON deep equality is reflexive for strings" {
   let values : Array[String] = @quickcheck.samples(100)
   for value in values {
     let json = Json::string(value)
-    assert_true(json_deep_equal(json, json))
+    assert_true(@moonrules.json_deep_equal(json, json))
   }
 }
 
@@ -225,7 +263,10 @@ test "property: JSON deep equality is symmetric" {
   for index, left in left_values {
     let a = Json::number(left.to_double())
     let b = Json::number(right_values[index].to_double())
-    @test.assert_eq(json_deep_equal(a, b), json_deep_equal(b, a))
+    @test.assert_eq(
+      @moonrules.json_deep_equal(a, b),
+      @moonrules.json_deep_equal(b, a),
+    )
   }
 }
 
@@ -238,13 +279,16 @@ test "property: greater-than reverses to less-than" {
     let a = Json::number(left.to_double())
     let b = Json::number(right.to_double())
     let greater = evaluate_property_expr(
-      Expr::Operation(Operator::GreaterThan, [
-        Expr::Literal(a),
-        Expr::Literal(b),
+      @moonrules.Expr::Operation(@moonrules.Operator::GreaterThan, [
+        @moonrules.Expr::Literal(a),
+        @moonrules.Expr::Literal(b),
       ]),
     )
     let less = evaluate_property_expr(
-      Expr::Operation(Operator::LessThan, [Expr::Literal(b), Expr::Literal(a)]),
+      @moonrules.Expr::Operation(@moonrules.Operator::LessThan, [
+        @moonrules.Expr::Literal(b),
+        @moonrules.Expr::Literal(a),
+      ]),
     )
     @test.assert_eq(greater.decision, less.decision)
   }
@@ -256,12 +300,12 @@ test "property: an inserted JSON string is always in its array" {
   for value in values {
     let json = Json::string(value)
     let report = evaluate_property_expr(
-      Expr::Operation(Operator::In, [
-        Expr::Literal(json),
-        Expr::Literal(Json::array([json])),
+      @moonrules.Expr::Operation(@moonrules.Operator::In, [
+        @moonrules.Expr::Literal(json),
+        @moonrules.Expr::Literal(Json::array([json])),
       ]),
     )
-    @test.assert_eq(report.decision, Decision::Pass)
+    @test.assert_eq(report.decision, @moonrules.Decision::Pass)
   }
 }
 
@@ -271,12 +315,12 @@ test "property: every string contains itself" {
   for value in values {
     let json = Json::string(value)
     let report = evaluate_property_expr(
-      Expr::Operation(Operator::Contains, [
-        Expr::Literal(json),
-        Expr::Literal(json),
+      @moonrules.Expr::Operation(@moonrules.Operator::Contains, [
+        @moonrules.Expr::Literal(json),
+        @moonrules.Expr::Literal(json),
       ]),
     )
-    @test.assert_eq(report.decision, Decision::Pass)
+    @test.assert_eq(report.decision, @moonrules.Decision::Pass)
   }
 }
 
@@ -286,19 +330,19 @@ test "property: every string starts and ends with itself" {
   for value in values {
     let json = Json::string(value)
     let starts = evaluate_property_expr(
-      Expr::Operation(Operator::StartsWith, [
-        Expr::Literal(json),
-        Expr::Literal(json),
+      @moonrules.Expr::Operation(@moonrules.Operator::StartsWith, [
+        @moonrules.Expr::Literal(json),
+        @moonrules.Expr::Literal(json),
       ]),
     )
     let ends = evaluate_property_expr(
-      Expr::Operation(Operator::EndsWith, [
-        Expr::Literal(json),
-        Expr::Literal(json),
+      @moonrules.Expr::Operation(@moonrules.Operator::EndsWith, [
+        @moonrules.Expr::Literal(json),
+        @moonrules.Expr::Literal(json),
       ]),
     )
-    @test.assert_eq(starts.decision, Decision::Pass)
-    @test.assert_eq(ends.decision, Decision::Pass)
+    @test.assert_eq(starts.decision, @moonrules.Decision::Pass)
+    @test.assert_eq(ends.decision, @moonrules.Decision::Pass)
   }
 }
 
@@ -306,14 +350,23 @@ test "property: every string starts and ends with itself" {
 test "property: checker and report JSON are deterministic" {
   let values : Array[Bool] = @quickcheck.samples(100)
   for value in values {
-    let expr = Expr::Operation(Operator::Not, [
-      Expr::Literal(Json::boolean(value)),
+    let expr = @moonrules.Expr::Operation(@moonrules.Operator::Not, [
+      @moonrules.Expr::Literal(Json::boolean(value)),
     ])
-    let first_diagnostics = check_expr(expr, Budget::default())
-    let second_diagnostics = check_expr(expr, Budget::default())
+    let first_diagnostics = @moonrules.check_expr(
+      expr,
+      @moonrules.Budget::default(),
+    )
+    let second_diagnostics = @moonrules.check_expr(
+      expr,
+      @moonrules.Budget::default(),
+    )
     @test.assert_eq(first_diagnostics, second_diagnostics)
     let report = evaluate_property_expr(expr)
-    @test.assert_eq(report_to_json(report), report_to_json(report))
+    @test.assert_eq(
+      @moonrules.report_to_json(report),
+      @moonrules.report_to_json(report),
+    )
   }
 }
 
@@ -321,21 +374,21 @@ test "property: checker and report JSON are deterministic" {
 test "property: report and diagnostic JSON round-trip through text" {
   let values : Array[Bool] = @quickcheck.samples(100)
   for value in values {
-    let report = evaluate_condition(
-      Expr::Literal(Json::boolean(value)),
+    let report = @moonrules.evaluate_condition(
+      @moonrules.Expr::Literal(Json::boolean(value)),
       Json::empty_object(),
-      Budget::default(),
+      @moonrules.Budget::default(),
     )
-    let report_text = report_to_json(report).stringify()
-    @test.assert_eq(@json.parse(report_text), report_to_json(report))
-    let diagnostics = check_expr(
-      Expr::Operation(Operator::And, []),
-      Budget::default(),
+    let report_text = @moonrules.report_to_json(report).stringify()
+    @test.assert_eq(@json.parse(report_text), @moonrules.report_to_json(report))
+    let diagnostics = @moonrules.check_expr(
+      @moonrules.Expr::Operation(@moonrules.Operator::And, []),
+      @moonrules.Budget::default(),
     )
-    let diagnostic_text = diagnostics_to_json(diagnostics).stringify()
+    let diagnostic_text = @moonrules.diagnostics_to_json(diagnostics).stringify()
     @test.assert_eq(
       @json.parse(diagnostic_text),
-      diagnostics_to_json(diagnostics),
+      @moonrules.diagnostics_to_json(diagnostics),
     )
   }
 }
