@@ -47,6 +47,12 @@ pub(all) struct Budget {
   max_preview_chars : Int32
 }
 pub fn Budget::default() -> Self
+#deprecated
+pub fn Budget::equal(Self, Self) -> Bool
+#deprecated
+pub fn Budget::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn Budget::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) enum DataPathError {
@@ -54,6 +60,12 @@ pub(all) enum DataPathError {
   MissingDataPath(String)
   NonObjectSegment(String)
 }
+#deprecated
+pub fn DataPathError::equal(Self, Self) -> Bool
+#deprecated
+pub fn DataPathError::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn DataPathError::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) enum Decision {
@@ -61,7 +73,13 @@ pub(all) enum Decision {
   Fail
   Indeterminate(EvalError)
 }
+#deprecated
+pub fn Decision::equal(Self, Self) -> Bool
 pub fn Decision::exit_code(Self) -> Int32
+#deprecated
+pub fn Decision::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn Decision::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) struct Diagnostic {
@@ -71,12 +89,24 @@ pub(all) struct Diagnostic {
   message : String
   suggestion : String
 }
+#deprecated
+pub fn Diagnostic::equal(Self, Self) -> Bool
+#deprecated
+pub fn Diagnostic::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn Diagnostic::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) enum DiagnosticSeverity {
   Error
   Warning
 }
+#deprecated
+pub fn DiagnosticSeverity::equal(Self, Self) -> Bool
+#deprecated
+pub fn DiagnosticSeverity::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn DiagnosticSeverity::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) enum EvalError {
@@ -85,6 +115,12 @@ pub(all) enum EvalError {
   BudgetExceeded(String, Int32, Int32)
   UnsupportedTraceMode(String)
 }
+#deprecated
+pub fn EvalError::equal(Self, Self) -> Bool
+#deprecated
+pub fn EvalError::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn EvalError::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) struct EvaluationReport {
@@ -92,6 +128,12 @@ pub(all) struct EvaluationReport {
   trace : TraceNode
   stats : ExecutionStats
 }
+#deprecated
+pub fn EvaluationReport::equal(Self, Self) -> Bool
+#deprecated
+pub fn EvaluationReport::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn EvaluationReport::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) struct ExecutionStats {
@@ -100,6 +142,12 @@ pub(all) struct ExecutionStats {
   max_depth_reached : Int32
   trace_nodes_emitted : Int32
 }
+#deprecated
+pub fn ExecutionStats::equal(Self, Self) -> Bool
+#deprecated
+pub fn ExecutionStats::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn ExecutionStats::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) enum Expr {
@@ -107,6 +155,12 @@ pub(all) enum Expr {
   Variable(String)
   Operation(Operator, Array[Expr])
 }
+#deprecated
+pub fn Expr::equal(Self, Self) -> Bool
+#deprecated
+pub fn Expr::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn Expr::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) enum Operator {
@@ -124,12 +178,24 @@ pub(all) enum Operator {
   StartsWith
   EndsWith
 }
+#deprecated
+pub fn Operator::equal(Self, Self) -> Bool
+#deprecated
+pub fn Operator::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn Operator::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) struct ResolvedInput {
   source : String
   value : @json.Json
 }
+#deprecated
+pub fn ResolvedInput::equal(Self, Self) -> Bool
+#deprecated
+pub fn ResolvedInput::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn ResolvedInput::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) struct RuleDocument {
@@ -137,6 +203,12 @@ pub(all) struct RuleDocument {
   description : String
   condition : Expr
 }
+#deprecated
+pub fn RuleDocument::equal(Self, Self) -> Bool
+#deprecated
+pub fn RuleDocument::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn RuleDocument::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) enum RuleParseError {
@@ -149,15 +221,27 @@ pub(all) enum RuleParseError {
   InvalidLiteral(String)
   InvalidArguments(String)
 }
+#deprecated
+pub fn RuleParseError::equal(Self, Self) -> Bool
 pub fn RuleParseError::message(Self) -> String
+#deprecated
+pub fn RuleParseError::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn RuleParseError::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) struct RulePath {
   segments : Array[RulePathSegment]
 }
+#deprecated
+pub fn RulePath::equal(Self, Self) -> Bool
 pub fn RulePath::field(Self, String) -> Self
 pub fn RulePath::index(Self, Int32) -> Self
+#deprecated
+pub fn RulePath::not_equal(Self, Self) -> Bool
 pub fn RulePath::root() -> Self
+#deprecated
+pub fn RulePath::to_repr(Self) -> @debug.Repr
 pub fn RulePath::to_string(Self) -> String
 
 #derive(Eq, @debug.Debug)
@@ -165,6 +249,12 @@ pub(all) enum RulePathSegment {
   Field(String)
   Index(Int32)
 }
+#deprecated
+pub fn RulePathSegment::equal(Self, Self) -> Bool
+#deprecated
+pub fn RulePathSegment::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn RulePathSegment::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) enum TraceMode {
@@ -172,6 +262,12 @@ pub(all) enum TraceMode {
   Summary
   Full
 }
+#deprecated
+pub fn TraceMode::equal(Self, Self) -> Bool
+#deprecated
+pub fn TraceMode::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn TraceMode::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) struct TraceNode {
@@ -183,6 +279,12 @@ pub(all) struct TraceNode {
   message : String
   children : Array[TraceNode]
 }
+#deprecated
+pub fn TraceNode::equal(Self, Self) -> Bool
+#deprecated
+pub fn TraceNode::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn TraceNode::to_repr(Self) -> @debug.Repr
 
 #derive(Eq, @debug.Debug)
 pub(all) enum TraceStatus {
@@ -192,6 +294,12 @@ pub(all) enum TraceStatus {
   Error
   Skipped
 }
+#deprecated
+pub fn TraceStatus::equal(Self, Self) -> Bool
+#deprecated
+pub fn TraceStatus::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn TraceStatus::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 
