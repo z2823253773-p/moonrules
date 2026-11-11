@@ -27,7 +27,7 @@ Only the latest published minor release receives security fixes. The current sup
 MoonRules depends on:
 
 - The MoonBit standard library and toolchain.
-- `moonbitlang/async` and `moonbitlang/x` (pinned by version in `moon.mod`).
+- `moonbitlang/async` (pinned by version in `moon.mod`).
 - The npm packages listed in `playground/package.json` (pinned in `package-lock.json`).
 
 All third-party licenses are documented in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). CI runs on every push and pull request; only green `main` is deployable.

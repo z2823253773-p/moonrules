@@ -168,8 +168,7 @@ MoonRules is licensed under Apache-2.0. Third-party dependencies and their licen
 
 Core dependencies:
 - MoonBit compiler and standard library — Apache-2.0
-- `moonbitlang/async@0.20.2` — Apache-2.0
-- `moonbitlang/x@0.4.46` — Apache-2.0
+- `moonbitlang/async@0.22.9` — Apache-2.0
 
 Playground dependencies:
 - CodeMirror 6 and Lezer — MIT

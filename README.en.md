@@ -27,6 +27,28 @@ moon run --target native cmd/main eval examples/coupon.rule.json --data examples
 
 The CLI prints every resolved variable and literal before reporting the decision. Use `--json` for machine-readable output, `-` for stdin, and `--help`/`--version` for usage information.
 
+## Current toolchain compatibility
+
+On 2026-11-11, the repository passed local compatibility checks with the
+current official toolchain: `moon 0.1.20261104`,
+`moonc v0.10.20+65efd5b93`, and `moonrun 0.1.20261104`. The supported and
+continuously checked targets are `native` and `wasm-gc`. The Playground uses
+Node.js 24 (verified with `v24.15.0`) and npm 11.
+
+```bash
+moon version --all
+moon fmt --check
+moon check --deny-warn
+moon test --target native && moon build --target native
+moon test --target wasm-gc && moon build --target wasm-gc
+scripts/test_cli.sh
+cd playground && npm ci && npm test && npm run build && npm run test:e2e
+```
+
+These versions and results are the local maintenance record for 2026-11-11;
+the GitHub Actions run remains the remote source of truth before merging. CI
+can also be started manually with `workflow_dispatch`.
+
 ## Example
 
 Rule:
