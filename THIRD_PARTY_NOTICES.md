@@ -6,11 +6,12 @@ MoonRules depends on the following third-party software. Each entry lists the pa
 
 | Package | Version | License | Repository |
 |---|---|---|---|
-| MoonBit compiler & toolchain | 0.1.20261104 (moonc 0.10.20) | Apache-2.0 | <https://github.com/moonbitlang/moonbit-compiler> |
+| `moon` build system & package manager | 0.1.20261104 | Apache-2.0 | <https://github.com/moonbitlang/moon> |
+| `moonc` compiler | 0.10.20 | MoonBit Public Source License v1 with compiler exceptions | <https://github.com/moonbitlang/moonbit-compiler> |
 | `moonbitlang/core` (json, quickcheck, bench, test, argparse, env) | bundled with toolchain | Apache-2.0 | <https://github.com/moonbitlang/core> |
 | `moonbitlang/async` | 0.22.9 | Apache-2.0 | <https://github.com/moonbitlang/async> |
 
-The MoonBit compiler, standard library, and official packages are licensed under the Apache License 2.0. See <https://www.apache.org/licenses/LICENSE-2.0>.
+The `moon` build system, MoonBit standard library, and `moonbitlang/async` are licensed under the Apache License 2.0. The compiler uses the MoonBit Public Source License v1 with exceptions for compiler output and non-commercial compiler modifications; consult the upstream license for its complete terms.
 
 ## Playground runtime dependencies
 
@@ -46,6 +47,7 @@ CodeMirror and Lezer are copyright Marijn Haverbeke and contributors, licensed u
 ## Full license texts
 
 - Apache License 2.0: <https://www.apache.org/licenses/LICENSE-2.0>
+- MoonBit compiler license: <https://github.com/moonbitlang/moonbit-compiler/blob/main/LICENSE.TXT>
 - MIT License: <https://opensource.org/licenses/MIT>
 
 ## Notes

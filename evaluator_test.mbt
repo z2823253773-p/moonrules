@@ -139,13 +139,13 @@ test "summary removes ordinary value leaves but keeps decisions" {
     expr,
     data,
     @moonrules.Budget::default(),
-    trace_mode=Full,
+    trace_mode=@moonrules.TraceMode::Full,
   )
   let summary = @moonrules.evaluate_condition(
     expr,
     data,
     @moonrules.Budget::default(),
-    trace_mode=Summary,
+    trace_mode=@moonrules.TraceMode::Summary,
   )
   @test.assert_eq(summary.decision, full.decision)
   @test.assert_eq(summary.trace.children.length(), 0)
@@ -163,7 +163,7 @@ test "summary keeps error and skipped nodes" {
     expr,
     Json::empty_object(),
     @moonrules.Budget::default(),
-    trace_mode=Summary,
+    trace_mode=@moonrules.TraceMode::Summary,
   )
   @test.assert_eq(report.decision, @moonrules.Decision::Fail)
   @test.assert_eq(
@@ -191,7 +191,7 @@ test "off returns one root and preserves report semantics" {
     expr,
     Json::empty_object(),
     @moonrules.Budget::default(),
-    trace_mode=Off,
+    trace_mode=@moonrules.TraceMode::Off,
   )
   @test.assert_eq(off.decision, full.decision)
   @test.assert_eq(off.stats, full.stats)

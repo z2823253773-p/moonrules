@@ -94,7 +94,7 @@ test "public facade parses checks and evaluates JSON sources" {
 test "diagnostics JSON has stable public fields" {
   let diagnostic : @moonrules.Diagnostic = {
     code: "E_ARITY",
-    severity: Error,
+    severity: @moonrules.DiagnosticSeverity::Error,
     rule_path: "condition.and",
     message: "operator and expects at least 1 argument",
     suggestion: "provide at least 1 argument",

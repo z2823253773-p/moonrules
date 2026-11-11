@@ -42,7 +42,10 @@ moon check --deny-warn
 moon test --target native && moon build --target native
 moon test --target wasm-gc && moon build --target wasm-gc
 scripts/test_cli.sh
-cd playground && npm ci && npm test && npm run build && npm run test:e2e
+cd playground
+npm ci
+npx playwright install chromium  # On Linux CI: add --with-deps
+npm test && npm run build && npm run test:e2e
 ```
 
 These versions and results are the local maintenance record for 2026-11-11;

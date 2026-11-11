@@ -58,6 +58,10 @@ Task 3 CI, documentation, dependency lock, and full local verification:
   `npm run build`: pass; `npm run test:e2e`: 11 tests passed.
 - The Vite production build still reports its pre-existing informational
   warning that the generated bundle is larger than 500 kB; it exits 0.
+- Final review corrected the MoonBit compiler license attribution, added the
+  missing Playwright browser-install step to clean-run documentation, and
+  completed explicit package qualification for context-inferred public enum
+  constructors in black-box tests.
 - No remote Actions run has been created on this local-only maintenance branch.
 
 No global toolchain, remote branch, release, package, or Pages deployment has

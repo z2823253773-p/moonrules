@@ -167,7 +167,8 @@ No AI-generated code was committed without human review. All public API contract
 MoonRules is licensed under Apache-2.0. Third-party dependencies and their licenses are documented in [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
 
 Core dependencies:
-- MoonBit compiler and standard library — Apache-2.0
+- MoonBit compiler — MoonBit Public Source License v1 with compiler exceptions
+- `moon` build system and MoonBit standard library — Apache-2.0
 - `moonbitlang/async@0.22.9` — Apache-2.0
 
 Playground dependencies:

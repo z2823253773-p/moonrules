@@ -110,7 +110,10 @@ moon check --deny-warn
 moon test --target native && moon build --target native
 moon test --target wasm-gc && moon build --target wasm-gc
 scripts/test_cli.sh
-cd playground && npm ci && npm test && npm run build && npm run test:e2e
+cd playground
+npm ci
+npx playwright install chromium  # Linux CI 使用：npx playwright install --with-deps chromium
+npm test && npm run build && npm run test:e2e
 ```
 
 上述版本与结果是 2026-11-11 的本地维护记录；合并前还应以 GitHub Actions

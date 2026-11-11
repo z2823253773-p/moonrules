@@ -125,7 +125,9 @@ test "property: depth budget always returns a structured error" {
     )
     assert_true(
       report.decision
-      is @moonrules.Decision::Indeterminate(BudgetExceeded("max_depth", _, _)),
+      is @moonrules.Decision::Indeterminate(
+        @moonrules.EvalError::BudgetExceeded("max_depth", _, _)
+      ),
     )
   }
 }
@@ -153,7 +155,7 @@ test "property: rule node budget always returns a structured error" {
     assert_true(
       report.decision
       is @moonrules.Decision::Indeterminate(
-        BudgetExceeded("max_rule_nodes", _, _)
+        @moonrules.EvalError::BudgetExceeded("max_rule_nodes", _, _)
       ),
     )
   }
@@ -180,7 +182,9 @@ test "property: step budget always returns a structured error" {
     )
     assert_true(
       report.decision
-      is @moonrules.Decision::Indeterminate(BudgetExceeded("max_steps", _, _)),
+      is @moonrules.Decision::Indeterminate(
+        @moonrules.EvalError::BudgetExceeded("max_steps", _, _)
+      ),
     )
   }
 }
@@ -207,7 +211,7 @@ test "property: trace budget uses its final slot for an error" {
     assert_true(
       report.decision
       is @moonrules.Decision::Indeterminate(
-        BudgetExceeded("max_trace_nodes", _, _)
+        @moonrules.EvalError::BudgetExceeded("max_trace_nodes", _, _)
       ),
     )
     @test.assert_eq(report.stats.trace_nodes_emitted, 2)
@@ -226,19 +230,19 @@ test "property: trace modes preserve decisions and reduce output" {
       expr,
       Json::empty_object(),
       @moonrules.Budget::default(),
-      trace_mode=Full,
+      trace_mode=@moonrules.TraceMode::Full,
     )
     let summary = @moonrules.evaluate_condition(
       expr,
       Json::empty_object(),
       @moonrules.Budget::default(),
-      trace_mode=Summary,
+      trace_mode=@moonrules.TraceMode::Summary,
     )
     let off = @moonrules.evaluate_condition(
       expr,
       Json::empty_object(),
       @moonrules.Budget::default(),
-      trace_mode=Off,
+      trace_mode=@moonrules.TraceMode::Off,
     )
     @test.assert_eq(full.decision, summary.decision)
     @test.assert_eq(full.decision, off.decision)
