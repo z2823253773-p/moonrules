@@ -4,7 +4,7 @@ fn evaluate_property_expr(expr : Expr) -> EvaluationReport {
 }
 
 ///|
-fn trace_node_count(node : TraceNode) -> Int {
+fn trace_node_count(node : TraceNode) -> Int32 {
   let mut count = 1
   for child in node.children {
     count += trace_node_count(child)
@@ -26,7 +26,7 @@ test "property: double negation preserves booleans" {
 
 ///|
 test "property: evaluation is deterministic" {
-  let values : Array[Int] = @quickcheck.samples(100)
+  let values : Array[Int32] = @quickcheck.samples(100)
   for value in values {
     let json = Json::number(value.to_double())
     let expr = Expr::Operation(Operator::Equal, [
@@ -220,8 +220,8 @@ test "property: JSON deep equality is reflexive for strings" {
 
 ///|
 test "property: JSON deep equality is symmetric" {
-  let left_values : Array[Int] = @quickcheck.samples(100)
-  let right_values : Array[Int] = @quickcheck.samples(100)
+  let left_values : Array[Int32] = @quickcheck.samples(100)
+  let right_values : Array[Int32] = @quickcheck.samples(100)
   for index, left in left_values {
     let a = Json::number(left.to_double())
     let b = Json::number(right_values[index].to_double())
@@ -231,8 +231,8 @@ test "property: JSON deep equality is symmetric" {
 
 ///|
 test "property: greater-than reverses to less-than" {
-  let left_values : Array[Int] = @quickcheck.samples(100)
-  let right_values : Array[Int] = @quickcheck.samples(100)
+  let left_values : Array[Int32] = @quickcheck.samples(100)
+  let right_values : Array[Int32] = @quickcheck.samples(100)
   for index, left in left_values {
     let right = right_values[index]
     let a = Json::number(left.to_double())

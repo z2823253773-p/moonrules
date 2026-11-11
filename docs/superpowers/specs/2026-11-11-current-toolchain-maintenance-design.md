@@ -13,13 +13,13 @@
 - `moon fmt --check` 因当前格式器要求的 `Int32`、标签参数、`#derive` 与尾逗号格式而失败。
 - `moon check --deny-warn` 因弃用语法、黑盒测试隐式包引用及未使用导入而失败。
 - 旧依赖 `moonbitlang/async@0.20.2` 与 `moonbitlang/x@0.4.46` 在 macOS arm64 的当前 native 后端下令 CLI 测试链接失败，缺少 `_moonbit_get_cli_args`。
-- 隔离副本升级至 `moonbitlang/async@0.22.9` 与 `moonbitlang/x@0.5.7` 后，CLI 白盒测试在当前 native 后端下通过。
+- 隔离副本升级至 `moonbitlang/async@0.22.9` 与 `moonbitlang/x@0.5.7` 后，CLI 白盒测试在当前 native 后端下通过；进一步验证表明 CLI 可直接迁移到当前标准库 `moonbitlang/core/env` 并移除 `x`。
 
 ## 目标
 
 - 迁移至当前格式器生成的 MoonBit 语法，不手工改变运行语义。
 - 使用当前工具链重新生成已跟踪的公开接口文件，确保接口快照与源码一致。
-- 更新到已验证可解决当前 native 链接故障的官方依赖版本。
+- 更新 `async`，并把 CLI 从已弃用的 `x/sys` 参数接口迁移到当前标准库 `core/env`，以解决当前 native 链接故障。
 - 保持根包测试为黑盒测试，并显式通过 `@moonrules` 使用公开 API。
 - 保持 CLI 测试为白盒测试；移除当前工具链识别出的无用导入。
 - 让 CI 可手动触发，同时继续在 push 和 pull request 上安装官方 latest 并执行已支持目标矩阵。
@@ -46,7 +46,7 @@
 
 ### 方案 C：最小完整兼容迁移（采用）
 
-使用当前格式器迁移语法，升级 `async` 与 `x`，显式化黑盒测试包边界，清理无用导入，并复跑全部 native、wasm-gc、CLI、Playground 与示例验证。它保留 v0.2 行为，同时直接覆盖已复现的两个根因。
+使用当前格式器迁移语法，升级 `async`、把 `x/sys` 替换为当前标准库 `core/env`，显式化黑盒测试包边界，清理无用导入，并复跑全部 native、wasm-gc、CLI、Playground 与示例验证。对公开类型增加显式的弃用 trait 扩展，保持旧版隐式提升的 `Eq`/`Debug` 普通方法兼容，同时消除当前编译器的迁移告警。它保留 v0.2 行为，同时直接覆盖已复现的根因。
 
 ## 完成标准
 

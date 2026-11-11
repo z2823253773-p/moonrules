@@ -1,9 +1,18 @@
 ///|
+#derive(Eq, Debug)
 pub(all) enum DataPathError {
   InvalidDataPath(String)
   MissingDataPath(String)
   NonObjectSegment(String)
-} derive(Eq, Debug)
+}
+
+///|
+#deprecated
+pub extend DataPathError with Eq::{not_equal, equal}
+
+///|
+#deprecated
+pub extend DataPathError with Debug::{to_repr}
 
 ///|
 pub fn parse_data_path(path : String) -> Result[Array[String], DataPathError] {

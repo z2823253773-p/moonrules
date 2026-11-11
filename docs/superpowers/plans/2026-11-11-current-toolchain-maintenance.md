@@ -48,9 +48,9 @@ Run with the isolated current toolchain: `moon fmt --check`, `moon check --deny-
 
 Expected: format and strict check fail on old syntax; native CLI test fails with undefined `_moonbit_get_cli_args` before dependency upgrades.
 
-- [ ] **Step 2: Upgrade only the dependencies implicated by the native linker failure**
+- [ ] **Step 2: Upgrade only the dependency implicated by the native linker failure and migrate the deprecated CLI environment API**
 
-Set `moonbitlang/async@0.22.9` and `moonbitlang/x@0.5.7` in `moon.mod`.
+Set `moonbitlang/async@0.22.9`, replace `@sys.get_cli_args()` / `@sys.exit()` with `@env.args()` / `@env.exit()`, and remove the direct `moonbitlang/x` dependency.
 
 - [ ] **Step 3: Apply the official formatter migration**
 
@@ -61,6 +61,8 @@ Expected: old derive/parameter/type formatting is mechanically migrated.
 - [ ] **Step 4: Remove imports reported unused by the current compiler**
 
 Remove only `moonbitlang/async/io` and `moonbitlang/core/json` from `cmd/main/moon.pkg` if the post-upgrade compiler still reports them unused.
+
+Add explicit deprecated `Eq`/`Debug` extensions for public derived types so the old regular-method surface remains available without relying on the compiler's deprecated implicit promotion.
 
 - [ ] **Step 5: Verify the focused linker regression and syntax gates**
 

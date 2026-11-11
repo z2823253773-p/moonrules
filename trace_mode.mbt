@@ -47,5 +47,5 @@ fn apply_trace_mode(
     TraceMode::Summary => summarize_trace(report.trace)
     TraceMode::Off => disable_trace(report.trace)
   }
-  { decision: report.decision, trace, stats: report.stats }
+  { decision: report.decision, trace, stats: report.stats, }
 }

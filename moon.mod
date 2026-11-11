@@ -15,6 +15,5 @@ preferred_target = "wasm-gc"
 description = "Explainable and budget-limited JSON business rules for MoonBit"
 
 import {
-  "moonbitlang/async@0.20.2",
-  "moonbitlang/x@0.4.46",
+  "moonbitlang/async@0.22.9",
 }

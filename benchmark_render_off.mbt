@@ -1,5 +1,5 @@
 ///|
-fn run_render_off_benchmark(it : @bench.T, size : Int) -> Unit {
+fn run_render_off_benchmark(it : @bench.T, size : Int32) -> Unit {
   let report = evaluate(
     benchmark_rule(size),
     Json::empty_object(),

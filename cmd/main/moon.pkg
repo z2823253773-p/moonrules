@@ -2,13 +2,12 @@ import {
   "z2823253773-p/moonrules",
   "moonbitlang/async",
   "moonbitlang/async/fs",
-  "moonbitlang/async/io",
   "moonbitlang/async/stdio",
-  "moonbitlang/core/json",
-  "moonbitlang/x/sys",
+  "moonbitlang/core/env",
 }
 
 import {
+  "moonbitlang/core/json",
   "moonbitlang/core/test",
 } for "wbtest"
 

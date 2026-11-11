@@ -1,5 +1,5 @@
 ///|
-fn run_parse_benchmark(it : @bench.T, size : Int) -> Unit {
+fn run_parse_benchmark(it : @bench.T, size : Int32) -> Unit {
   let source = benchmark_rule_source(size)
   it.bench(fn() { it.keep(parse(source)) })
 }
