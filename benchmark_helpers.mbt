@@ -1,5 +1,5 @@
 ///|
-fn benchmark_expr(size : Int) -> Expr {
+fn benchmark_expr(size : Int32) -> Expr {
   let children : Array[Expr] = []
   for index in 0..<size {
     children.push(
@@ -13,7 +13,7 @@ fn benchmark_expr(size : Int) -> Expr {
 }
 
 ///|
-fn benchmark_rule(size : Int) -> RuleDocument {
+fn benchmark_rule(size : Int32) -> RuleDocument {
   {
     id: "benchmark-\{size}",
     description: "deterministic benchmark fixture",
@@ -22,7 +22,7 @@ fn benchmark_rule(size : Int) -> RuleDocument {
 }
 
 ///|
-fn benchmark_rule_source(size : Int) -> String {
+fn benchmark_rule_source(size : Int32) -> String {
   let conditions : Array[Json] = []
   for index in 0..<size {
     conditions.push(

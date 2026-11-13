@@ -1,5 +1,5 @@
 ///|
-fn run_evaluate_benchmark(it : @bench.T, size : Int) -> Unit {
+fn run_evaluate_benchmark(it : @bench.T, size : Int32) -> Unit {
   let rule = benchmark_rule(size)
   it.bench(fn() {
     it.keep(evaluate(rule, Json::empty_object(), Budget::default()))

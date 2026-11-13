@@ -1,12 +1,12 @@
 ///|
 test "coupon trace has independent variable and literal nodes" {
   let source = "{\"id\":\"student-coupon\",\"description\":\"adult students\",\"condition\":{\">=\":[{\"var\":\"user.age\"},18]}}"
-  let rule = match parse_rule_document(@json.parse(source)) {
+  let rule = match @moonrules.parse_rule_document(@json.parse(source)) {
     Ok(value) => value
     Err(_) => fail("test rule must parse")
   }
   let data = @json.parse("{\"user\":{\"age\":20}}")
-  let report = evaluate(rule, data, Budget::default())
+  let report = @moonrules.evaluate(rule, data, @moonrules.Budget::default())
   debug_inspect(report.decision, content="Pass")
   debug_inspect(report.trace.children.length(), content="2")
   debug_inspect(report.trace.children[0].status, content="Value")
@@ -18,11 +18,15 @@ test "coupon trace has independent variable and literal nodes" {
 ///|
 test "minimal evaluator reports missing variable" {
   let source = "{\"id\":\"x\",\"description\":\"x\",\"condition\":{\">=\":[{\"var\":\"user.age\"},18]}}"
-  let rule = match parse_rule_document(@json.parse(source)) {
+  let rule = match @moonrules.parse_rule_document(@json.parse(source)) {
     Ok(value) => value
     Err(_) => fail("test rule must parse")
   }
-  let report = evaluate(rule, Json::empty_object(), Budget::default())
+  let report = @moonrules.evaluate(
+    rule,
+    Json::empty_object(),
+    @moonrules.Budget::default(),
+  )
   debug_inspect(
     report.decision,
     content="Indeterminate(MissingVariable(\"user.age\"))",
@@ -33,11 +37,15 @@ test "minimal evaluator reports missing variable" {
 ///|
 test "minimal and short-circuits after false" {
   let source = "{\"id\":\"x\",\"description\":\"x\",\"condition\":{\"and\":[{\">=\":[1,2]},{\"var\":\"never\"}]}}"
-  let rule = match parse_rule_document(@json.parse(source)) {
+  let rule = match @moonrules.parse_rule_document(@json.parse(source)) {
     Ok(value) => value
     Err(_) => fail("test rule must parse")
   }
-  let report = evaluate(rule, Json::empty_object(), Budget::default())
+  let report = @moonrules.evaluate(
+    rule,
+    Json::empty_object(),
+    @moonrules.Budget::default(),
+  )
   debug_inspect(report.decision, content="Fail")
   debug_inspect(report.trace.children.length(), content="2")
   debug_inspect(report.trace.children[1].status, content="Skipped")
@@ -45,12 +53,16 @@ test "minimal and short-circuits after false" {
 
 ///|
 test "and false dominates earlier error" {
-  let expr = Expr::Operation(Operator::And, [
-    Expr::Variable("missing"),
-    Expr::Literal(Json::boolean(false)),
-    Expr::Variable("never"),
+  let expr = @moonrules.Expr::Operation(@moonrules.Operator::And, [
+    @moonrules.Expr::Variable("missing"),
+    @moonrules.Expr::Literal(Json::boolean(false)),
+    @moonrules.Expr::Variable("never"),
   ])
-  let report = evaluate_condition(expr, Json::empty_object(), Budget::default())
+  let report = @moonrules.evaluate_condition(
+    expr,
+    Json::empty_object(),
+    @moonrules.Budget::default(),
+  )
   debug_inspect(report.decision, content="Fail")
   debug_inspect(report.trace.children[0].status, content="Error")
   debug_inspect(report.trace.children[1].status, content="Value")
@@ -59,12 +71,16 @@ test "and false dominates earlier error" {
 
 ///|
 test "or true dominates earlier error" {
-  let expr = Expr::Operation(Operator::Or, [
-    Expr::Variable("missing"),
-    Expr::Literal(Json::boolean(true)),
-    Expr::Variable("never"),
+  let expr = @moonrules.Expr::Operation(@moonrules.Operator::Or, [
+    @moonrules.Expr::Variable("missing"),
+    @moonrules.Expr::Literal(Json::boolean(true)),
+    @moonrules.Expr::Variable("never"),
   ])
-  let report = evaluate_condition(expr, Json::empty_object(), Budget::default())
+  let report = @moonrules.evaluate_condition(
+    expr,
+    Json::empty_object(),
+    @moonrules.Budget::default(),
+  )
   debug_inspect(report.decision, content="Pass")
   debug_inspect(report.trace.children[0].status, content="Error")
   debug_inspect(report.trace.children[2].status, content="Skipped")
@@ -72,45 +88,64 @@ test "or true dominates earlier error" {
 
 ///|
 test "error remains indeterminate without decisive boolean" {
-  let expr = Expr::Operation(Operator::And, [
-    Expr::Literal(Json::boolean(true)),
-    Expr::Variable("missing"),
+  let expr = @moonrules.Expr::Operation(@moonrules.Operator::And, [
+    @moonrules.Expr::Literal(Json::boolean(true)),
+    @moonrules.Expr::Variable("missing"),
   ])
   debug_inspect(
-    evaluate_condition(expr, Json::empty_object(), Budget::default()).decision,
+    @moonrules.evaluate_condition(
+      expr,
+      Json::empty_object(),
+      @moonrules.Budget::default(),
+    ).decision,
     content="Indeterminate(MissingVariable(\"missing\"))",
   )
 }
 
 ///|
 test "not inverts booleans and preserves errors" {
-  let false_expr = Expr::Operation(Operator::Not, [
-    Expr::Literal(Json::boolean(true)),
+  let false_expr = @moonrules.Expr::Operation(@moonrules.Operator::Not, [
+    @moonrules.Expr::Literal(Json::boolean(true)),
   ])
   debug_inspect(
-    evaluate_condition(false_expr, Json::empty_object(), Budget::default()).decision,
+    @moonrules.evaluate_condition(
+      false_expr,
+      Json::empty_object(),
+      @moonrules.Budget::default(),
+    ).decision,
     content="Fail",
   )
-  let error_expr = Expr::Operation(Operator::Not, [Expr::Variable("missing")])
+  let error_expr = @moonrules.Expr::Operation(@moonrules.Operator::Not, [
+    @moonrules.Expr::Variable("missing"),
+  ])
   debug_inspect(
-    evaluate_condition(error_expr, Json::empty_object(), Budget::default()).decision,
+    @moonrules.evaluate_condition(
+      error_expr,
+      Json::empty_object(),
+      @moonrules.Budget::default(),
+    ).decision,
     content="Indeterminate(MissingVariable(\"missing\"))",
   )
 }
 
 ///|
 test "summary removes ordinary value leaves but keeps decisions" {
-  let expr = Expr::Operation(Operator::GreaterOrEqual, [
-    Expr::Variable("user.age"),
-    Expr::Literal(Json::number(18.0)),
+  let expr = @moonrules.Expr::Operation(@moonrules.Operator::GreaterOrEqual, [
+    @moonrules.Expr::Variable("user.age"),
+    @moonrules.Expr::Literal(Json::number(18.0)),
   ])
   let data = @json.parse("{\"user\":{\"age\":20}}")
-  let full = evaluate_condition(expr, data, Budget::default(), trace_mode=Full)
-  let summary = evaluate_condition(
+  let full = @moonrules.evaluate_condition(
     expr,
     data,
-    Budget::default(),
-    trace_mode=Summary,
+    @moonrules.Budget::default(),
+    trace_mode=@moonrules.TraceMode::Full,
+  )
+  let summary = @moonrules.evaluate_condition(
+    expr,
+    data,
+    @moonrules.Budget::default(),
+    trace_mode=@moonrules.TraceMode::Summary,
   )
   @test.assert_eq(summary.decision, full.decision)
   @test.assert_eq(summary.trace.children.length(), 0)
@@ -119,34 +154,44 @@ test "summary removes ordinary value leaves but keeps decisions" {
 
 ///|
 test "summary keeps error and skipped nodes" {
-  let expr = Expr::Operation(Operator::And, [
-    Expr::Variable("missing"),
-    Expr::Literal(Json::boolean(false)),
-    Expr::Variable("never"),
+  let expr = @moonrules.Expr::Operation(@moonrules.Operator::And, [
+    @moonrules.Expr::Variable("missing"),
+    @moonrules.Expr::Literal(Json::boolean(false)),
+    @moonrules.Expr::Variable("never"),
   ])
-  let report = evaluate_condition(
+  let report = @moonrules.evaluate_condition(
     expr,
     Json::empty_object(),
-    Budget::default(),
-    trace_mode=Summary,
+    @moonrules.Budget::default(),
+    trace_mode=@moonrules.TraceMode::Summary,
   )
-  @test.assert_eq(report.decision, Decision::Fail)
-  @test.assert_eq(report.trace.children[0].status, TraceStatus::Error)
-  @test.assert_eq(report.trace.children[1].status, TraceStatus::Skipped)
+  @test.assert_eq(report.decision, @moonrules.Decision::Fail)
+  @test.assert_eq(
+    report.trace.children[0].status,
+    @moonrules.TraceStatus::Error,
+  )
+  @test.assert_eq(
+    report.trace.children[1].status,
+    @moonrules.TraceStatus::Skipped,
+  )
 }
 
 ///|
 test "off returns one root and preserves report semantics" {
-  let expr = Expr::Operation(Operator::Equal, [
-    Expr::Literal(Json::number(1.0)),
-    Expr::Literal(Json::number(1.0)),
+  let expr = @moonrules.Expr::Operation(@moonrules.Operator::Equal, [
+    @moonrules.Expr::Literal(Json::number(1.0)),
+    @moonrules.Expr::Literal(Json::number(1.0)),
   ])
-  let full = evaluate_condition(expr, Json::empty_object(), Budget::default())
-  let off = evaluate_condition(
+  let full = @moonrules.evaluate_condition(
     expr,
     Json::empty_object(),
-    Budget::default(),
-    trace_mode=Off,
+    @moonrules.Budget::default(),
+  )
+  let off = @moonrules.evaluate_condition(
+    expr,
+    Json::empty_object(),
+    @moonrules.Budget::default(),
+    trace_mode=@moonrules.TraceMode::Off,
   )
   @test.assert_eq(off.decision, full.decision)
   @test.assert_eq(off.stats, full.stats)
@@ -156,15 +201,17 @@ test "off returns one root and preserves report semantics" {
 
 ///|
 test "max depth budget keeps a partial error trace" {
-  let expr = Expr::Operation(Operator::Not, [Expr::Literal(Json::boolean(true))])
-  let budget : Budget = {
+  let expr = @moonrules.Expr::Operation(@moonrules.Operator::Not, [
+    @moonrules.Expr::Literal(Json::boolean(true)),
+  ])
+  let budget : @moonrules.Budget = {
     max_depth: 1,
     max_rule_nodes: 4096,
     max_steps: 10000,
     max_trace_nodes: 4096,
     max_preview_chars: 256,
   }
-  let report = evaluate_condition(expr, Json::empty_object(), budget)
+  let report = @moonrules.evaluate_condition(expr, Json::empty_object(), budget)
   debug_inspect(
     report.decision,
     content="Indeterminate(BudgetExceeded(\"max_depth\", 2, 1))",
@@ -174,18 +221,18 @@ test "max depth budget keeps a partial error trace" {
 
 ///|
 test "rule node budget stops before executing later nodes" {
-  let expr = Expr::Operation(Operator::And, [
-    Expr::Literal(Json::boolean(true)),
-    Expr::Literal(Json::boolean(true)),
+  let expr = @moonrules.Expr::Operation(@moonrules.Operator::And, [
+    @moonrules.Expr::Literal(Json::boolean(true)),
+    @moonrules.Expr::Literal(Json::boolean(true)),
   ])
-  let budget : Budget = {
+  let budget : @moonrules.Budget = {
     max_depth: 64,
     max_rule_nodes: 1,
     max_steps: 10000,
     max_trace_nodes: 4096,
     max_preview_chars: 256,
   }
-  let report = evaluate_condition(expr, Json::empty_object(), budget)
+  let report = @moonrules.evaluate_condition(expr, Json::empty_object(), budget)
   debug_inspect(
     report.decision,
     content="Indeterminate(BudgetExceeded(\"max_rule_nodes\", 2, 1))",
@@ -195,18 +242,18 @@ test "rule node budget stops before executing later nodes" {
 
 ///|
 test "step budget is enforced independently" {
-  let expr = Expr::Operation(Operator::And, [
-    Expr::Literal(Json::boolean(true)),
-    Expr::Literal(Json::boolean(true)),
+  let expr = @moonrules.Expr::Operation(@moonrules.Operator::And, [
+    @moonrules.Expr::Literal(Json::boolean(true)),
+    @moonrules.Expr::Literal(Json::boolean(true)),
   ])
-  let budget : Budget = {
+  let budget : @moonrules.Budget = {
     max_depth: 64,
     max_rule_nodes: 4096,
     max_steps: 1,
     max_trace_nodes: 4096,
     max_preview_chars: 256,
   }
-  let report = evaluate_condition(expr, Json::empty_object(), budget)
+  let report = @moonrules.evaluate_condition(expr, Json::empty_object(), budget)
   debug_inspect(
     report.decision,
     content="Indeterminate(BudgetExceeded(\"max_steps\", 2, 1))",
@@ -216,19 +263,19 @@ test "step budget is enforced independently" {
 
 ///|
 test "trace budget reserves its final slot for truncation error" {
-  let expr = Expr::Operation(Operator::And, [
-    Expr::Literal(Json::boolean(true)),
-    Expr::Literal(Json::boolean(true)),
-    Expr::Literal(Json::boolean(true)),
+  let expr = @moonrules.Expr::Operation(@moonrules.Operator::And, [
+    @moonrules.Expr::Literal(Json::boolean(true)),
+    @moonrules.Expr::Literal(Json::boolean(true)),
+    @moonrules.Expr::Literal(Json::boolean(true)),
   ])
-  let budget : Budget = {
+  let budget : @moonrules.Budget = {
     max_depth: 64,
     max_rule_nodes: 4096,
     max_steps: 10000,
     max_trace_nodes: 3,
     max_preview_chars: 256,
   }
-  let report = evaluate_condition(expr, Json::empty_object(), budget)
+  let report = @moonrules.evaluate_condition(expr, Json::empty_object(), budget)
   debug_inspect(
     report.decision,
     content="Indeterminate(BudgetExceeded(\"max_trace_nodes\", 3, 3))",
@@ -244,28 +291,32 @@ test "trace budget reserves its final slot for truncation error" {
 
 ///|
 fn evaluate_binary_for_test(
-  operator : Operator,
+  operator : @moonrules.Operator,
   left : String,
   right : String,
-) -> EvaluationReport raise {
-  evaluate_condition(
-    Expr::Operation(operator, [
-      Expr::Literal(@json.parse(left)),
-      Expr::Literal(@json.parse(right)),
+) -> @moonrules.EvaluationReport raise {
+  @moonrules.evaluate_condition(
+    @moonrules.Expr::Operation(operator, [
+      @moonrules.Expr::Literal(@json.parse(left)),
+      @moonrules.Expr::Literal(@json.parse(right)),
     ]),
     Json::empty_object(),
-    Budget::default(),
+    @moonrules.Budget::default(),
   )
 }
 
 ///|
 test "equality and inequality accept every JSON type" {
   debug_inspect(
-    evaluate_binary_for_test(Operator::Equal, "{\"a\":1}", "{\"a\":1.0}").decision,
+    evaluate_binary_for_test(
+      @moonrules.Operator::Equal,
+      "{\"a\":1}",
+      "{\"a\":1.0}",
+    ).decision,
     content="Pass",
   )
   debug_inspect(
-    evaluate_binary_for_test(Operator::NotEqual, "[1,2]", "[2,1]").decision,
+    evaluate_binary_for_test(@moonrules.Operator::NotEqual, "[1,2]", "[2,1]").decision,
     content="Pass",
   )
 }
@@ -273,23 +324,23 @@ test "equality and inequality accept every JSON type" {
 ///|
 test "all ordered comparisons use strict numeric semantics" {
   debug_inspect(
-    evaluate_binary_for_test(Operator::GreaterThan, "3", "2").decision,
+    evaluate_binary_for_test(@moonrules.Operator::GreaterThan, "3", "2").decision,
     content="Pass",
   )
   debug_inspect(
-    evaluate_binary_for_test(Operator::GreaterOrEqual, "2", "2.0").decision,
+    evaluate_binary_for_test(@moonrules.Operator::GreaterOrEqual, "2", "2.0").decision,
     content="Pass",
   )
   debug_inspect(
-    evaluate_binary_for_test(Operator::LessThan, "2", "3").decision,
+    evaluate_binary_for_test(@moonrules.Operator::LessThan, "2", "3").decision,
     content="Pass",
   )
   debug_inspect(
-    evaluate_binary_for_test(Operator::LessOrEqual, "2", "2").decision,
+    evaluate_binary_for_test(@moonrules.Operator::LessOrEqual, "2", "2").decision,
     content="Pass",
   )
   debug_inspect(
-    evaluate_binary_for_test(Operator::GreaterThan, "2", "3").decision,
+    evaluate_binary_for_test(@moonrules.Operator::GreaterThan, "2", "3").decision,
     content="Fail",
   )
 }
@@ -297,7 +348,7 @@ test "all ordered comparisons use strict numeric semantics" {
 ///|
 test "ordered comparison rejects cross-type coercion" {
   debug_inspect(
-    evaluate_binary_for_test(Operator::GreaterThan, "\"3\"", "2").decision,
+    evaluate_binary_for_test(@moonrules.Operator::GreaterThan, "\"3\"", "2").decision,
     content="Indeterminate(TypeMismatch(\"numeric comparison requires two numbers\"))",
   )
 }
@@ -306,19 +357,23 @@ test "ordered comparison rejects cross-type coercion" {
 test "in uses JSON deep equality for array membership" {
   debug_inspect(
     evaluate_binary_for_test(
-      Operator::In,
+      @moonrules.Operator::In,
       "\"admin\"",
       "[\"viewer\",\"admin\"]",
     ).decision,
     content="Pass",
   )
   debug_inspect(
-    evaluate_binary_for_test(Operator::In, "{\"a\":1}", "[{\"a\":1.0}]").decision,
+    evaluate_binary_for_test(
+      @moonrules.Operator::In,
+      "{\"a\":1}",
+      "[{\"a\":1.0}]",
+    ).decision,
     content="Pass",
   )
   debug_inspect(
     evaluate_binary_for_test(
-      Operator::In,
+      @moonrules.Operator::In,
       "\"owner\"",
       "[\"viewer\",\"admin\"]",
     ).decision,
@@ -329,7 +384,11 @@ test "in uses JSON deep equality for array membership" {
 ///|
 test "in rejects non-array haystacks" {
   debug_inspect(
-    evaluate_binary_for_test(Operator::In, "\"admin\"", "\"administrator\"").decision,
+    evaluate_binary_for_test(
+      @moonrules.Operator::In,
+      "\"admin\"",
+      "\"administrator\"",
+    ).decision,
     content="Indeterminate(TypeMismatch(\"in requires an array as its second argument\"))",
   )
 }
@@ -337,15 +396,23 @@ test "in rejects non-array haystacks" {
 ///|
 test "contains is a strict string operator" {
   debug_inspect(
-    evaluate_binary_for_test(Operator::Contains, "\"moonrules\"", "\"rules\"").decision,
+    evaluate_binary_for_test(
+      @moonrules.Operator::Contains,
+      "\"moonrules\"",
+      "\"rules\"",
+    ).decision,
     content="Pass",
   )
   debug_inspect(
-    evaluate_binary_for_test(Operator::Contains, "\"moonrules\"", "\"sun\"").decision,
+    evaluate_binary_for_test(
+      @moonrules.Operator::Contains,
+      "\"moonrules\"",
+      "\"sun\"",
+    ).decision,
     content="Fail",
   )
   debug_inspect(
-    evaluate_binary_for_test(Operator::Contains, "[1,2]", "1").decision,
+    evaluate_binary_for_test(@moonrules.Operator::Contains, "[1,2]", "1").decision,
     content="Indeterminate(TypeMismatch(\"string operator requires two strings\"))",
   )
 }
@@ -353,19 +420,35 @@ test "contains is a strict string operator" {
 ///|
 test "starts_with and ends_with are strict string operators" {
   debug_inspect(
-    evaluate_binary_for_test(Operator::StartsWith, "\"moonrules\"", "\"moon\"").decision,
+    evaluate_binary_for_test(
+      @moonrules.Operator::StartsWith,
+      "\"moonrules\"",
+      "\"moon\"",
+    ).decision,
     content="Pass",
   )
   debug_inspect(
-    evaluate_binary_for_test(Operator::StartsWith, "\"moonrules\"", "\"rules\"").decision,
+    evaluate_binary_for_test(
+      @moonrules.Operator::StartsWith,
+      "\"moonrules\"",
+      "\"rules\"",
+    ).decision,
     content="Fail",
   )
   debug_inspect(
-    evaluate_binary_for_test(Operator::EndsWith, "\"moonrules\"", "\"rules\"").decision,
+    evaluate_binary_for_test(
+      @moonrules.Operator::EndsWith,
+      "\"moonrules\"",
+      "\"rules\"",
+    ).decision,
     content="Pass",
   )
   debug_inspect(
-    evaluate_binary_for_test(Operator::EndsWith, "\"moonrules\"", "\"moon\"").decision,
+    evaluate_binary_for_test(
+      @moonrules.Operator::EndsWith,
+      "\"moonrules\"",
+      "\"moon\"",
+    ).decision,
     content="Fail",
   )
 }

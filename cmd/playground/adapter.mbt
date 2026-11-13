@@ -26,8 +26,8 @@ fn adapter_error(code : String, message : String) -> String {
 fn option_int(
   fields : Map[String, Json],
   name : String,
-  default : Int,
-) -> Result[Int, String] {
+  default : Int32,
+) -> Result[Int32, String] {
   match fields.get(name) {
     None => Ok(default)
     Some(Number(value, ..)) => {
@@ -117,7 +117,7 @@ fn parse_options(source : String) -> Result[AdapterOptions, String] {
   if diagnostics.length() > 0 {
     return Err(diagnostics[0].message)
   }
-  Ok({ trace_mode, budget })
+  Ok({ trace_mode, budget, })
 }
 
 ///|

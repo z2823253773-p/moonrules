@@ -29,7 +29,7 @@ fn root_message_parts(message : String) -> (String, String) {
 }
 
 ///|
-fn take_chars(text : String, limit : Int) -> String {
+fn take_chars(text : String, limit : Int32) -> String {
   if limit <= 0 {
     return ""
   }
@@ -46,7 +46,7 @@ fn take_chars(text : String, limit : Int) -> String {
 }
 
 ///|
-fn preview_json(value : Json, max_chars : Int) -> String {
+fn preview_json(value : Json, max_chars : Int32) -> String {
   let text = value.stringify()
   if text.char_length() <= max_chars {
     text

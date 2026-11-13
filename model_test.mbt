@@ -1,6 +1,6 @@
 ///|
 test "default budget is locked" {
-  let budget = Budget::default()
+  let budget = @moonrules.Budget::default()
   debug_inspect(
     (
       budget.max_depth,
@@ -15,9 +15,11 @@ test "default budget is locked" {
 
 ///|
 test "decision keeps false separate from execution error" {
-  debug_inspect(Decision::Fail, content="Fail")
+  debug_inspect(@moonrules.Decision::Fail, content="Fail")
   debug_inspect(
-    Decision::Indeterminate(EvalError::MissingVariable("user.age")),
+    @moonrules.Decision::Indeterminate(
+      @moonrules.EvalError::MissingVariable("user.age"),
+    ),
     content="Indeterminate(MissingVariable(\"user.age\"))",
   )
 }
@@ -25,7 +27,11 @@ test "decision keeps false separate from execution error" {
 ///|
 test "V1 exposes trace modes but implements full only" {
   debug_inspect(
-    [TraceMode::Off, TraceMode::Summary, TraceMode::Full],
+    [
+      @moonrules.TraceMode::Off,
+      @moonrules.TraceMode::Summary,
+      @moonrules.TraceMode::Full,
+    ],
     content="[Off, Summary, Full]",
   )
 }

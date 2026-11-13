@@ -3,6 +3,7 @@ package "z2823253773-p/moonrules"
 
 import {
   "moonbitlang/core/debug",
+  "moonbitlang/core/json",
 }
 
 // Values
@@ -10,94 +11,158 @@ pub fn check(RuleDocument, budget? : Budget) -> Array[Diagnostic]
 
 pub fn check_expr(Expr, Budget) -> Array[Diagnostic]
 
-pub fn diagnostics_to_json(Array[Diagnostic]) -> Json
+pub fn diagnostics_to_json(Array[Diagnostic]) -> @json.Json
 
-pub fn evaluate(RuleDocument, Json, Budget, trace_mode? : TraceMode) -> EvaluationReport
+pub fn evaluate(RuleDocument, @json.Json, Budget, trace_mode? : TraceMode) -> EvaluationReport
 
-pub fn evaluate_condition(Expr, Json, Budget, trace_mode? : TraceMode) -> EvaluationReport
+pub fn evaluate_condition(Expr, @json.Json, Budget, trace_mode? : TraceMode) -> EvaluationReport
 
 pub fn evaluate_json(String, String, budget? : Budget, trace_mode? : TraceMode) -> Result[EvaluationReport, String]
 
-pub fn json_deep_equal(Json, Json) -> Bool
+pub fn json_deep_equal(@json.Json, @json.Json) -> Bool
 
 pub fn parse(String) -> Result[RuleDocument, RuleParseError]
 
 pub fn parse_data_path(String) -> Result[Array[String], DataPathError]
 
-pub fn parse_rule_document(Json) -> Result[RuleDocument, RuleParseError]
+pub fn parse_rule_document(@json.Json) -> Result[RuleDocument, RuleParseError]
 
 pub fn render_report(EvaluationReport, Budget) -> String
 
-pub fn report_to_json(EvaluationReport) -> Json
+pub fn report_to_json(EvaluationReport) -> @json.Json
 
-pub fn resolve_data_path(Json, String) -> Result[Json, DataPathError]
+pub fn resolve_data_path(@json.Json, String) -> Result[@json.Json, DataPathError]
 
 pub fn validate_budget(Budget) -> Array[Diagnostic]
 
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) struct Budget {
-  max_depth : Int
-  max_rule_nodes : Int
-  max_steps : Int
-  max_trace_nodes : Int
-  max_preview_chars : Int
-} derive(Eq, @debug.Debug)
+  max_depth : Int32
+  max_rule_nodes : Int32
+  max_steps : Int32
+  max_trace_nodes : Int32
+  max_preview_chars : Int32
+}
 pub fn Budget::default() -> Self
+#deprecated
+pub fn Budget::equal(Self, Self) -> Bool
+#deprecated
+pub fn Budget::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn Budget::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum DataPathError {
   InvalidDataPath(String)
   MissingDataPath(String)
   NonObjectSegment(String)
-} derive(Eq, @debug.Debug)
+}
+#deprecated
+pub fn DataPathError::equal(Self, Self) -> Bool
+#deprecated
+pub fn DataPathError::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn DataPathError::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Decision {
   Pass
   Fail
   Indeterminate(EvalError)
-} derive(Eq, @debug.Debug)
-pub fn Decision::exit_code(Self) -> Int
+}
+#deprecated
+pub fn Decision::equal(Self, Self) -> Bool
+pub fn Decision::exit_code(Self) -> Int32
+#deprecated
+pub fn Decision::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn Decision::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Diagnostic {
   code : String
   severity : DiagnosticSeverity
   rule_path : String
   message : String
   suggestion : String
-} derive(Eq, @debug.Debug)
+}
+#deprecated
+pub fn Diagnostic::equal(Self, Self) -> Bool
+#deprecated
+pub fn Diagnostic::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn Diagnostic::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum DiagnosticSeverity {
   Error
   Warning
-} derive(Eq, @debug.Debug)
+}
+#deprecated
+pub fn DiagnosticSeverity::equal(Self, Self) -> Bool
+#deprecated
+pub fn DiagnosticSeverity::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn DiagnosticSeverity::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum EvalError {
   MissingVariable(String)
   TypeMismatch(String)
-  BudgetExceeded(String, Int, Int)
+  BudgetExceeded(String, Int32, Int32)
   UnsupportedTraceMode(String)
-} derive(Eq, @debug.Debug)
+}
+#deprecated
+pub fn EvalError::equal(Self, Self) -> Bool
+#deprecated
+pub fn EvalError::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn EvalError::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct EvaluationReport {
   decision : Decision
   trace : TraceNode
   stats : ExecutionStats
-} derive(Eq, @debug.Debug)
+}
+#deprecated
+pub fn EvaluationReport::equal(Self, Self) -> Bool
+#deprecated
+pub fn EvaluationReport::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn EvaluationReport::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct ExecutionStats {
-  steps_executed : Int
-  nodes_evaluated : Int
-  max_depth_reached : Int
-  trace_nodes_emitted : Int
-} derive(Eq, @debug.Debug)
+  steps_executed : Int32
+  nodes_evaluated : Int32
+  max_depth_reached : Int32
+  trace_nodes_emitted : Int32
+}
+#deprecated
+pub fn ExecutionStats::equal(Self, Self) -> Bool
+#deprecated
+pub fn ExecutionStats::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn ExecutionStats::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Expr {
-  Literal(Json)
+  Literal(@json.Json)
   Variable(String)
   Operation(Operator, Array[Expr])
-} derive(Eq, @debug.Debug)
+}
+#deprecated
+pub fn Expr::equal(Self, Self) -> Bool
+#deprecated
+pub fn Expr::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn Expr::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Operator {
   And
   Or
@@ -112,19 +177,40 @@ pub(all) enum Operator {
   Contains
   StartsWith
   EndsWith
-} derive(Eq, @debug.Debug)
+}
+#deprecated
+pub fn Operator::equal(Self, Self) -> Bool
+#deprecated
+pub fn Operator::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn Operator::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct ResolvedInput {
   source : String
-  value : Json
-} derive(Eq, @debug.Debug)
+  value : @json.Json
+}
+#deprecated
+pub fn ResolvedInput::equal(Self, Self) -> Bool
+#deprecated
+pub fn ResolvedInput::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn ResolvedInput::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct RuleDocument {
   id : String
   description : String
   condition : Expr
-} derive(Eq, @debug.Debug)
+}
+#deprecated
+pub fn RuleDocument::equal(Self, Self) -> Bool
+#deprecated
+pub fn RuleDocument::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn RuleDocument::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum RuleParseError {
   ExpectedObject(String)
   MissingField(String)
@@ -134,47 +220,87 @@ pub(all) enum RuleParseError {
   InvalidVariable(String)
   InvalidLiteral(String)
   InvalidArguments(String)
-} derive(Eq, @debug.Debug)
+}
+#deprecated
+pub fn RuleParseError::equal(Self, Self) -> Bool
 pub fn RuleParseError::message(Self) -> String
+#deprecated
+pub fn RuleParseError::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn RuleParseError::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct RulePath {
   segments : Array[RulePathSegment]
-} derive(Eq, @debug.Debug)
+}
+#deprecated
+pub fn RulePath::equal(Self, Self) -> Bool
 pub fn RulePath::field(Self, String) -> Self
-pub fn RulePath::index(Self, Int) -> Self
+pub fn RulePath::index(Self, Int32) -> Self
+#deprecated
+pub fn RulePath::not_equal(Self, Self) -> Bool
 pub fn RulePath::root() -> Self
+#deprecated
+pub fn RulePath::to_repr(Self) -> @debug.Repr
 pub fn RulePath::to_string(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub(all) enum RulePathSegment {
   Field(String)
-  Index(Int)
-} derive(Eq, @debug.Debug)
+  Index(Int32)
+}
+#deprecated
+pub fn RulePathSegment::equal(Self, Self) -> Bool
+#deprecated
+pub fn RulePathSegment::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn RulePathSegment::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum TraceMode {
   Off
   Summary
   Full
-} derive(Eq, @debug.Debug)
+}
+#deprecated
+pub fn TraceMode::equal(Self, Self) -> Bool
+#deprecated
+pub fn TraceMode::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn TraceMode::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct TraceNode {
   rule_path : String
   operator : String
   status : TraceStatus
   resolved_inputs : Array[ResolvedInput]
-  result : Json?
+  result : @json.Json?
   message : String
   children : Array[TraceNode]
-} derive(Eq, @debug.Debug)
+}
+#deprecated
+pub fn TraceNode::equal(Self, Self) -> Bool
+#deprecated
+pub fn TraceNode::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn TraceNode::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum TraceStatus {
   Value
   Pass
   Fail
   Error
   Skipped
-} derive(Eq, @debug.Debug)
+}
+#deprecated
+pub fn TraceStatus::equal(Self, Self) -> Bool
+#deprecated
+pub fn TraceStatus::not_equal(Self, Self) -> Bool
+#deprecated
+pub fn TraceStatus::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 
 // Traits
-

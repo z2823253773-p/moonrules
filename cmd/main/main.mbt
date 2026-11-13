@@ -26,7 +26,7 @@ fn diagnostics_text(diagnostics : Array[@moonrules.Diagnostic]) -> String {
 }
 
 ///|
-async fn run_check(rule_path : String, mode : OutputMode) -> Int {
+async fn run_check(rule_path : String, mode : OutputMode) -> Int32 {
   let rule_source = match read_source(rule_path) {
     Ok(value) => value
     Err(message) => {
@@ -66,7 +66,7 @@ async fn run_eval(
   rule_path : String,
   data_path : String,
   mode : OutputMode,
-) -> Int {
+) -> Int32 {
   let rule_source = match read_source(rule_path) {
     Ok(value) => value
     Err(message) => {
@@ -105,7 +105,7 @@ async fn run_eval(
 
 ///|
 async fn main {
-  let arguments = @sys.get_cli_args()
+  let arguments = @env.args()
   let code = match parse_cli(arguments[1:]) {
     Err(CliParseError::DualStdin) => {
       @stdio.stderr.write("rule and data cannot both use stdin\n")
@@ -127,5 +127,5 @@ async fn main {
     Ok(CliConfig::Eval(rule_path, data_path, mode)) =>
       run_eval(rule_path, data_path, mode)
   }
-  @sys.exit(code)
+  @env.exit(code)
 }

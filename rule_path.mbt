@@ -1,17 +1,35 @@
 ///|
+#derive(Eq, Debug)
 pub(all) enum RulePathSegment {
   Field(String)
-  Index(Int)
-} derive(Eq, Debug)
+  Index(Int32)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct RulePath {
   segments : Array[RulePathSegment]
-} derive(Eq, Debug)
+}
+
+///|
+#deprecated
+pub extend RulePathSegment with Eq::{not_equal, equal}
+
+///|
+#deprecated
+pub extend RulePathSegment with Debug::{to_repr}
+
+///|
+#deprecated
+pub extend RulePath with Eq::{not_equal, equal}
+
+///|
+#deprecated
+pub extend RulePath with Debug::{to_repr}
 
 ///|
 pub fn RulePath::root() -> RulePath {
-  { segments: [] }
+  { segments: [], }
 }
 
 ///|
@@ -22,7 +40,7 @@ pub fn RulePath::field(self : RulePath, name : String) -> RulePath {
 }
 
 ///|
-pub fn RulePath::index(self : RulePath, index : Int) -> RulePath {
+pub fn RulePath::index(self : RulePath, index : Int32) -> RulePath {
   let segments = self.segments.copy()
   segments.push(Index(index))
   { segments, }

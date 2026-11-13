@@ -63,6 +63,29 @@ FAIL student-coupon
 moon add z2823253773-p/moonrules@0.2.0
 ```
 
+## 当前工具链兼容性
+
+2026-11-11 已在官方当前工具链 `moon 0.1.20261104`、
+`moonc v0.10.20+65efd5b93`、`moonrun 0.1.20261104` 下完成本地兼容性检查。
+支持并持续验证 `native` 与 `wasm-gc`；Playground 使用 Node.js 24（本次为
+`v24.15.0`）和 npm 11。
+
+```bash
+moon version --all
+moon fmt --check
+moon check --deny-warn
+moon test --target native && moon build --target native
+moon test --target wasm-gc && moon build --target wasm-gc
+scripts/test_cli.sh
+cd playground
+npm ci
+npx playwright install chromium  # Linux CI 使用：npx playwright install --with-deps chromium
+npm test && npm run build && npm run test:e2e
+```
+
+上述版本与结果是 2026-11-11 的本地维护记录；合并前还应以 GitHub Actions
+在远端重新执行的结果为准。CI 也可通过 `workflow_dispatch` 手动触发。
+
 ## 库 API
 
 - `parse(source)`：解析 JSON 字符串为 `RuleDocument`。

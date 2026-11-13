@@ -1,22 +1,25 @@
 ///|
+#derive(Eq, Debug)
 pub(all) enum OutputMode {
   Human
   Json
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum CliConfig {
   Check(String, OutputMode)
   Eval(String, String, OutputMode)
   Help
   Version
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum CliParseError {
   Usage
   DualStdin
-} derive(Eq, Debug)
+}
 
 ///|
 fn mode_from_suffix(arguments : ArrayView[String]) -> OutputMode {

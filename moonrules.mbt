@@ -8,7 +8,7 @@ pub fn parse(source : String) -> Result[RuleDocument, RuleParseError] {
 ///|
 pub fn check(
   rule : RuleDocument,
-  budget? : Budget = Budget::default(),
+  budget~ : Budget = Budget::default(),
 ) -> Array[Diagnostic] {
   check_expr(rule.condition, budget)
 }
@@ -31,8 +31,8 @@ fn diagnostics_message(diagnostics : Array[Diagnostic]) -> String {
 pub fn evaluate_json(
   rule_source : String,
   data_source : String,
-  budget? : Budget = Budget::default(),
-  trace_mode? : TraceMode = Full,
+  budget~ : Budget = Budget::default(),
+  trace_mode~ : TraceMode = Full,
 ) -> Result[EvaluationReport, String] {
   let rule = match parse(rule_source) {
     Ok(value) => value

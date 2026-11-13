@@ -1,4 +1,5 @@
 ///|
+#derive(Eq, Debug)
 pub(all) enum RuleParseError {
   ExpectedObject(String)
   MissingField(String)
@@ -8,7 +9,15 @@ pub(all) enum RuleParseError {
   InvalidVariable(String)
   InvalidLiteral(String)
   InvalidArguments(String)
-} derive(Eq, Debug)
+}
+
+///|
+#deprecated
+pub extend RuleParseError with Eq::{not_equal, equal}
+
+///|
+#deprecated
+pub extend RuleParseError with Debug::{to_repr}
 
 ///|
 pub fn RuleParseError::message(self : RuleParseError) -> String {
@@ -76,7 +85,7 @@ pub fn parse_rule_document(json : Json) -> Result[RuleDocument, RuleParseError] 
     Ok(value) => value
     Err(error) => return Err(error)
   }
-  Ok({ id, description, condition })
+  Ok({ id, description, condition, })
 }
 
 ///|

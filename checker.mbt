@@ -18,7 +18,7 @@ fn operator_name(operator : Operator) -> String {
 }
 
 ///|
-fn valid_arity(operator : Operator, count : Int) -> Bool {
+fn valid_arity(operator : Operator, count : Int32) -> Bool {
   match operator {
     And | Or => count >= 1
     Not => count == 1
@@ -36,7 +36,7 @@ fn valid_arity(operator : Operator, count : Int) -> Bool {
 }
 
 ///|
-fn arity_message(operator : Operator, count : Int) -> (String, String) {
+fn arity_message(operator : Operator, count : Int32) -> (String, String) {
   let name = operator_name(operator)
   match operator {
     And | Or =>
@@ -59,7 +59,7 @@ fn diagnostic(
   message : String,
   suggestion : String,
 ) -> Diagnostic {
-  { code, severity: Error, rule_path, message, suggestion }
+  { code, severity: Error, rule_path, message, suggestion, }
 }
 
 ///|
@@ -134,8 +134,8 @@ pub fn validate_budget(budget : Budget) -> Array[Diagnostic] {
   fn check_limit(
     diagnostics : Array[Diagnostic],
     field : String,
-    supplied : Int,
-    allowed : Int,
+    supplied : Int32,
+    allowed : Int32,
   ) -> Unit {
     if supplied > allowed {
       diagnostics.push(
@@ -175,7 +175,7 @@ pub fn validate_budget(budget : Budget) -> Array[Diagnostic] {
 ///|
 pub fn check_expr(expr : Expr, budget : Budget) -> Array[Diagnostic] {
   let diagnostics = validate_budget(budget)
-  let count : Ref[Int] = Ref(0)
+  let count : Ref[Int32] = Ref(0)
   check_node(
     expr,
     RulePath::root().field("condition"),
@@ -191,8 +191,8 @@ pub fn check_expr(expr : Expr, budget : Budget) -> Array[Diagnostic] {
 fn check_node(
   expr : Expr,
   path : RulePath,
-  depth : Int,
-  count : Ref[Int],
+  depth : Int32,
+  count : Ref[Int32],
   budget : Budget,
   out : Array[Diagnostic],
 ) -> Unit {

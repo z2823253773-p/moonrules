@@ -1,17 +1,17 @@
 # Third-Party Notices
 
-MoonRules depends on the following third-party software. Each entry lists the package name, version (as pinned in the v0.2.0 release), license, and upstream repository.
+MoonRules depends on the following third-party software. Each entry lists the package name, version in the current source tree, license, and upstream repository.
 
 ## MoonBit toolchain and standard library
 
 | Package | Version | License | Repository |
 |---|---|---|---|
-| MoonBit compiler & toolchain | 0.1.20260713 (moonc 0.10.4) | Apache-2.0 | <https://github.com/moonbitlang/moonbit-compiler> |
+| `moon` build system & package manager | 0.1.20261104 | Apache-2.0 | <https://github.com/moonbitlang/moon> |
+| `moonc` compiler | 0.10.20 | MoonBit Public Source License v1 with compiler exceptions | <https://github.com/moonbitlang/moonbit-compiler> |
 | `moonbitlang/core` (json, quickcheck, bench, test, argparse, env) | bundled with toolchain | Apache-2.0 | <https://github.com/moonbitlang/core> |
-| `moonbitlang/async` | 0.20.2 | Apache-2.0 | <https://github.com/moonbitlang/async> |
-| `moonbitlang/x` | 0.4.46 | Apache-2.0 | <https://github.com/moonbitlang/x> |
+| `moonbitlang/async` | 0.22.9 | Apache-2.0 | <https://github.com/moonbitlang/async> |
 
-The MoonBit compiler, standard library, and official packages are licensed under the Apache License 2.0. See <https://www.apache.org/licenses/LICENSE-2.0>.
+The `moon` build system, MoonBit standard library, and `moonbitlang/async` are licensed under the Apache License 2.0. The compiler uses the MoonBit Public Source License v1 with exceptions for compiler output and non-commercial compiler modifications; consult the upstream license for its complete terms.
 
 ## Playground runtime dependencies
 
@@ -37,9 +37,9 @@ CodeMirror and Lezer are copyright Marijn Haverbeke and contributors, licensed u
 
 | Package | Version | License | Repository |
 |---|---|---|---|
-| vite | 8.1.5 | MIT | <https://github.com/vitejs/vite> |
+| vite | 8.3.8 | MIT | <https://github.com/vitejs/vite> |
 | typescript | 7.0.2 | Apache-2.0 | <https://github.com/microsoft/TypeScript> |
-| vitest | 4.1.10 | MIT | <https://github.com/vitest-dev/vitest> |
+| vitest | 4.1.12 | MIT | <https://github.com/vitest-dev/vitest> |
 | @playwright/test | 1.62.0 | Apache-2.0 | <https://github.com/microsoft/playwright> |
 | jsdom | 30.0.0 | MIT | <https://github.com/jsdom/jsdom> |
 | @types/node | 26.1.2 | MIT | <https://github.com/DefinitelyTyped/DefinitelyTyped> |
@@ -47,10 +47,11 @@ CodeMirror and Lezer are copyright Marijn Haverbeke and contributors, licensed u
 ## Full license texts
 
 - Apache License 2.0: <https://www.apache.org/licenses/LICENSE-2.0>
+- MoonBit compiler license: <https://github.com/moonbitlang/moonbit-compiler/blob/main/LICENSE.TXT>
 - MIT License: <https://opensource.org/licenses/MIT>
 
 ## Notes
 
-- All version numbers reflect the locked dependencies in `moon.mod` and `playground/package-lock.json` at the time of the v0.2.0 release.
+- All version numbers reflect the locked dependencies in the current `moon.mod` and `playground/package-lock.json`.
 - MoonRules itself is licensed under Apache-2.0. See [LICENSE](LICENSE).
 - No part of MoonRules copies or derives from JSONLogic source code. References to JSONLogic in documentation describe semantic inspiration only.

@@ -1,10 +1,10 @@
 ///|
 priv struct EvalContext {
   budget : Budget
-  mut steps : Int
-  mut nodes : Int
-  mut max_depth : Int
-  mut trace_nodes : Int
+  mut steps : Int32
+  mut nodes : Int32
+  mut max_depth : Int32
+  mut trace_nodes : Int32
   mut halted : Bool
 }
 
@@ -88,7 +88,7 @@ pub fn evaluate(
   rule : RuleDocument,
   data : Json,
   budget : Budget,
-  trace_mode? : TraceMode = Full,
+  trace_mode~ : TraceMode = Full,
 ) -> EvaluationReport {
   match first_budget_excess(budget) {
     Some(error) =>
@@ -153,7 +153,7 @@ pub fn evaluate_condition(
   condition : Expr,
   data : Json,
   budget : Budget,
-  trace_mode? : TraceMode = Full,
+  trace_mode~ : TraceMode = Full,
 ) -> EvaluationReport {
   let rule : RuleDocument = {
     id: "condition",
@@ -174,7 +174,7 @@ fn value_trace(
     rule_path: path.to_string(),
     operator,
     status: Value,
-    resolved_inputs: [{ source, value }],
+    resolved_inputs: [{ source, value, }],
     result: Some(value),
     message: "resolved \{source}",
     children: [],
@@ -186,7 +186,7 @@ fn error_trace(
   path : RulePath,
   operator : String,
   error : EvalError,
-  children? : Array[TraceNode] = [],
+  children~ : Array[TraceNode] = [],
 ) -> TraceNode {
   {
     rule_path: path.to_string(),
@@ -247,7 +247,7 @@ fn operation_trace(
   for child in children {
     match child.result {
       Some(result) =>
-        resolved_inputs.push({ source: child.operator, value: result })
+        resolved_inputs.push({ source: child.operator, value: result, })
       None => ()
     }
   }
@@ -301,7 +301,7 @@ fn eval_and(
   arguments : Array[Expr],
   data : Json,
   operation_path : RulePath,
-  depth : Int,
+  depth : Int32,
 ) -> EvalNodeResult {
   let children : Array[TraceNode] = []
   let mut first_error : EvalError? = None
@@ -349,7 +349,7 @@ fn eval_and(
       None => Ok(Json::boolean(true))
     }
   }
-  { value, trace: operation_trace(operation_path, And, value, children) }
+  { value, trace: operation_trace(operation_path, And, value, children), }
 }
 
 ///|
@@ -358,7 +358,7 @@ fn eval_or(
   arguments : Array[Expr],
   data : Json,
   operation_path : RulePath,
-  depth : Int,
+  depth : Int32,
 ) -> EvalNodeResult {
   let children : Array[TraceNode] = []
   let mut first_error : EvalError? = None
@@ -406,7 +406,7 @@ fn eval_or(
       None => Ok(Json::boolean(false))
     }
   }
-  { value, trace: operation_trace(operation_path, Or, value, children) }
+  { value, trace: operation_trace(operation_path, Or, value, children), }
 }
 
 ///|
@@ -415,7 +415,7 @@ fn eval_not(
   arguments : Array[Expr],
   data : Json,
   operation_path : RulePath,
-  depth : Int,
+  depth : Int32,
 ) -> EvalNodeResult {
   if arguments.length() != 1 {
     let error = TypeMismatch("operator not requires one operand")
@@ -437,7 +437,7 @@ fn eval_not(
     Ok(_) => Err(TypeMismatch("not requires a boolean operand"))
     Err(error) => Err(error)
   }
-  { value, trace: operation_trace(operation_path, Not, value, [child.trace]) }
+  { value, trace: operation_trace(operation_path, Not, value, [child.trace]), }
 }
 
 ///|
@@ -447,7 +447,7 @@ fn eval_binary_comparison(
   arguments : Array[Expr],
   data : Json,
   operation_path : RulePath,
-  depth : Int,
+  depth : Int32,
 ) -> EvalNodeResult {
   let children : Array[TraceNode] = []
   if arguments.length() != 2 {
@@ -486,7 +486,7 @@ fn eval_binary_comparison(
         Err(error) => Err(error)
       }
   }
-  { value, trace: operation_trace(operation_path, operator, value, children) }
+  { value, trace: operation_trace(operation_path, operator, value, children), }
 }
 
 ///|
@@ -495,7 +495,7 @@ fn eval_expr(
   expr : Expr,
   data : Json,
   path : RulePath,
-  depth : Int,
+  depth : Int32,
 ) -> EvalNodeResult {
   context.trace_nodes += 1
   if context.trace_nodes >= context.budget.max_trace_nodes {
@@ -505,7 +505,7 @@ fn eval_expr(
       context.budget.max_trace_nodes,
     )
     context.halted = true
-    return { value: Err(error), trace: error_trace(path, "budget", error) }
+    return { value: Err(error), trace: error_trace(path, "budget", error), }
   }
   if depth > context.max_depth {
     context.max_depth = depth
@@ -513,7 +513,7 @@ fn eval_expr(
   if depth > context.budget.max_depth {
     let error = BudgetExceeded("max_depth", depth, context.budget.max_depth)
     context.halted = true
-    return { value: Err(error), trace: error_trace(path, "budget", error) }
+    return { value: Err(error), trace: error_trace(path, "budget", error), }
   }
   let next_node = context.nodes + 1
   if next_node > context.budget.max_rule_nodes {
@@ -523,14 +523,14 @@ fn eval_expr(
       context.budget.max_rule_nodes,
     )
     context.halted = true
-    return { value: Err(error), trace: error_trace(path, "budget", error) }
+    return { value: Err(error), trace: error_trace(path, "budget", error), }
   }
   context.nodes = next_node
   let next_step = context.steps + 1
   if next_step > context.budget.max_steps {
     let error = BudgetExceeded("max_steps", next_step, context.budget.max_steps)
     context.halted = true
-    return { value: Err(error), trace: error_trace(path, "budget", error) }
+    return { value: Err(error), trace: error_trace(path, "budget", error), }
   }
   context.steps = next_step
   match expr {
